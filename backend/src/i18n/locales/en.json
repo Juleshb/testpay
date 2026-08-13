@@ -1,0 +1,22 @@
+{
+  "failedLoadShowcase": "Failed to load showcase",
+  "failedSubmitReview": "Failed to submit review",
+  "thanksReview": "Thanks for your review! It will appear on the landing page after approval.",
+  "failedRegisterDeveloper": "Failed to register for API access",
+  "invalidAccessToken": "Invalid access token",
+  "emailRequired": "Email is required",
+  "validEmailRequired": "Valid email is required",
+  "nameRequired": "Name is required",
+  "nameTooLong": "Name must be 80 characters or less",
+  "companyNameRequired": "Company name is required for company registrations",
+  "invalidCredentials": "Invalid credentials",
+  "passwordRequired": "Password is required",
+  "passwordMismatch": "Passwords do not match",
+  "termsRequired": "You must accept the Terms of Use and Privacy Policy",
+  "registrationFailed": "Registration failed",
+  "loginFailed": "Login failed",
+  "updateFailed": "Update failed",
+  "unauthorized": "Unauthorized",
+  "forbidden": "Forbidden",
+  "notFound": "Not found"
+}

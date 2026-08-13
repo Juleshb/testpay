@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      (function () {
+        var stored = localStorage.getItem('theme');
+        var theme = stored === 'light' || stored === 'dark' ? stored : 'dark';
+        if (theme === 'dark') document.documentElement.classList.add('dark');
+
+        var standalone =
+          window.matchMedia('(display-mode: standalone)').matches ||
+          window.navigator.standalone === true;
+        if (standalone) document.documentElement.classList.add('pwa-standalone');
+      })();
+    </script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+    <meta name="theme-color" content="#0B0B0B" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F6F6F6" media="(prefers-color-scheme: light)" />
+    <meta name="description" content="StackPay — stack earnings, grow your balance, withdraw to crypto" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="StackPay" />
+    <meta name="application-name" content="StackPay" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Short+Stack&family=Sono:MONO,wght@0..1,200..800&display=swap"
+      rel="stylesheet"
+    />
+    <title>StackPay — Stack Earnings</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

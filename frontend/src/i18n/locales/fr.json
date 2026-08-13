@@ -1,0 +1,359 @@
+{
+  "language": {
+    "label": "Langue",
+    "en": "Anglais",
+    "fr": "Français",
+    "sw": "Swahili"
+  },
+  "common": {
+    "createAccount": "Créer un compte",
+    "createFreeAccount": "Créer un compte gratuit",
+    "logIn": "Se connecter",
+    "getStarted": "Commencer",
+    "home": "Accueil",
+    "menu": "Menu",
+    "send": "Envoyer",
+    "askQuestion": "Posez une question…",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "loading": "Chargement…",
+    "processing": "traitement",
+    "version": "Version",
+    "developedBy": "Développé par {{team}}.",
+    "allRights": "© {{year}} {{name}}. Tous droits réservés.",
+    "accept": "Accepter",
+    "decline": "Refuser",
+    "continue": "Continuer",
+    "backToHome": "Retour à l'accueil",
+    "needHelp": "Besoin d'aide ?",
+    "closeHelp": "Fermer l'aide",
+    "openHelp": "Ouvrir le chat d'aide",
+    "you": "Vous",
+    "helpBot": "Assistant",
+    "typing": "Saisie…",
+    "readyToStart": "Prêt à commencer ?",
+    "publicFreeRead": "Public · Gratuit",
+    "documentation": "Documentation",
+    "developers": "Développeurs",
+    "onThisPage": "Sur cette page",
+    "tableOfContents": "Table des matières",
+    "hideContents": "Masquer le sommaire",
+    "userGuide": "Guide utilisateur",
+    "apiDocs": "Docs API",
+    "apiReference": "Référence API",
+    "termsOfUse": "Conditions d'utilisation",
+    "privacyPolicy": "Politique de confidentialité",
+    "admin": "admin",
+    "session": "session",
+    "signOut": "déconnexion"
+  },
+  "nav": {
+    "overview": "aperçu",
+    "dashboard": "tableau de bord",
+    "payments": "paiements",
+    "newPayment": "nouveau paiement",
+    "recentPayments": "paiements récents",
+    "managePayments": "gérer les paiements",
+    "wallet": "portefeuille",
+    "transfer": "transfert",
+    "withdraw": "retrait",
+    "invitations": "invitations",
+    "loan": "prêt",
+    "packages": "forfaits",
+    "browsePackages": "parcourir les forfaits",
+    "myPortfolio": "mon portefeuille",
+    "community": "communauté",
+    "platform": "plateforme",
+    "networks": "réseaux",
+    "systemAdmin": "admin système",
+    "allRecentPayments": "tous les paiements récents",
+    "users": "utilisateurs",
+    "referrals": "parrainages",
+    "landingTeam": "équipe landing",
+    "reviews": "avis",
+    "settings": "paramètres",
+    "home": "Accueil",
+    "pay": "Payer",
+    "chat": "Chat",
+    "mainNav": "Navigation principale"
+  },
+  "auth": {
+    "welcomeBack": "Bon retour",
+    "signInSubtitle": "Connectez-vous à votre console",
+    "noAccount": "Pas de compte ?",
+    "createOne": "Créer un compte",
+    "emailUsername": "E-mail / Nom d'utilisateur",
+    "phone": "Téléphone",
+    "phoneNumber": "Numéro de téléphone",
+    "password": "Mot de passe",
+    "signIn": "Se connecter",
+    "enterEmailOrUsername": "Entrez votre e-mail ou nom d'utilisateur",
+    "enterPhone": "Entrez votre numéro de téléphone",
+    "enterEmailOrUsername": "Entrez votre e-mail ou nom d'utilisateur",
+    "createAccountTitle": "Créez votre compte",
+    "createAccountSubtitle": "Rejoignez StackPay et commencez à gagner",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "signInLink": "Se connecter",
+    "fullName": "Nom complet",
+    "email": "E-mail",
+    "confirmPassword": "Confirmer le mot de passe",
+    "invitationCode": "Code d'invitation (optionnel)",
+    "acceptTerms": "J'accepte les Conditions d'utilisation et la Politique de confidentialité",
+    "register": "Créer un compte",
+    "eyebrow": "Logiciel · Paiements · 2025",
+    "heroTitle": "Empilez vos gains",
+    "heroHighlight": "croître · retirer · répéter",
+    "heroBody": "Investissez dans des forfaits, gagnez quotidiennement, invitez des amis et retirez vers votre portefeuille crypto — sur plus de 7 réseaux EVM.",
+    "account": "Compte"
+  },
+  "footer": {
+    "tagline": "{{name}} · paiements crypto · forfaits d'investissement · parrainages · prêts · communauté"
+  },
+  "status": {
+    "all": "tous",
+    "pending": "en attente",
+    "confirmed": "confirmé",
+    "expired": "expiré",
+    "swept": "collecté"
+  },
+  "cookie": {
+    "title": "Nous utilisons des cookies",
+    "body": "StackPay utilise des cookies et le stockage local pour vous garder connecté, mémoriser votre thème et améliorer l'expérience. En continuant, vous acceptez ces technologies.",
+    "accept": "Accepter les cookies",
+    "essentialOnly": "Essentiels uniquement"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "description": "Gérer votre compte · {{user}}",
+    "username": "Nom d'utilisateur",
+    "usernameHint": "Attribué automatiquement · partagez-le pour les transferts",
+    "profileImage": "Photo de profil",
+    "profileImageHint": "Collez l'URL d'une image publique, ou laissez vide pour un avatar généré automatiquement dans la communauté et les parrainages.",
+    "profileImagePlaceholder": "https://exemple.com/photo.jpg",
+    "saveChanges": "Enregistrer",
+    "profileUpdated": "Profil mis à jour avec succès",
+    "keepEmailOrPhone": "Conservez au moins un e-mail ou un téléphone sur votre compte",
+    "language": "Langue",
+    "languageHint": "S'applique à l'application, l'assistant et la documentation"
+  },
+  "help": {
+    "title": "Aide StackPay",
+    "subtitle": "Réponses sur l'inscription, les paiements, les forfaits et plus",
+    "devSubtitle": "Déverrouillage API, tarifs, paiement et intégration",
+    "greeting": "Bonjour ! Je suis l'assistant StackPay. Posez vos questions sur l'inscription, les paiements, les forfaits, les retraits, les parrainages, les prêts, ou consultez le guide gratuit sur /guide.",
+    "devGreeting": "Bonjour ! Je peux vous aider à déverrouiller la documentation API StackPay, expliquer les tarifs et les étapes de paiement, et guider votre intégration.",
+    "fallback": "Je ne suis pas sûr pour l'instant. Essayez l'inscription, les paiements crypto, les forfaits, les retraits ou les parrainages. Consultez aussi le guide gratuit sur /guide ou créez un compte gratuit.",
+    "publicGuideLink": "Aide publique :",
+    "userGuideLink": "Guide utilisateur",
+    "quickQuestions": {
+      "account": "Comment créer un compte ?",
+      "guide": "Où est le guide utilisateur ?",
+      "networks": "Quels réseaux crypto sont pris en charge ?",
+      "packages": "Comment fonctionnent les forfaits d'investissement ?",
+      "withdraw": "Comment fonctionnent les retraits ?"
+    },
+    "devQuickQuestions": {
+      "unlock": "Comment déverrouiller la documentation API ?",
+      "pricing": "Combien coûte l'accès API ?",
+      "payment": "Comment payer l'accès développeur ?",
+      "auth": "Comment authentifier les requêtes API ?",
+      "included": "Que contient la documentation API ?"
+    },
+    "entries": {
+      "signup": {
+        "question": "Comment créer un compte ?",
+        "answer": "Cliquez sur Commencer ou Créer un compte gratuit sur la page d'accueil. Inscrivez-vous avec e-mail, téléphone ou les deux. Vous devez accepter les Conditions et la Politique de confidentialité. Un code d'invitation est optionnel.",
+        "keywords": ["inscription", "créer compte", "rejoindre", "compte", "email", "téléphone", "sign up", "register"]
+      },
+      "login": {
+        "question": "Comment se connecter ?",
+        "answer": "Utilisez Se connecter dans le menu. Connectez-vous avec nom d'utilisateur, e-mail ou téléphone et mot de passe. Après connexion, vous arrivez sur votre tableau de bord.",
+        "keywords": ["connexion", "se connecter", "mot de passe", "login", "log in"]
+      },
+      "payments": {
+        "question": "Comment fonctionnent les paiements crypto ?",
+        "answer": "Créez une demande de paiement, recevez une adresse de dépôt unique et payez depuis n'importe quel portefeuille crypto sur un réseau EVM pris en charge. Vous pouvez aussi copier l'adresse et envoyer manuellement. Une fois la transaction confirmée, votre solde USD est crédité automatiquement.",
+        "keywords": ["paiement", "dépôt", "crypto", "portefeuille", "wallet", "usdc", "usdt", "adresse"]
+      },
+      "networks": {
+        "question": "Quels réseaux sont pris en charge ?",
+        "answer": "StackPay prend en charge les principaux réseaux EVM : Ethereum, Polygon, BNB Chain, Arbitrum, Optimism, Base, Avalanche et Sepolia testnet.",
+        "keywords": ["réseau", "chain", "polygon", "bsc", "arbitrum", "optimism", "base", "avalanche", "ethereum"]
+      },
+      "packages": {
+        "question": "Comment fonctionnent les forfaits d'investissement ?",
+        "answer": "Placez votre solde USD dans des forfaits à paliers pour gagner un revenu quotidien. Parcourez les forfaits, choisissez un montant et suivez vos investissements actifs dans votre portefeuille.",
+        "keywords": ["forfait", "investir", "investissement", "revenu", "portefeuille", "package"]
+      },
+      "withdraw": {
+        "question": "Comment fonctionnent les retraits ?",
+        "answer": "Retirez votre solde USD en USDC ou USDT vers votre portefeuille crypto sur les réseaux pris en charge. Des limites min/max s'appliquent et sont affichées dans la section retrait.",
+        "keywords": ["retrait", "retirer", "payout", "portefeuille", "withdraw"]
+      },
+      "transfer": {
+        "question": "Puis-je transférer à d'autres utilisateurs ?",
+        "answer": "Oui. StackPay permet des transferts internes instantanés entre membres depuis la page transfert — sans frais blockchain pour les mouvements internes.",
+        "keywords": ["transfert", "envoyer", "membre", "interne", "transfer"]
+      },
+      "referrals": {
+        "question": "Comment fonctionne le parrainage ?",
+        "answer": "Chaque membre reçoit un code et un lien d'invitation. Quand une personne invitée fait son premier investissement, vous gagnez une commission créditée sur votre solde USD.",
+        "keywords": ["parrainage", "invitation", "commission", "code", "referral"]
+      },
+      "loans": {
+        "question": "Comment fonctionnent les prêts ?",
+        "answer": "Les membres éligibles peuvent emprunter jusqu'à 75 % de leur investissement actif. Le remboursement est automatique depuis les gains quotidiens des forfaits.",
+        "keywords": ["prêt", "emprunter", "remboursement", "loan"]
+      },
+      "community": {
+        "question": "Qu'est-ce que la communauté ?",
+        "answer": "StackPay inclut des canaux communautaires et des messages directs pour que les membres restent connectés. Les photos de profil apparaissent dans le chat et les listes de membres.",
+        "keywords": ["communauté", "chat", "canal", "message", "community"]
+      },
+      "mobile": {
+        "question": "Puis-je installer StackPay sur mon téléphone ?",
+        "answer": "Oui. StackPay est une PWA. Sur mobile, utilisez Ajouter à l'écran d'accueil pour l'installer comme une application native.",
+        "keywords": ["mobile", "app", "pwa", "installer", "iphone", "android"]
+      },
+      "balance": {
+        "question": "Comment fonctionne mon solde USD ?",
+        "answer": "Votre solde USD est le portefeuille central dans StackPay. Paiements, revenus, commissions, prêts, transferts et retraits passent par ce solde unique visible sur le tableau de bord.",
+        "keywords": ["solde", "usd", "portefeuille", "balance"]
+      },
+      "fees": {
+        "question": "Y a-t-il des frais ?",
+        "answer": "Les transferts internes entre membres StackPay sont gratuits. Les frais de gas s'appliquent pour les dépôts et retraits on-chain selon la blockchain utilisée.",
+        "keywords": ["frais", "coût", "gratuit", "fees"]
+      },
+      "security": {
+        "question": "StackPay est-il sécurisé ?",
+        "answer": "Les comptes utilisent un hachage sécurisé des mots de passe et des jetons de session. Chaque paiement reçoit une adresse unique. Ne partagez jamais votre mot de passe ou phrase secrète.",
+        "keywords": ["sécurité", "sûr", "mot de passe", "security"]
+      },
+      "guide": {
+        "question": "Où est le guide utilisateur ?",
+        "answer": "Le guide public gratuit est sur /guide. Il explique l'inscription, les paiements, les forfaits, les retraits, les parrainages, les prêts et la communauté — sans compte ni paiement. La référence API développeur est sur /docs.",
+        "keywords": ["guide", "aide", "documentation", "tutoriel", "public"]
+      },
+      "support": {
+        "question": "Comment obtenir de l'aide humaine ?",
+        "answer": "Pour les questions générales, consultez le guide sur /guide ou continuez avec cet assistant. Pour l'aide liée au compte, connectez-vous et contactez via les canaux communautaires.",
+        "keywords": ["support", "aide", "contact", "équipe", "problème"]
+      },
+      "api": {
+        "question": "Où est la documentation API développeur ?",
+        "answer": "La documentation est sur /docs. La référence REST et WebSocket complète se déverrouille après un paiement unique (100 $ Individuel / 250 $ Entreprise en USDC sur Polygon).",
+        "keywords": ["api", "développeur", "documentation", "docs", "intégration"]
+      },
+      "terms": {
+        "question": "Où sont les Conditions et la Confidentialité ?",
+        "answer": "Les liens Conditions d'utilisation et Politique de confidentialité sont dans le pied de page. Vous devez les accepter à la création du compte.",
+        "keywords": ["conditions", "confidentialité", "politique", "légal", "cookies"]
+      },
+      "apiUnlock": {
+        "question": "Comment déverrouiller la documentation API ?",
+        "answer": "Allez sur /docs, inscrivez-vous avec nom et e-mail, choisissez Individuel (100 $) ou Entreprise (250 $), puis payez le montant USDC exact sur Polygon à l'adresse indiquée.",
+        "keywords": ["déverrouiller", "docs api", "accès", "documentation"]
+      },
+      "apiPricing": {
+        "question": "Combien coûte l'accès API ?",
+        "answer": "Déverrouillage unique : 100 $ USDC pour les développeurs individuels et 250 $ USDC pour les entreprises. Paiement sur Polygon uniquement.",
+        "keywords": ["prix", "tarif", "coût", "100", "250"]
+      },
+      "apiPayment": {
+        "question": "Comment payer l'accès développeur ?",
+        "answer": "Après inscription sur /docs, copiez l'adresse de dépôt et envoyez exactement le montant USDC indiqué sur Polygon. Cette page se rafraîchit toutes les 10 secondes.",
+        "keywords": ["payer", "usdc", "polygon", "dépôt", "portefeuille", "envoyer", "adresse"]
+      },
+      "apiAuth": {
+        "question": "Comment authentifier les requêtes API ?",
+        "answer": "Les endpoints membres nécessitent un JWT de POST /api/auth/login ou /register. Envoyez Authorization: Bearer <token>. Les jetons expirent après 7 jours.",
+        "keywords": ["authentifier", "jwt", "bearer", "token", "auth"]
+      }
+    }
+  },
+  "guide": {
+    "title": "Guide utilisateur",
+    "subtitle": "Documentation publique gratuite pour {{name}}. Apprenez l'inscription, les paiements, les forfaits, les parrainages et plus — sans connexion ni paiement.",
+    "intro": "{{name}} vous aide à payer en crypto, faire croître un solde USD via des forfaits d'investissement, gagner des commissions de parrainage, emprunter contre vos investissements et vous connecter avec d'autres membres. Ce guide est gratuit pour tous — sans compte ni paiement.",
+    "publicNote": "Tout le monde peut lire ce guide. Pour la référence API payante, voir",
+    "introduction": "Introduction",
+    "introHelp": "Utilisez les sections ci-dessous ou le chat Besoin d'aide ? — il utilise la même base de connaissances que cette page.",
+    "readyToJoin": "Prêt à rejoindre ?",
+    "joinBody": "Créez un compte {{name}} gratuit pour payer, investir et gagner.",
+    "sections": {
+      "getting-started": "Premiers pas",
+      "money": "Paiements et solde",
+      "grow": "Investir et gagner",
+      "move-money": "Transferts et retraits",
+      "community": "Communauté",
+      "trust": "Sécurité et légal",
+      "developers": "Développeurs"
+    },
+    "getStarted": "Commencer"
+  },
+  "docs": {
+    "title": "Documentation API",
+    "subtitle": "Intégrez {{name}} via notre API REST et WebSocket communautaire. La référence complète se déverrouille après des frais uniques (100 $ individuel / 250 $ entreprise).",
+    "publicGuideHint": "Besoin d'aide générale sur {{name}} ? Consultez le",
+    "publicGuideLink": "guide utilisateur public",
+    "publicGuideSuffix": "— gratuit.",
+    "unlockTitle": "Déverrouiller la documentation développeur",
+    "unlockBody": "La référence REST et WebSocket complète est disponible après un paiement unique. Inscrivez-vous avec e-mail et nom, choisissez individuel ou entreprise, puis payez en USDC sur Polygon.",
+    "individual": "Individuel",
+    "company": "Entreprise",
+    "soloDev": "Développeurs solo et freelances",
+    "teamsOrg": "Équipes et organisations",
+    "register": "S'inscrire",
+    "name": "Nom",
+    "namePlaceholder": "Votre nom complet",
+    "emailPlaceholder": "vous@entreprise.com",
+    "companyName": "Nom de l'entreprise",
+    "companyPlaceholder": "Entreprise SARL",
+    "continuePayment": "Continuer vers le paiement · {{amount}} $ USDC",
+    "paymentRequired": "Paiement requis",
+    "paymentInstructions": "Envoyez exactement {{amount}} USDC sur {{network}} pour déverrouiller la documentation pour {{email}}.",
+    "depositAddress": "Adresse de dépôt",
+    "amount": "Montant",
+    "network": "Réseau",
+    "status": "Statut",
+    "waitingPayment": "En attente de confirmation. Cette page se rafraîchit automatiquement toutes les 10 secondes.",
+    "differentEmail": "Utiliser un autre e-mail",
+    "docsHidden": "Documentation masquée jusqu'à confirmation du paiement",
+    "checkingAccess": "vérification de l'accès API",
+    "unlockFeeIndividual": "{{amount}} $ de déverrouillage"
+  },
+  "docsNav": {
+    "overview": "Aperçu",
+    "auth": "Authentification",
+    "public": "API publique",
+    "accounts": "Comptes",
+    "payments": "Paiements",
+    "packages": "Forfaits",
+    "transfers": "Transferts",
+    "withdrawals": "Retraits",
+    "referrals": "Parrainages",
+    "loans": "Prêts",
+    "community": "Communauté",
+    "realtime": "WebSocket",
+    "admin": "API Admin",
+    "errors": "Erreurs"
+  },
+  "landing": {
+    "logIn": "Se connecter",
+    "getStarted": "Commencer",
+    "createFreeAccount": "Créer un compte gratuit",
+    "goToDashboard": "Aller au tableau de bord"
+  },
+  "errors": {
+    "generic": "Une erreur s'est produite. Veuillez réessayer.",
+    "network": "Erreur réseau. Vérifiez votre connexion.",
+    "invalidCredentials": "Identifiants invalides",
+    "emailRequired": "L'e-mail est requis",
+    "validEmailRequired": "Un e-mail valide est requis",
+    "nameRequired": "Le nom est requis",
+    "passwordRequired": "Le mot de passe est requis",
+    "passwordMismatch": "Les mots de passe ne correspondent pas",
+    "termsRequired": "Vous devez accepter les Conditions et la Politique de confidentialité"
+  }
+}

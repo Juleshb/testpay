@@ -1,0 +1,536 @@
+{
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "fr": "French",
+    "sw": "Swahili"
+  },
+  "common": {
+    "createAccount": "Create account",
+    "createFreeAccount": "Create free account",
+    "logIn": "Log in",
+    "getStarted": "Get started",
+    "home": "Home",
+    "menu": "Menu",
+    "send": "Send",
+    "askQuestion": "Ask a question...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading…",
+    "processing": "processing",
+    "version": "Version",
+    "developedBy": "Developed by the {{team}}.",
+    "allRights": "© {{year}} {{name}}. All rights reserved.",
+    "accept": "Accept",
+    "decline": "Decline",
+    "continue": "Continue",
+    "backToHome": "Back to home",
+    "needHelp": "Need help?",
+    "closeHelp": "Close help",
+    "openHelp": "Open help chat",
+    "you": "You",
+    "helpBot": "Help bot",
+    "typing": "Typing…",
+    "readyToStart": "Ready to start?",
+    "publicFreeRead": "Public · Free to read",
+    "documentation": "Documentation",
+    "developers": "Developers",
+    "onThisPage": "On this page",
+    "tableOfContents": "Table of contents",
+    "hideContents": "Hide contents",
+    "userGuide": "User Guide",
+    "apiDocs": "API Docs",
+    "apiReference": "API Reference",
+    "termsOfUse": "Terms of Use",
+    "privacyPolicy": "Privacy Policy",
+    "admin": "admin",
+    "session": "session",
+    "signOut": "sign out"
+  },
+  "nav": {
+    "overview": "overview",
+    "dashboard": "dashboard",
+    "payments": "payments",
+    "newPayment": "new payment",
+    "recentPayments": "recent payments",
+    "managePayments": "manage payments",
+    "wallet": "wallet",
+    "transfer": "transfer",
+    "withdraw": "withdraw",
+    "invitations": "invitations",
+    "loan": "loan",
+    "packages": "packages",
+    "browsePackages": "browse packages",
+    "myPortfolio": "my portfolio",
+    "community": "community",
+    "platform": "platform",
+    "networks": "networks",
+    "systemAdmin": "system admin",
+    "allRecentPayments": "all recent payments",
+    "users": "users",
+    "referrals": "referrals",
+    "landingTeam": "landing team",
+    "reviews": "reviews",
+    "settings": "settings",
+    "home": "Home",
+    "pay": "Pay",
+    "chat": "Chat",
+    "mainNav": "Main navigation"
+  },
+  "auth": {
+    "welcomeBack": "Welcome back",
+    "signInSubtitle": "Sign in to your developer console",
+    "noAccount": "No account?",
+    "createOne": "Create one",
+    "emailUsername": "Email / Username",
+    "phone": "Phone",
+    "phoneNumber": "Phone number",
+    "password": "Password",
+    "signIn": "Sign in",
+    "enterPhone": "Enter your phone number",
+    "enterEmailOrUsername": "Enter your email or username",
+    "createAccountTitle": "Create your account",
+    "createAccountSubtitle": "Join StackPay and start stacking earnings",
+    "alreadyHaveAccount": "Already have an account?",
+    "signInLink": "Sign in",
+    "fullName": "Full name",
+    "email": "Email",
+    "confirmPassword": "Confirm password",
+    "invitationCode": "Invitation code (optional)",
+    "acceptTerms": "I accept the Terms of Use and Privacy Policy",
+    "register": "Create account",
+    "eyebrow": "Software · Payments · 2025",
+    "heroTitle": "Stack your earnings",
+    "heroHighlight": "grow · withdraw · repeat",
+    "heroBody": "Invest in packages, earn daily, invite friends, and cash out to your crypto wallet — across 7+ EVM networks.",
+    "account": "Account"
+  },
+  "footer": {
+    "tagline": "{{name}} · crypto payments · investment packages · referrals · loans · community"
+  },
+  "status": {
+    "all": "all",
+    "pending": "pending",
+    "confirmed": "confirmed",
+    "expired": "expired",
+    "swept": "swept"
+  },
+  "cookie": {
+    "title": "We use cookies",
+    "body": "StackPay uses cookies and local storage to keep you signed in, remember your theme, and improve the app experience. By continuing, you accept our use of these technologies.",
+    "accept": "Accept cookies",
+    "essentialOnly": "Essential only"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Manage your account · {{user}}",
+    "username": "Username",
+    "usernameHint": "Auto-assigned · share this for transfers",
+    "profileImage": "Profile image",
+    "profileImageHint": "Paste a public image URL, or leave empty for an auto-generated avatar in community and referrals.",
+    "profileImagePlaceholder": "https://example.com/photo.jpg",
+    "saveChanges": "Save changes",
+    "profileUpdated": "Profile updated successfully",
+    "keepEmailOrPhone": "Keep at least one of email or phone on your account",
+    "language": "Language",
+    "languageHint": "Applies across the app, help bot, and documentation"
+  },
+  "help": {
+    "title": "StackPay Help",
+    "subtitle": "Answers about sign-up, payments, packages & more",
+    "devSubtitle": "API unlock, pricing, payment & integration",
+    "greeting": "Hi! I'm the StackPay help bot. Ask me about sign-up, payments, packages, withdrawals, referrals, loans, or read the free user guide at /guide.",
+    "devGreeting": "Hi! I can help you unlock StackPay API docs, explain pricing and payment steps, and guide you through integration.",
+    "fallback": "I'm not sure about that yet. Try asking about sign-up, crypto payments, investment packages, withdrawals, referrals, or loans. You can also read the free user guide at /guide or create a free account to explore the dashboard.",
+    "publicGuideLink": "Public user help:",
+    "userGuideLink": "User guide",
+    "quickQuestions": {
+      "account": "How do I create an account?",
+      "guide": "Where is the user guide?",
+      "networks": "Which crypto networks are supported?",
+      "packages": "How do investment packages work?",
+      "withdraw": "How do withdrawals work?"
+    },
+    "devQuickQuestions": {
+      "unlock": "How do I unlock the API documentation?",
+      "pricing": "What does API access cost?",
+      "payment": "How do I pay for developer access?",
+      "auth": "How do I authenticate API requests?",
+      "included": "What is included in the API docs?"
+    },
+    "entries": {
+      "signup": {
+        "question": "How do I create an account?",
+        "answer": "Click Get started or Create free account on the landing page. You can register with email, phone, or both. You must accept the Terms of Use and Privacy Policy. An invitation code is optional and links you to the member who invited you.",
+        "keywords": ["sign up", "signup", "register", "create account", "join", "account", "email", "phone"]
+      },
+      "login": {
+        "question": "How do I log in?",
+        "answer": "Use Log in from the top menu. Sign in with your username, email, or phone plus your password. After login you'll land on your dashboard.",
+        "keywords": ["log in", "login", "sign in", "password", "forgot"]
+      },
+      "payments": {
+        "question": "How do crypto payments work?",
+        "answer": "Create a payment request in the app, receive a unique deposit address, and pay from any crypto wallet on a supported EVM network. You can also copy the deposit address and send manually from an exchange or mobile wallet. Once the transaction confirms on-chain, your USD balance is credited automatically.",
+        "keywords": ["payment", "pay", "deposit", "fund", "crypto", "wallet", "usdc", "usdt", "eth", "address"]
+      },
+      "networks": {
+        "question": "Which networks are supported?",
+        "answer": "StackPay supports major EVM networks including Ethereum, Polygon, BNB Chain, Arbitrum, Optimism, Base, Avalanche, and Sepolia testnet. Payments and withdrawals use the network you select for each request.",
+        "keywords": ["network", "chain", "polygon", "bsc", "arbitrum", "optimism", "base", "avalanche", "sepolia", "ethereum"]
+      },
+      "packages": {
+        "question": "How do investment packages work?",
+        "answer": "Put your USD balance into tiered investment packages to earn daily income. Browse packages in the app, choose an amount within each tier's limits, and track active investments in your portfolio. Income accrues automatically on schedule.",
+        "keywords": ["package", "invest", "investment", "daily", "income", "earn", "portfolio", "tier", "return"]
+      },
+      "withdraw": {
+        "question": "How do withdrawals work?",
+        "answer": "Withdraw your USD balance as USDC or USDT to your crypto wallet on supported networks. You can save your wallet address for faster future withdrawals. Minimum and maximum limits apply and are shown in the withdraw section.",
+        "keywords": ["withdraw", "withdrawal", "cash out", "payout", "wallet", "saved wallet"]
+      },
+      "transfer": {
+        "question": "Can I transfer to other users?",
+        "answer": "Yes. StackPay supports instant internal transfers between members. Send USD balance to another StackPay user from the transfer page — no blockchain fees for internal moves.",
+        "keywords": ["transfer", "send", "peer", "member", "internal", "p2p"]
+      },
+      "referrals": {
+        "question": "How does the referral program work?",
+        "answer": "Every member gets a personal invite code and link. When someone you invited makes their first package investment, you earn a referral commission credited to your USD balance. Track invites and earnings on the referrals page.",
+        "keywords": ["referral", "invite", "invitation", "commission", "invite code", "refer", "friend"]
+      },
+      "loans": {
+        "question": "How do loans work?",
+        "answer": "Eligible members can borrow up to 75% of their active investment as a loan. Repayment is handled automatically from daily package earnings, with interest applied according to the loan terms shown in the app.",
+        "keywords": ["loan", "borrow", "advance", "repay", "repayment", "eligibility"]
+      },
+      "community": {
+        "question": "What is the community feature?",
+        "answer": "StackPay includes community channels and direct messages so members can coordinate and stay connected. Profile images appear in chat, member lists, and referral teams.",
+        "keywords": ["community", "chat", "channel", "dm", "message", "direct message", "profile"]
+      },
+      "mobile": {
+        "question": "Can I install StackPay on my phone?",
+        "answer": "Yes. StackPay is a progressive web app (PWA). On mobile, use your browser's Add to Home Screen option to install it like a native app with a full-screen experience.",
+        "keywords": ["mobile", "app", "pwa", "install", "iphone", "android", "home screen"]
+      },
+      "balance": {
+        "question": "How does my USD balance work?",
+        "answer": "Your USD balance is the central wallet inside StackPay. Crypto payments, package income, referral commissions, loan activity, transfers, and withdrawals all flow through this single balance you can view anytime on the dashboard.",
+        "keywords": ["balance", "usd", "wallet balance", "track", "ledger"]
+      },
+      "fees": {
+        "question": "Are there fees?",
+        "answer": "Internal transfers between StackPay members are free. Crypto network gas fees apply for on-chain deposits and withdrawals depending on the blockchain you use. Package and loan terms are shown before you confirm any action.",
+        "keywords": ["fee", "fees", "cost", "charge", "free"]
+      },
+      "security": {
+        "question": "Is StackPay secure?",
+        "answer": "Accounts use secure password hashing and session tokens. Each payment gets a unique deposit address. Never share your password or seed phrase. Only use official StackPay links and verify wallet addresses before sending crypto.",
+        "keywords": ["secure", "security", "safe", "private", "password"]
+      },
+      "guide": {
+        "question": "Where is the user guide?",
+        "answer": "The free public user guide is at /guide on the StackPay website. It explains sign-up, payments, packages, withdrawals, referrals, loans, community, and more — no account or payment required. Developer API reference is separate at /docs.",
+        "keywords": ["guide", "help", "documentation", "how to", "tutorial", "learn", "public"]
+      },
+      "support": {
+        "question": "How do I get human support?",
+        "answer": "For general product questions, read the free user guide at /guide or keep chatting with this help bot. For account-specific help, sign in and reach out through community channels or your team contacts.",
+        "keywords": ["support", "help", "contact", "human", "team", "issue", "problem"]
+      },
+      "api": {
+        "question": "Where is the developer API documentation?",
+        "answer": "StackPay developer documentation lives at /docs. The page is always visible, but the full REST and WebSocket reference unlocks after a one-time payment ($100 Individual / $250 Company in USDC on Polygon). Register on that page or ask the help bot there for step-by-step guidance.",
+        "keywords": ["api", "developer", "documentation", "docs", "integrate", "rest", "webhook"]
+      },
+      "terms": {
+        "question": "Where are the Terms and Privacy Policy?",
+        "answer": "Terms of Use and Privacy Policy links are in the site footer. You must accept both when creating an account. Cookie preferences can be managed from the banner when you first visit.",
+        "keywords": ["terms", "privacy", "policy", "legal", "cookies"]
+      },
+      "apiUnlock": {
+        "question": "How do I unlock the API documentation?",
+        "answer": "Go to /docs on the StackPay website. Register with your name and email, choose Individual ($100) or Company ($250), then pay the exact USDC amount on Polygon to the deposit address shown. The full REST and WebSocket reference unlocks automatically after on-chain confirmation.",
+        "keywords": ["unlock", "api docs", "documentation", "access", "paywall", "developer access"]
+      },
+      "apiPricing": {
+        "question": "What does API access cost?",
+        "answer": "API documentation unlock is a one-time payment: $100 USDC for Individual developers and $250 USDC for Company accounts. Payment is on Polygon only. This unlocks the full developer reference — it is separate from StackPay member accounts and investment packages.",
+        "keywords": ["price", "pricing", "cost", "fee", "100", "250", "individual", "company"]
+      },
+      "apiPayment": {
+        "question": "How do I pay for developer access?",
+        "answer": "After registering on /docs, copy the deposit address and send exactly the listed USDC amount on Polygon (not Ethereum mainnet). Keep this page open — it refreshes every 10 seconds and unlocks the docs when your payment confirms.",
+        "keywords": ["pay", "payment", "usdc", "polygon", "deposit", "wallet", "send", "address"]
+      },
+      "apiAuth": {
+        "question": "How do I authenticate API requests?",
+        "answer": "Member endpoints require a JWT from POST /api/auth/login or POST /api/auth/register. Send Authorization: Bearer <token> on each request. Tokens expire after 7 days. Admin routes need a user with the ADMIN role.",
+        "keywords": ["authenticate", "auth", "jwt", "bearer", "token", "login", "header"]
+      }
+    }
+  },
+  "guide": {
+    "title": "User Guide",
+    "subtitle": "Free public documentation for {{name}}. Learn how sign-up, payments, packages, referrals, and more work — no login or payment required.",
+    "intro": "{{name}} helps you pay with crypto, grow a USD balance through investment packages, earn referral commissions, borrow against investments, and connect with other members. This guide is free for everyone — no account or payment required.",
+    "publicNote": "Anyone can read this guide. For paid developer API reference, see",
+    "introduction": "Introduction",
+    "introHelp": "Use the sections below or the Need help? chat in the corner — it uses the same knowledge base as this page.",
+    "readyToJoin": "Ready to join?",
+    "joinBody": "Create a free {{name}} account to start paying, investing, and earning.",
+    "sections": {
+      "getting-started": "Getting started",
+      "money": "Payments & balance",
+      "grow": "Invest & earn",
+      "move-money": "Transfers & withdrawals",
+      "community": "Community",
+      "trust": "Security & legal",
+      "developers": "Developers"
+    },
+    "getStarted": "Get started"
+  },
+  "docs": {
+    "title": "API Documentation",
+    "subtitle": "Integrate with {{name}} using our REST API and community WebSocket. The full endpoint reference unlocks after a one-time fee ($100 individual / $250 company).",
+    "publicGuideHint": "Looking for general help using {{name}}? Read the free",
+    "publicGuideLink": "public user guide",
+    "publicGuideSuffix": "— no payment required.",
+    "unlockTitle": "Unlock developer documentation",
+    "unlockBody": "Full REST and WebSocket API reference is available after a one-time unlock payment. Register with your email and name, choose individual or company, then pay in USDC on Polygon.",
+    "individual": "Individual",
+    "company": "Company",
+    "soloDev": "Solo developers & freelancers",
+    "teamsOrg": "Teams & organizations",
+    "register": "Register",
+    "name": "Name",
+    "namePlaceholder": "Your full name",
+    "emailPlaceholder": "you@company.com",
+    "companyName": "Company name",
+    "companyPlaceholder": "Company Ltd",
+    "continuePayment": "Continue to payment · ${{amount}} USDC",
+    "paymentRequired": "Payment required",
+    "paymentInstructions": "Send exactly {{amount}} USDC on {{network}} to unlock the API docs for {{email}}.",
+    "depositAddress": "Deposit address",
+    "amount": "Amount",
+    "network": "Network",
+    "status": "Status",
+    "waitingPayment": "Waiting for payment confirmation. This page refreshes automatically every 10 seconds.",
+    "differentEmail": "Use a different email",
+    "docsHidden": "Documentation hidden until unlock payment is confirmed",
+    "checkingAccess": "checking API access",
+    "unlockFeeIndividual": "${{amount}} unlock"
+  },
+  "docsNav": {
+    "overview": "Overview",
+    "auth": "Authentication",
+    "public": "Public API",
+    "accounts": "Accounts",
+    "payments": "Payments",
+    "packages": "Packages",
+    "transfers": "Transfers",
+    "withdrawals": "Withdrawals",
+    "referrals": "Referrals",
+    "loans": "Loans",
+    "community": "Community",
+    "realtime": "WebSocket",
+    "admin": "Admin API",
+    "errors": "Errors"
+  },
+  "landing": {
+    "logIn": "Log in",
+    "getStarted": "Get started",
+    "createFreeAccount": "Create free account",
+    "goToDashboard": "Go to dashboard",
+    "alreadyHaveAccount": "I already have an account",
+    "eyebrow": "All-in-one crypto platform",
+    "heroTitle1": "Stack earnings.",
+    "heroTitle2": "Grow · withdraw · repeat.",
+    "heroBody": "StackPay combines crypto payments, investment packages, referrals, loans, and community — so you can fund, grow, and cash out your balance from one place.",
+    "heroTags": {
+      "noCard": "No card required",
+      "multiChain": "Multi-chain",
+      "mobileApp": "Mobile app"
+    },
+    "membersJoined": "Join {{count}} members already on StackPay",
+    "atAGlance": "At a glance",
+    "glance": {
+      "payments": { "label": "Payments", "value": "Crypto wallet + unique addresses" },
+      "packages": { "label": "Packages", "value": "Daily automated income" },
+      "withdraw": { "label": "Withdraw", "value": "USDC & USDT payout" },
+      "referrals": { "label": "Referrals", "value": "Invite & earn commission" }
+    },
+    "dashboardHint": "Live dashboard · package portfolio · loan tracking · community chat",
+    "stats": {
+      "label": "Platform stats",
+      "title": "Growing with real members",
+      "members": { "label": "Members joined", "value": "2.5k+", "hint": "Worldwide community" },
+      "investments": { "label": "Active investments", "value": "840+", "hint": "Package portfolios" },
+      "payments": { "label": "Payments processed", "value": "12k+", "hint": "Confirmed on-chain" },
+      "rating": { "label": "Member rating", "value": "4.8/5", "hint": "Member reviews" }
+    },
+    "why": {
+      "label": "Why StackPay",
+      "title": "Why we built this app",
+      "subtitle": "Most crypto tools stop at payments. StackPay connects funding, earning, community, and cash-out in one place — because growing balance should feel simple, social, and repeatable.",
+      "items": [
+        {
+          "title": "Crypto-native, not crypto-confusing",
+          "body": "Pay with your crypto wallet, earn in USD balance, and withdraw stablecoins — without juggling five different apps."
+        },
+        {
+          "title": "Built to grow with your network",
+          "body": "Packages, referrals, and loans connect into one flow so your earnings and your team scale together."
+        },
+        {
+          "title": "Transparent balance, one wallet",
+          "body": "Payments, daily income, referral commissions, and loan activity all feed the same balance you can track anytime."
+        },
+        {
+          "title": "Community that keeps you in sync",
+          "body": "Channels, DMs, and profile images help members coordinate, share wins, and stay active inside StackPay."
+        }
+      ]
+    },
+    "flow": {
+      "label": "The flow",
+      "title": "How StackPay works",
+      "subtitle": "From your first crypto deposit to daily earnings and withdrawal — every step is built into the platform.",
+      "steps": ["Sign up", "Pay crypto", "Invest", "Earn daily", "Withdraw"]
+    },
+    "howItWorks": {
+      "label": "Step by step",
+      "title": "Your journey on StackPay",
+      "items": [
+        {
+          "step": "01",
+          "title": "Create your account",
+          "body": "Sign up with email or phone. Optional invitation codes link you to the member who invited you."
+        },
+        {
+          "step": "02",
+          "title": "Fund with crypto",
+          "body": "Create a payment request, get a unique deposit address, and pay from any wallet on 7+ EVM networks."
+        },
+        {
+          "step": "03",
+          "title": "Invest & earn daily",
+          "body": "Choose an investment package, lock in your balance, and receive automated daily income to your wallet balance."
+        },
+        {
+          "step": "04",
+          "title": "Grow your network",
+          "body": "Share your invite link, earn commission when friends invest, and unlock loan eligibility as you build your team."
+        },
+        {
+          "step": "05",
+          "title": "Withdraw or transfer",
+          "body": "Cash out as USDC or USDT to your saved wallet address, or send USD balance instantly to another StackPay user."
+        }
+      ]
+    },
+    "features": {
+      "label": "Features",
+      "title": "Everything in one app",
+      "subtitle": "Payments, investing, referrals, loans, transfers, withdrawals, and community — designed to work together.",
+      "items": [
+        {
+          "title": "Crypto payments",
+          "body": "Accept and send crypto from any wallet. Each payment gets a unique HD deposit address with automatic fund collection.",
+          "tags": ["Any wallet", "Auto-sweep", "HD wallets"]
+        },
+        {
+          "title": "Investment packages",
+          "body": "Put your USD balance into tiered packages and earn daily returns. Track active investments in your portfolio.",
+          "tags": ["Daily income", "Multiple tiers", "Portfolio"]
+        },
+        {
+          "title": "Withdraw to wallet",
+          "body": "Convert balance to USDC or USDT on Ethereum, Polygon, BSC, Arbitrum, Base, Optimism, or Avalanche. Your wallet address is saved for next time.",
+          "tags": ["USDC · USDT", "Multi-chain", "Saved wallet"]
+        },
+        {
+          "title": "Instant transfers",
+          "body": "Move USD balance to any StackPay member instantly — free internal transfers between accounts.",
+          "tags": ["Peer-to-peer", "Instant", "No fees"]
+        },
+        {
+          "title": "Invitation program",
+          "body": "Every member gets a personal invite code. Earn commission when someone you invited makes their first package investment.",
+          "tags": ["Invite link", "Commission", "Referral tracking"]
+        },
+        {
+          "title": "Loan program",
+          "body": "Eligible members can borrow 75% of their active investment. Repayment happens automatically from daily earnings with 25% interest.",
+          "tags": ["75% advance", "Auto-repay", "Eligibility rules"]
+        },
+        {
+          "title": "Community",
+          "body": "Join channels, chat with members, send direct messages, and stay connected while you grow your balance.",
+          "tags": ["Channels", "DMs", "Real-time"]
+        },
+        {
+          "title": "Install as app",
+          "body": "Add StackPay to your home screen on iPhone or Android. Full-screen, fixed layout — works like a native mobile app.",
+          "tags": ["PWA", "Home screen", "Offline shell"]
+        }
+      ]
+    },
+    "networks": {
+      "label": "Networks",
+      "title": "Multi-chain by default",
+      "body": "Pay and withdraw across major EVM networks. Each payment stores its chain and token — monitoring and payouts run on the correct network automatically.",
+      "list": ["Ethereum", "Polygon", "BNB Chain", "Arbitrum", "Optimism", "Base", "Avalanche", "Sepolia"]
+    },
+    "balance": {
+      "label": "Balance",
+      "title": "One USD balance, many actions",
+      "items": [
+        "Incoming crypto payments credit your balance after confirmation",
+        "Package investments and daily income update your available USD",
+        "Referral commissions and loan advances flow into the same wallet",
+        "Withdraw USDC/USDT or transfer to another StackPay user anytime",
+        "Loan repayments deduct automatically from daily earnings"
+      ]
+    },
+    "testimonials": {
+      "label": "What customers say",
+      "title": "Trusted by StackPay members",
+      "averageFrom": "average from {{count}} member reviews",
+      "loading": "Loading reviews...",
+      "empty": "Member reviews will appear here soon.",
+      "starRating": "{{rating}} out of 5 stars"
+    },
+    "community": {
+      "label": "Community teams",
+      "title": "A team structure built to support you",
+      "body": "StackPay is run by a dedicated community team — with clear roles for support, growth, and member success. Profile images appear across channels, direct messages, and referral teams so conversations feel personal.",
+      "bullets": [
+        "Dedicated roles for community leadership",
+        "Profile images in chat, DMs, and referral teams",
+        "Managed team shown on the landing page"
+      ],
+      "leadershipLabel": "leadership team",
+      "loadingTeam": "Loading team...",
+      "emptyTeam": "Our community team will be listed here soon."
+    },
+    "cta": {
+      "eyebrow": "Ready to start?",
+      "title": "Join StackPay today",
+      "body": "Create your account in minutes. Fund with crypto, pick a package, and start stacking earnings — on web or installed as a mobile app.",
+      "signUpFree": "Sign up free"
+    }
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "network": "Network error. Check your connection.",
+    "invalidCredentials": "Invalid credentials",
+    "emailRequired": "Email is required",
+    "validEmailRequired": "Valid email is required",
+    "nameRequired": "Name is required",
+    "passwordRequired": "Password is required",
+    "passwordMismatch": "Passwords do not match",
+    "termsRequired": "You must accept the Terms of Use and Privacy Policy"
+  }
+}

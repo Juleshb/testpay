@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="bg" x1="64" y1="48" x2="448" y2="464" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#141918"/>
+      <stop offset="1" stop-color="#0B0B0B"/>
+    </linearGradient>
+    <linearGradient id="stack" x1="120" y1="160" x2="392" y2="360" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#CFFFE2"/>
+      <stop offset="1" stop-color="#7FC0AC"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <rect x="48" y="48" width="416" height="416" rx="96" stroke="#A2D5C6" stroke-opacity="0.22" stroke-width="4"/>
+  <rect x="148" y="292" width="216" height="36" rx="10" fill="url(#stack)" opacity="0.42"/>
+  <rect x="148" y="244" width="216" height="36" rx="10" fill="url(#stack)" opacity="0.68"/>
+  <rect x="148" y="196" width="216" height="36" rx="10" fill="url(#stack)"/>
+  <path d="M256 148v28M232 164l24-24 24 24" stroke="#A2D5C6" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="256" y="392" text-anchor="middle" font-family="'Short Stack', cursive, sans-serif" font-size="52" fill="#F6F6F6">Stack</text>
+  <text x="256" y="448" text-anchor="middle" font-family="'Short Stack', cursive, sans-serif" font-size="52" fill="#A2D5C6">Pay</text>
+</svg>

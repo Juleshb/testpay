@@ -1,0 +1,440 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   String              @id @default(uuid())
+  username             String?             @unique
+  email                String?             @unique
+  phone                String?             @unique
+  passwordHash         String
+  name                 String?
+  role                 Role                @default(USER)
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+  payments             Payment[]
+  packageInvestments   PackageInvestment[]
+  packageIncomes       PackageIncome[]
+  balanceEntries       BalanceEntry[]
+  communityPosts       CommunityPost[]
+  communityReactions   CommunityPostReaction[]
+  conversationsAsA     Conversation[]    @relation("ConversationParticipantA")
+  conversationsAsB     Conversation[]    @relation("ConversationParticipantB")
+  directMessages       DirectMessage[]
+  communityChannelReads CommunityChannelRead[]
+  transfersSent         UserTransfer[] @relation("TransfersSent")
+  transfersReceived     UserTransfer[] @relation("TransfersReceived")
+  withdrawals           Withdrawal[]
+  inviteCode            String?             @unique
+  referredById          String?
+  referredBy            User?               @relation("UserReferrals", fields: [referredById], references: [id])
+  referrals             User[]              @relation("UserReferrals")
+  referralCommissionsEarned ReferralCommission[] @relation("ReferralInviter")
+  referralAsInvitee     ReferralCommission? @relation("ReferralInvitee")
+  loans                 Loan[]
+  savedWithdrawAddress  String?
+  savedWithdrawChainId  Int?
+  savedWithdrawToken    String?
+  avatarUrl             String?
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Payment {
+  id              String        @id @default(uuid())
+  userId          String?
+  user            User?         @relation(fields: [userId], references: [id])
+  email           String?
+  name            String?
+  amount          String
+  chainId         Int           @default(11155111)
+  tokenSymbol     String        @default("ETH")
+  tokenAddress    String?
+  depositAddress  String        @unique
+  derivationIndex Int           @unique
+  status          PaymentStatus @default(PENDING)
+  txHash          String?
+  paidAmount      String?
+  usdAmount       String?
+  usdRate         String?
+  balanceCreditedAt DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  paidAt          DateTime?
+  sweptAt         DateTime?
+  sweepTxHash     String?
+  apiDeveloperAccess ApiDeveloperAccess?
+
+  @@index([status])
+  @@index([depositAddress])
+  @@index([chainId])
+  @@index([userId])
+}
+
+enum PaymentStatus {
+  PENDING
+  CONFIRMED
+  SWEPT
+  EXPIRED
+}
+
+model WalletIndex {
+  id    Int @id @default(1)
+  index Int @default(0)
+}
+
+model Package {
+  id           String              @id @default(uuid())
+  name         String              @unique
+  slug         String              @unique
+  minAmount    String
+  maxAmount    String?
+  dailyRate    String
+  durationDays Int
+  description  String?
+  badgeColor   String              @default("#A2D5C6")
+  sortOrder    Int                 @default(0)
+  active       Boolean             @default(true)
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  investments  PackageInvestment[]
+
+  @@map("VipPlan")
+}
+
+enum PackageInvestmentStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+
+  @@map("VipInvestmentStatus")
+}
+
+model PackageInvestment {
+  id            String                  @id @default(uuid())
+  userId        String
+  user          User                    @relation(fields: [userId], references: [id])
+  planId        String
+  package       Package                 @relation(fields: [planId], references: [id])
+  amount        String
+  tokenSymbol   String                  @default("USDT")
+  status        PackageInvestmentStatus @default(ACTIVE)
+  totalEarned   String                  @default("0")
+  startedAt     DateTime                @default(now())
+  endsAt        DateTime
+  lastAccruedAt DateTime?
+  createdAt     DateTime                @default(now())
+  updatedAt     DateTime                @updatedAt
+  incomes       PackageIncome[]
+  referralCommission ReferralCommission?
+
+  @@index([userId])
+  @@index([status])
+  @@index([planId])
+  @@map("VipInvestment")
+}
+
+model PackageIncome {
+  id           String            @id @default(uuid())
+  userId       String
+  user         User              @relation(fields: [userId], references: [id])
+  investmentId String
+  investment   PackageInvestment @relation(fields: [investmentId], references: [id])
+  amount       String
+  tokenSymbol  String            @default("USDT")
+  accrualDate  DateTime          @db.Date
+  loanRepaymentUsd String?
+  createdAt    DateTime          @default(now())
+  loanRepayment LoanRepayment?
+
+  @@unique([investmentId, accrualDate])
+  @@index([userId])
+  @@index([accrualDate])
+  @@map("VipIncome")
+}
+
+enum BalanceEntryType {
+  CREDIT
+  DEBIT
+}
+
+enum BalanceSourceType {
+  PAYMENT
+  PACKAGE_INVESTMENT
+  USER_TRANSFER
+  WITHDRAWAL
+  REFERRAL
+  LOAN
+}
+
+model BalanceEntry {
+  id         String             @id @default(uuid())
+  userId     String
+  user       User               @relation(fields: [userId], references: [id])
+  type       BalanceEntryType
+  amountUsd  String
+  sourceType BalanceSourceType
+  sourceId   String
+  createdAt  DateTime           @default(now())
+
+  @@unique([sourceType, sourceId])
+  @@index([userId])
+}
+
+model UserTransfer {
+  id         String   @id @default(uuid())
+  fromUserId String
+  fromUser   User     @relation("TransfersSent", fields: [fromUserId], references: [id])
+  toUserId   String
+  toUser     User     @relation("TransfersReceived", fields: [toUserId], references: [id])
+  amountUsd  String
+  note       String?
+  createdAt  DateTime @default(now())
+
+  @@index([fromUserId])
+  @@index([toUserId])
+  @@index([createdAt])
+}
+
+enum WithdrawalStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+model Withdrawal {
+  id                 String           @id @default(uuid())
+  userId             String
+  user               User             @relation(fields: [userId], references: [id])
+  amountUsd          String
+  chainId            Int
+  tokenSymbol        String
+  tokenAmount        String
+  tokenAddress       String?
+  destinationAddress String
+  status             WithdrawalStatus @default(PENDING)
+  txHash             String?
+  failureReason      String?
+  processedAt        DateTime?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model CommunityChannel {
+  id          String          @id @default(uuid())
+  slug        String          @unique
+  name        String
+  description String?
+  sortOrder   Int             @default(0)
+  createdAt   DateTime        @default(now())
+  posts       CommunityPost[]
+  reads       CommunityChannelRead[]
+}
+
+model CommunityPost {
+  id        String                  @id @default(uuid())
+  channelId String?
+  channel   CommunityChannel?       @relation(fields: [channelId], references: [id])
+  userId    String
+  user      User                    @relation(fields: [userId], references: [id])
+  content   String
+  createdAt DateTime                @default(now())
+  updatedAt DateTime                @updatedAt
+  reactions CommunityPostReaction[]
+
+  @@index([createdAt])
+  @@index([userId])
+  @@index([channelId])
+}
+
+model CommunityPostReaction {
+  id        String        @id @default(uuid())
+  postId    String
+  post      CommunityPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User          @relation(fields: [userId], references: [id])
+  emoji     String
+  createdAt DateTime      @default(now())
+
+  @@unique([postId, userId, emoji])
+  @@index([postId])
+}
+
+model Conversation {
+  id           String          @id @default(uuid())
+  participantA String
+  participantB String
+  userA        User            @relation("ConversationParticipantA", fields: [participantA], references: [id])
+  userB        User            @relation("ConversationParticipantB", fields: [participantB], references: [id])
+  messages     DirectMessage[]
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@unique([participantA, participantB])
+  @@index([participantA])
+  @@index([participantB])
+}
+
+model DirectMessage {
+  id             String       @id @default(uuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id])
+  content        String
+  quotedPostId   String?
+  quotedContent  String?
+  readAt         DateTime?
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId, createdAt])
+  @@index([senderId])
+}
+
+model CommunityChannelRead {
+  id         String           @id @default(uuid())
+  userId     String
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channelId  String
+  channel    CommunityChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  lastReadAt DateTime         @default(now())
+
+  @@unique([userId, channelId])
+  @@index([userId])
+}
+
+model ReferralSettings {
+  id                Int      @id @default(1)
+  commissionPercent String   @default("10")
+  updatedAt         DateTime @updatedAt
+}
+
+model ReferralCommission {
+  id                String            @id @default(uuid())
+  inviterId         String
+  inviter           User              @relation("ReferralInviter", fields: [inviterId], references: [id])
+  inviteeId         String            @unique
+  invitee           User              @relation("ReferralInvitee", fields: [inviteeId], references: [id])
+  investmentId      String            @unique
+  investment        PackageInvestment @relation(fields: [investmentId], references: [id])
+  packageAmountUsd  String
+  commissionPercent String
+  commissionUsd     String
+  createdAt         DateTime          @default(now())
+
+  @@index([inviterId])
+  @@index([createdAt])
+}
+
+enum LoanStatus {
+  ACTIVE
+  PAID
+  CANCELLED
+}
+
+model Loan {
+  id                String       @id @default(uuid())
+  userId            String
+  user              User         @relation(fields: [userId], references: [id])
+  investmentBaseUsd String
+  principalUsd      String
+  interestRate      String       @default("25")
+  interestUsd       String
+  totalOwedUsd      String
+  paidUsd           String       @default("0")
+  status            LoanStatus   @default(ACTIVE)
+  termsAcceptedAt   DateTime
+  disbursedAt       DateTime     @default(now())
+  paidAt            DateTime?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  repayments        LoanRepayment[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model LoanRepayment {
+  id              String        @id @default(uuid())
+  loanId          String
+  loan            Loan          @relation(fields: [loanId], references: [id])
+  packageIncomeId String        @unique
+  packageIncome   PackageIncome @relation(fields: [packageIncomeId], references: [id])
+  amountUsd       String
+  createdAt       DateTime      @default(now())
+
+  @@index([loanId])
+}
+
+model ShowcaseTeamMember {
+  id        String   @id @default(uuid())
+  name      String
+  role      String
+  avatarUrl String?
+  sortOrder Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([active, sortOrder])
+}
+
+model ShowcaseTestimonial {
+  id               String   @id @default(uuid())
+  name             String
+  role             String?
+  quote            String
+  rating           Int      @default(5)
+  avatarUrl        String?
+  sortOrder        Int      @default(0)
+  active           Boolean  @default(true)
+  publicSubmission Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([active, sortOrder])
+  @@index([publicSubmission, active])
+}
+
+enum ApiDeveloperAccountType {
+  INDIVIDUAL
+  COMPANY
+}
+
+enum ApiDeveloperAccessStatus {
+  PENDING_PAYMENT
+  ACTIVE
+}
+
+model ApiDeveloperAccess {
+  id          String                   @id @default(uuid())
+  email       String
+  name        String
+  accountType ApiDeveloperAccountType
+  companyName String?
+  amountUsd   String
+  accessToken String                   @unique @default(uuid())
+  status      ApiDeveloperAccessStatus @default(PENDING_PAYMENT)
+  paymentId   String?                  @unique
+  payment     Payment?                 @relation(fields: [paymentId], references: [id])
+  paidAt      DateTime?
+  createdAt   DateTime                 @default(now())
+  updatedAt   DateTime                 @updatedAt
+
+  @@index([email])
+  @@index([status])
+}

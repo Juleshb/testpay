@@ -1,0 +1,22 @@
+{
+  "failedLoadShowcase": "Imeshindwa kupakia maonyesho",
+  "failedSubmitReview": "Imeshindwa kutuma maoni",
+  "thanksReview": "Asante kwa maoni yako! Yataonekana kwenye ukurasa wa kwanza baada ya kuidhinishwa.",
+  "failedRegisterDeveloper": "Imeshindwa kusajili ufikiaji wa API",
+  "invalidAccessToken": "Tokeni ya ufikiaji si sahihi",
+  "emailRequired": "Barua pepe inahitajika",
+  "validEmailRequired": "Barua pepe halali inahitajika",
+  "nameRequired": "Jina linahitajika",
+  "nameTooLong": "Jina lazima liwe na herufi 80 au chini",
+  "companyNameRequired": "Jina la kampuni linahitajika kwa usajili wa kampuni",
+  "invalidCredentials": "Hati batili",
+  "passwordRequired": "Nenosiri linahitajika",
+  "passwordMismatch": "Manenosiri hayalingani",
+  "termsRequired": "Lazima ukubali Masharti na Sera ya faragha",
+  "registrationFailed": "Usajili umeshindwa",
+  "loginFailed": "Kuingia kumeshindwa",
+  "updateFailed": "Usasishaji umeshindwa",
+  "unauthorized": "Haijaidhinishwa",
+  "forbidden": "Hairuhusiwi",
+  "notFound": "Haipatikani"
+}

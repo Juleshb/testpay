@@ -1,0 +1,1025 @@
+{
+  "status": {
+    "pending": "Inasubiri",
+    "confirmed": "Imethibitishwa",
+    "swept": "Imekusanywa",
+    "expired": "Imeisha muda",
+    "processing": "Inachakatwa",
+    "completed": "Imekamilika",
+    "failed": "Imeshindwa",
+    "cancelled": "Imefutwa",
+    "all": "zote"
+  },
+  "pageCommon": {
+    "retry": "Jaribu tena",
+    "open": "fungua →",
+    "viewAll": "ona zote →",
+    "view": "Angalia",
+    "noData": "Hakuna data bado",
+    "noDataYet": "Hakuna data bado",
+    "chain": "Mnyororo",
+    "amount": "Kiasi",
+    "date": "Tarehe",
+    "time": "Muda",
+    "status": "Hali",
+    "network": "Mtandao",
+    "address": "Anwani",
+    "user": "Mtumiaji",
+    "create": "Unda",
+    "createOne": "unda moja",
+    "period": "kipindi",
+    "today": "Leo",
+    "yesterday": "Jana",
+    "usdApprox": "≈ ${{amount}} USD",
+    "loading": {
+      "dashboard": "inapakia dashibodi",
+      "payments": "inachukua malipo",
+      "recentPayments": "inapakia malipo ya hivi karibuni",
+      "payment": "inapakia malipo",
+      "transfer": "inapakia uhamisho",
+      "withdraw": "inapakia utoaji",
+      "packages": "inapakia vifurushi",
+      "portfolio": "inapakia kwingineko",
+      "referrals": "inapakia mialiko",
+      "loan": "inapakia programu ya mkopo",
+      "networks": "inapakia mitandao",
+      "users": "inapakia watumiaji",
+      "referralSettings": "inapakia mipangilio ya mialiko",
+      "platformPayments": "inapakia malipo ya jukwaa",
+      "testimonials": "inapakia maoni",
+      "showcaseTeam": "inapakia timu ya kuonyesha"
+    }
+  },
+  "landing": {
+    "logIn": "Ingia",
+    "getStarted": "Anza",
+    "createFreeAccount": "Unda akaunti bure",
+    "alreadyHaveAccount": "Tayari nina akaunti",
+    "eyebrow": "Jukwaa la crypto kamili",
+    "heroTitle1": "Jilimbikizie mapato.",
+    "heroTitle2": "Kua · toa · rudia.",
+    "heroBody": "StackPay inachanganya malipo ya crypto, vifurushi vya uwekezaji, mialiko, mikopo na jumuiya — ili uweze kufadhili, kukua na kutoa salio lako kutoka mahali pamoja.",
+    "heroTags": {
+      "noCard": "Hakuna kadi inahitajika",
+      "multiChain": "Minyororo mingi",
+      "mobileApp": "Programu ya simu"
+    },
+    "membersJoined": "Jiunge na wanachama {{count}} tayari kwenye StackPay",
+    "atAGlance": "Kwa muhtasari",
+    "glance": {
+      "payments": {
+        "label": "Malipos",
+        "value": "Pochi ya crypto + anwani za kipekee"
+      },
+      "packages": {
+        "label": "Kifurushis",
+        "value": "Mapato ya kiotomatiki kila siku"
+      },
+      "withdraw": {
+        "label": "Utoaji",
+        "value": "Malipo ya USDC na USDT"
+      },
+      "referrals": {
+        "label": "Mialiko",
+        "value": "Alika na pata kamisheni"
+      }
+    },
+    "dashboardHint": "Live dashboard · package portfolio · mkopo tracking · community chat",
+    "stats": {
+      "label": "Jukwaa stats",
+      "title": "Growing with real mwanachamas",
+      "members": {
+        "label": "Members joined",
+        "value": "2.5k+",
+        "hint": "Worldwide community"
+      },
+      "investments": {
+        "label": "Hai uwekezajis",
+        "value": "840+",
+        "hint": "Kifurushi portfolios"
+      },
+      "payments": {
+        "label": "Malipos processed",
+        "value": "12k+",
+        "hint": "Imethibitishwa on-chain"
+      },
+      "rating": {
+        "label": "Member rating",
+        "value": "4.8/5",
+        "hint": "Member maonis"
+      }
+    },
+    "why": {
+      "label": "Why StackPay",
+      "title": "Why we built this app",
+      "subtitle": "Zana nyingi za crypto huishia kwenye malipo tu. StackPay inaunganisha ufadhili, mapato, jumuiya na utoaji mahali pamoja — kwa sababu kukuza salio kunapaswa kuwa rahisi, kijamii na kurudiwa.",
+      "items": [
+        {
+          "title": "Crypto-native, si crypto-confusing",
+          "body": "Lipa kwa pochi yako ya crypto, pata mapato kwa salio la USD, na toa stablecoins — bila kuchanganya programu tano tofauti."
+        },
+        {
+          "title": "Built to grow with yako network",
+          "body": "Vifurushi, mialiko na mikopo huunganishwa katika mtiririko mmoja ili mapato yako na timu yako yakue pamoja."
+        },
+        {
+          "title": "Transparent balance, one pochi",
+          "body": "Malipo, mapato ya kila siku, kamisheni za mialiko na shughuli za mkopo zote huongeza salio lile lile unaloweza kufuatilia wakati wowote."
+        },
+        {
+          "title": "Jumuiya that keeps you in sync",
+          "body": "Vituo, ujumbe wa moja kwa moja na picha za wasifu husaidia wanachama kuratibu, kushiriki mafanikio na kubaki hai ndani ya StackPay."
+        }
+      ]
+    },
+    "flow": {
+      "label": "The flow",
+      "title": "How StackPay works",
+      "subtitle": "Kutoka amana yako ya kwanza ya crypto hadi mapato ya kila siku na utoaji — kila hatua imejengwa ndani ya jukwaa.",
+      "steps": [
+        "Sign up",
+        "Pay crypto",
+        "Invest",
+        "Earn daily",
+        "Utoaji"
+      ]
+    },
+    "howItWorks": {
+      "label": "Step by step",
+      "title": "Yako journey on StackPay",
+      "items": [
+        {
+          "step": "01",
+          "title": "Unda yako akaunti",
+          "body": "Jisajili kwa barua pepe au simu. Nambari za mialiko za hiari zinakuunganisha na mwanachama aliyekualika."
+        },
+        {
+          "step": "02",
+          "title": "Fund with crypto",
+          "body": "Unda ombi la malipo, pata anwani ya kipekee ya amana, na ulipe kutoka pochi yoyote kwenye mitandao 7+ ya EVM."
+        },
+        {
+          "step": "03",
+          "title": "Invest & earn daily",
+          "body": "Chagua kifurushi cha uwekezaji, funga salio lako, na upokee mapato ya kila siku kiotomatiki kwenye salio lako."
+        },
+        {
+          "step": "04",
+          "title": "Grow yako network",
+          "body": "Shiriki kiungo chako cha mialiko, pata kamisheni marafiki wanapowekeza, na ufungue ustahiki wa mkopo unapojenga timu yako."
+        },
+        {
+          "step": "05",
+          "title": "Utoaji or transfer",
+          "body": "Toa kama USDC au USDT kwenye anwani yako iliyohifadhiwa, au tuma salio la USD mara moja kwa mtumiaji mwingine wa StackPay."
+        }
+      ]
+    },
+    "features": {
+      "label": "Features",
+      "title": "Everything in one app",
+      "subtitle": "Malipo, uwekezaji, mialiko, mikopo, uhamisho, utoaji na jumuiya — yameundwa kufanya kazi pamoja.",
+      "items": [
+        {
+          "title": "Crypto payments",
+          "body": "Kubali na tuma crypto kutoka pochi yoyote. Kila malipo yanapata anwani ya kipekee ya HD na ukusanyaji wa kiotomatiki wa fedha.",
+          "tags": [
+            "Pochi yoyote",
+            "Auto-sweep",
+            "HD pochis"
+          ]
+        },
+        {
+          "title": "Uwekezaji packages",
+          "body": "Weka salio lako la USD katika vifurushi vya viwango na upate mapato ya kila siku. Fuata uwekezaji hai kwenye kwingineko yako.",
+          "tags": [
+            "Daily mapato",
+            "Multiple tiers",
+            "Kwingineko"
+          ]
+        },
+        {
+          "title": "Utoaji to pochi",
+          "body": "Badilisha salio kuwa USDC au USDT kwenye Ethereum, Polygon, BSC, Arbitrum, Base, Optimism au Avalanche. Anwani yako ya pochi imehifadhiwa kwa mara ijayo.",
+          "tags": [
+            "USDC · USDT",
+            "Minyororo mingi",
+            "Hifadhid pochi"
+          ]
+        },
+        {
+          "title": "Instant transfers",
+          "body": "Hamisha salio la USD kwa mwanachama yeyote wa StackPay mara moja — uhamisho wa ndani bila malipo kati ya akaunti.",
+          "tags": [
+            "Peer-to-peer",
+            "Instant",
+            "Hakuna fees"
+          ]
+        },
+        {
+          "title": "Mialiko program",
+          "body": "Kila mwanachama anapata nambari ya mialiko ya kibinafsi. Pata kamisheni mtu uliyemwalika anapowekeza kifurushi chake cha kwanza.",
+          "tags": [
+            "Invite link",
+            "Kamisheni",
+            "Referral tracking"
+          ]
+        },
+        {
+          "title": "Mkopo program",
+          "body": "Wanachama wanaostahiki wanaweza kukopa 75% ya uwekezaji wao hai. Malipo yanafanywa kiotomatiki kutoka mapato ya kila siku na riba ya 25%.",
+          "tags": [
+            "75% advance",
+            "Auto-repay",
+            "Eligibility rules"
+          ]
+        },
+        {
+          "title": "Jumuiya",
+          "body": "Jiunge na vituo, ongea na wanachama, tuma ujumbe wa moja kwa moja na ubaki umeunganishwa unapokua salio lako.",
+          "tags": [
+            "Channels",
+            "DMs",
+            "Real-time"
+          ]
+        },
+        {
+          "title": "Sakinisha as app",
+          "body": "Ongeza StackPay kwenye skrini ya nyumbani kwenye iPhone au Android. Skrini kamili, mpangilio thabiti — inafanya kazi kama programu asilia ya simu.",
+          "tags": [
+            "PWA",
+            "Home screen",
+            "Offline shell"
+          ]
+        }
+      ]
+    },
+    "networks": {
+      "label": "Mtandaos",
+      "title": "Multi-chain by default",
+      "body": "Lipa na toa kwenye mitandao mikuu ya EVM. Kila malipo huhifadhi mnyororo na tokeni — ufuatiliaji na malipo hufanyika kwenye mtandao sahihi kiotomatiki.",
+      "list": [
+        "Ethereum",
+        "Polygon",
+        "BNB Chain",
+        "Arbitrum",
+        "Optimism",
+        "Base",
+        "Avalanche",
+        "Sepolia"
+      ]
+    },
+    "balance": {
+      "label": "Salio",
+      "title": "One USD balance, many actions",
+      "items": [
+        "Incoming crypto payments credit yako balance after confirmation",
+        "Kifurushi uwekezajis and daily mapato update yako available USD",
+        "Referral kamishenis and mkopo advances flow into the same pochi",
+        "Utoaji USDC/USDT or transfer to another StackPay user anytime",
+        "Mkopo repayments deduct automatically from daily mapato"
+      ]
+    },
+    "testimonials": {
+      "label": "What customers say",
+      "title": "Trusted by StackPay mwanachamas",
+      "averageFrom": "average from {{count}} mwanachama maonis",
+      "loading": "Inapakia maonis...",
+      "empty": "Member maonis will appear here soon.",
+      "starRating": "{{rating}} out of 5 stars"
+    },
+    "communityTeam": {
+      "label": "Jumuiya teams",
+      "title": "A team structure built to support you",
+      "body": "StackPay inaendeshwa na timu ya jumuiya iliyojitolea — na majukumu wazi ya msaada, ukuaji na mafanikio ya wanachama. Picha za wasifu zinaonekana katika vituo, ujumbe wa moja kwa moja na timu za mialiko.",
+      "bullets": [
+        "Dedicated jukumus for community leadership",
+        "Profile images in chat, DMs, and referral teams",
+        "Simamiad team shown on the landing page"
+      ],
+      "leadershipLabel": "leadership team",
+      "loadingTeam": "Inapakia team...",
+      "emptyTeam": "Our community team will be listed here soon."
+    },
+    "cta": {
+      "eyebrow": "Ready to start?",
+      "title": "Join StackPay today",
+      "body": "Unda akaunti yako kwa dakika chache. Wekeza kwa crypto, chagua kifurushi, na anza kujilimbikizia mapato — kwenye wavuti au kama programu ya simu.",
+      "signUpFree": "Jisajili bure"
+    }
+  },
+  "dashboard": {
+    "title": "Dashibodi",
+    "label": "muhtasari",
+    "description": "Takwimu hai · husasishwa kila sekunde 15",
+    "withdraw": "Utoaji",
+    "transfer": "Uhamisho",
+    "newPayment": "Malipo mapya",
+    "accountBalance": "salio la akaunti",
+    "available": "Inapatikana",
+    "totalPaid": "Jumla iliyolipwa",
+    "invested": "Imewekezwa",
+    "confirmedPayments": "Malipo yaliyothibitishwa",
+    "balanceHint": "Zote networks and tokenis are converted to USD when a payment is confirmed.",
+    "statistics": "takwimu",
+    "total": "Jumla",
+    "today": "Leo",
+    "pending": "Inasubiri",
+    "confirmed": "Imethibitishwa",
+    "success": "Mafanikio",
+    "volume": "kiasi",
+    "requests": "Requests",
+    "totalAmount": "Jumla amount",
+    "confirmedUsd": "Imethibitishwa (USD)",
+    "byNetwork": "by network",
+    "byToken": "by tokeni",
+    "recentPayments": "ya hivi karibuni payments",
+    "noPaymentsYet": "Hakuna payments yet —"
+  },
+  "home": {
+    "title": "Malipo mapya",
+    "label": "Unda",
+    "description": "Ombi la malipo ya crypto · {{userId}}",
+    "network": "Mtandao",
+    "token": "Tokeni",
+    "amount": "Kiasi",
+    "selectNetwork": "Chagua network",
+    "selectToken": "Chagua tokeni",
+    "chainSublabel": "Chain {{chainId}}",
+    "continueToPayment": "Endelea to Malipo",
+    "howItWorks": "Jinsi inavyofanya kazi",
+    "steps": [
+      "Chagua network, tokeni & amount",
+      "Get a unique amana anwani",
+      "Lipa kutoka pochi yako"
+    ],
+    "selected": "Selected"
+  },
+  "payments": {
+    "title": "Malipos",
+    "label": "simamia",
+    "description": "Zote yako payment maombi · refreshes every 15s",
+    "recent": "Recent",
+    "newPayment": "Malipo mapya",
+    "total": "Jumla",
+    "pending": "Inasubiri",
+    "completed": "Imekamilika",
+    "emptyTitle": "Hakuna payments yet",
+    "emptyDescription": "Unda yako ya kwanza crypto payment to get started.",
+    "createPayment": "Unda malipo"
+  },
+  "payment": {
+    "title": "Malipo",
+    "description": "{{network}} · {{symbol}}",
+    "backToPayments": "← Rudi to payments",
+    "steps": {
+      "create": "Unda",
+      "send": "Send",
+      "confirm": "Confirm"
+    },
+    "wrongNetwork": "wrong network",
+    "requested": "requested",
+    "received": "received {{amount}} {{symbol}}",
+    "name": "Name",
+    "email": "Barua pepe",
+    "depositAddress": "amana anwani",
+    "viewOnExplorer": "Angalia on explorer →",
+    "paymentReceived": "Malipo yamepokelewa",
+    "viewTransaction": "Angalia transaction →",
+    "switchNetwork": "Badilisha pochi yako kwenda {{network}} kabla ya kulipa.",
+    "connectWallet": "Unganisha pochi",
+    "connected": "Connected",
+    "balance": "Salio:",
+    "needAtLeast": "Need at least {{amount}} {{symbol}} on {{network}}",
+    "pay": "Pay {{amount}} {{symbol}}",
+    "tx": "Tx:",
+    "balanceUpdates": "Salio updates every 10s",
+    "balanceError": "Could si refresh amana balance. Malipo details are still valid."
+  },
+  "transfer": {
+    "title": "Tuma pesa",
+    "label": "pochi transfer",
+    "description": "Move USD from yako balance to another StackPay user — instant and free",
+    "withdraw": "Utoaji",
+    "dashboard": "Dashibodi",
+    "availableToSend": "available to send",
+    "balanceSource": "USD balance · from confirmed crypto amanas",
+    "newTransfer": "Mpya transfer",
+    "formHint": "Complete zote 3 steps, then maoni and send",
+    "step1Title": "Who are you sending to?",
+    "step1Hint": "Use @username (recommended), barua pepe, or simu",
+    "usernamePlaceholder": "@username",
+    "findUser": "Find user",
+    "change": "Change",
+    "recipientConfirmed": "Recipient confirmed — ready for step 2",
+    "step2Title": "How much?",
+    "step2Hint": "Ingiza amount in USD",
+    "sendAll": "Tuma zote (${{amount}})",
+    "notEnoughBalance": "Si enough balance — you only have ${{amount}}",
+    "step3Title": "Ongeza a note",
+    "step3Hint": "Si lazima — visible in transfer historia",
+    "notePlaceholder": "e.g. Thanks for the help",
+    "review": "maoni before sending",
+    "to": "To",
+    "amount": "Kiasi",
+    "balanceAfter": "Yako balance after",
+    "note": "Note",
+    "sendButton": "Tuma ${{amount}} to {{recipient}}",
+    "enterValidAmount": "Ingiza a valid amount to continue",
+    "findRecipientFirst": "Find a recipient first",
+    "receiveMoney": "receive money",
+    "shareUsername": "Shiriki yako username so others can tuma you funds:",
+    "copy": "Nakili",
+    "copied": "Imenakiliwa!",
+    "howItWorks": "how it works",
+    "howSteps": [
+      {
+        "title": "Find the user",
+        "body": "Ingiza their @username and tap Find user"
+      },
+      {
+        "title": "Chagua amount",
+        "body": "Pick a preset or type any amount up to yako balance"
+      },
+      {
+        "title": "Confirm & send",
+        "body": "Maoni the summary, then tuma — funds arrive instantly"
+      }
+    ],
+    "balanceBreakdown": "balance breakdown",
+    "totalReceived": "Jumla received",
+    "totalSentSpent": "Jumla sent / spent",
+    "availableNow": "Inapatikana now",
+    "transferHistory": "transfer historia",
+    "historyHint": "Zote money you sent and received",
+    "records": "{{count}} record",
+    "records_plural": "{{count}} records",
+    "noTransfers": "Hakuna transfers yet",
+    "noTransfersHint": "Yako sent and received transfers will appear here",
+    "sentTo": "Sent to",
+    "receivedFrom": "Received from",
+    "directionSent": "sent",
+    "directionReceived": "received",
+    "successMessage": "Mafanikiofully sent ${{amount}} to {{label}}"
+  },
+  "withdraw": {
+    "title": "Utoaji",
+    "label": "pochi",
+    "description": "Cash out USD balance to yako crypto pochi as USDC or USDT",
+    "transfer": "Uhamisho",
+    "dashboard": "Dashibodi",
+    "availableToWithdraw": "available to withdraw",
+    "minMax": "Min ${{min}} · Max ${{max}} per request",
+    "withdrawToWallet": "Utoaji to pochi",
+    "formHint": "Chagua network, tokeni, amount, and yako pochi anwani",
+    "step1Title": "Chagua network",
+    "step1Hint": "Where you want to receive crypto",
+    "step2Title": "Chagua tokeni",
+    "step2Hint": "Stablecoins — 1 USD ≈ 1 tokeni",
+    "step3Title": "How much USD?",
+    "step3Hint": "You receive ~{{amount}} {{tokeni}}",
+    "step4Title": "Yako pochi anwani",
+    "step4Hint": "Must match the network above (0x…)",
+    "savedWallet": "saved pochi",
+    "tapToUseSaved": "Tap to use saved anwani",
+    "addressPlaceholder": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+    "paste": "Paste",
+    "saveWallet": "Hifadhi pochi for next time",
+    "savedForNext": "Hifadhid for next utoaji",
+    "removeSaved": "Ondoa saved",
+    "invalidAddress": "Ingiza a valid EVM anwani (42 characters starting with 0x)",
+    "amountRangeError": "Ingiza between ${{min}} and ${{max}}",
+    "withdrawAll": "Utoaji zote (${{amount}})",
+    "review": "maoni",
+    "youReceive": "You receive",
+    "toAddress": "To anwani",
+    "balanceAfter": "Salio after",
+    "submitReady": "Utoaji ${{amount}} as {{tokeni}}",
+    "enterValidAddress": "Ingiza a valid pochi anwani",
+    "enterValidAmount": "Ingiza a valid amount",
+    "completeSteps": "Complete the steps above",
+    "withdrawOptions": "withdraw options",
+    "options": [
+      "USDC and USDT on major networks",
+      "1 USD balance = 1 stablecoin tokeni",
+      "Processed automatically within minutes",
+      "Imeshindwa utoajis are refunded to balance"
+    ],
+    "balanceBreakdown": "balance breakdown",
+    "totalReceived": "Jumla received",
+    "totalSpent": "Jumla spent",
+    "available": "Inapatikana",
+    "alsoAvailable": "also available",
+    "sendToUser": "→ Tuma to another StackPay user",
+    "withdrawalHistory": "utoaji historia",
+    "historyHint": "Status updates automatically",
+    "noWithdrawals": "Hakuna utoajis yet",
+    "noWithdrawalsHint": "Yako utoaji maombi will appear here",
+    "viewTx": "Angalia tx",
+    "inQueue": "In queue…",
+    "balanceRefunded": " — balance refunded",
+    "walletSaved": "Pochi saved for yako next utoaji.",
+    "walletRemoved": "Hifadhid pochi removed.",
+    "pasteError": "Could si paste from clipboard. Paste manually into the field.",
+    "queuedSuccess": "Utoajial queued — ${{amountUsd}} as {{tokeniKiasi}} {{tokeniSymbol}} on {{networkName}}"
+  },
+  "packages": {
+    "title": "Uwekezaji Kifurushis",
+    "label": "Invest",
+    "description": "Chagua a package and invest from yako USD balance",
+    "myPortfolio": "My Kwingineko",
+    "availableBalance": "Inapatikana balance",
+    "dailyIncome": "Daily mapato",
+    "active": "Hai",
+    "invested": "Imewekezwa",
+    "totalEarned": "Jumla earned",
+    "allTimeInvested": "All-time invested",
+    "eligibleForYou": "stahiki for you",
+    "noPackagesBalance": "Hakuna packages available yet — yako balance is ${{balance}} USD.",
+    "increaseBalance": "Make a payment to increase yako balance and unlock packages below.",
+    "makePayment": "Make a Malipo",
+    "noActivePackages": "Hakuna active packages available right now. Check rudi later.",
+    "allPackages": "zote packages",
+    "needMoreBalance": "need more balance",
+    "needMore": "Need ${{amount}} more",
+    "minDaily": "Min ${{min}} USD · {{rate}}% daily",
+    "customAmount": "custom amount · {{name}}",
+    "earnPerDay": "you will earn per day",
+    "perDay": "/ day",
+    "basedOnAmount": "Based on ${{amount}} at {{rate}}% daily",
+    "atMinimum": "At minimum ${{min}} · {{rate}}% daily",
+    "availableMinMax": "Inapatikana: ${{available}} USD · Min ${{min}}{{max}}",
+    "maxSuffix": " · Max ${{max}}",
+    "insufficientBalance": "Insufficient balance. You need ${{needed}} but have ${{available}} USD.",
+    "activateInvestment": "Activate Uwekezaji",
+    "activatedSuccess": "Kifurushi activated. Daily mapato starts accruing from tomorrow.",
+    "eligible": "stahiki",
+    "locked": "imefungwa",
+    "daily": "daily",
+    "investAmount": "Invest amount",
+    "duration": "Muda",
+    "days": "{{count}} days",
+    "activate": "Activate · ${{amount}}",
+    "dailyReturn": "daily return · {{days}} days",
+    "atMin": "at min",
+    "fromUsd": "from ${{amount}} USD",
+    "needMoreShort": " · need ${{amount}} more"
+  },
+  "portfolio": {
+    "title": "My Kwingineko",
+    "label": "Mapato",
+    "description": "Yako active uwekezajis and daily mapato historia · refreshes every 30s",
+    "browsePackages": "Browse Kifurushis",
+    "dailyIncome": "Daily mapato",
+    "activePackages": "Hai packages",
+    "activeInvested": "Hai invested",
+    "investments": "uwekezajis",
+    "emptyTitle": "Hakuna uwekezajis yet",
+    "emptyDescription": "Chagua a package and start earning daily mapato.",
+    "daysLeft": "{{rate}}% daily · {{days}} days left",
+    "earned": "+{{amount}} earned",
+    "started": "Started",
+    "ends": "Ends",
+    "lastAccrual": "Last accrual",
+    "pending": "Inasubiri",
+    "incomeHistory": "daily mapato historia",
+    "incomeEmpty": "Mapato accrues daily after yako ya kwanza full day. Check rudi tomorrow.",
+    "package": "Kifurushi",
+    "statusActive": "active",
+    "statusCompleted": "completed",
+    "statusCancelled": "imefutwa"
+  },
+  "referrals": {
+    "title": "Mialiko",
+    "label": "referrals",
+    "description": "Earn {{percent}}% when someone you invite buys their ya kwanza package",
+    "invitationCode": "yako mialiko code",
+    "copyCode": "Nakili code",
+    "shareLink": "shiriki link",
+    "copyLink": "Nakili link",
+    "howItWorks": "Mpya watumiaji ingiza yako code when signing up. When they invest in their ya kwanza package, you receive {{percent}}% of that uwekezaji amount as USD balance.",
+    "invitedBy": "you were invited by",
+    "aMember": "A mwanachama",
+    "codeLabel": "Code: {{code}}",
+    "earnings": "mapato",
+    "invited": "Invited",
+    "paidReferrals": "Paid referrals",
+    "totalEarned": "Jumla earned",
+    "invitedUsers": "invited watumiaji",
+    "noInvitees": "Hakuna one has signed up with yako code yet. Shiriki yako link to invite friends.",
+    "joined": "Joined",
+    "yourEarn": "Yako earn",
+    "statusEarned": "Kamisheni paid",
+    "statusInvested": "Imewekezwa",
+    "statusAwaiting": "Awaiting ya kwanza package",
+    "commissionHistory": "kamisheni historia",
+    "noCommissions": "Hakuna kamishenis yet. Shiriki yako code to start earning.",
+    "firstPackage": "Ya kwanza package · ${{amount}} · {{percent}}%",
+    "userFallback": "Mtumiaji"
+  },
+  "loans": {
+    "title": "Mkopo Program",
+    "label": "finance",
+    "description": "Borrow against yako package uwekezaji — repaid automatically from daily mapato",
+    "portfolio": "Kwingineko",
+    "acceptTermsError": "Please accept the mkopo masharti",
+    "approvedSuccess": "Mkopo idhinishad! ${{amount}} credited to yako balance.",
+    "activeLoan": "active mkopo",
+    "remainingOf": "remaining of ${{total}} total",
+    "repaidProgress": "{{percent}}% repaid · ${{paid}} paid",
+    "principal": "Principal",
+    "interest": "Interest ({{rate}}%)",
+    "basedOnInvestment": "Based on uwekezaji",
+    "disbursed": "Disbursed",
+    "earningsApplied": "Yako daily package mapato are applied to this mkopo until it is fully cleared.",
+    "loanOffer": "mkopo offer",
+    "canBorrow": "You can borrow",
+    "interest25": "Interest (25%)",
+    "totalToRepay": "Jumla to repay",
+    "offerDetail": "{{principalPercent}}% of yako active uwekezaji (${{uwekezaji}}) + {{interestPercent}}% interest",
+    "eligibility": "eligibility",
+    "qualifiedInvitees": "qualified invitees ({{count}})",
+    "noInvitees": "Hakuna invitees yet. Shiriki yako code on the Mialiko page.",
+    "invitationsLink": "Mialiko",
+    "hasPackage": "Has package",
+    "noPackage": "Hakuna package",
+    "terms": "masharti",
+    "termsBody": "I agree that zote daily package mapato will be applied to repay my mkopo (principal + {{interestPercent}}% interest) until the full amount of ${{totalOwed}} is cleared. The mkopo principal of ${{principal}} will be credited to my USD balance immediately.",
+    "acceptCheckbox": "I accept these mkopo masharti",
+    "applyFor": "Apply for ${{amount}} mkopo",
+    "balanceAfterApproval": "Inapatikana balance after approval: ${{before}} → ${{after}}",
+    "loanHistory": "mkopo historia",
+    "borrowed": "${{amount}} borrowed",
+    "repayDetail": "Repay ${{total}} · {{date}}",
+    "recentRepayments": "ya hivi karibuni repayments from mapato",
+    "statusPaid": "PAID",
+    "statusActive": "ACTIVE"
+  },
+  "community": {
+    "title": "Jumuiya",
+    "label": "workspace",
+    "description": "Channels for everyone · reactions · reply privately in DMs"
+  },
+  "networks": {
+    "title": "Mtandaos",
+    "labelPlatform": "Jukwaa",
+    "labelSupported": "Inayotumika",
+    "descriptionAdmin": "{{networks}} EVM networks · {{tokenis}} tokenis configured",
+    "descriptionUser": "{{networks}} networks · {{tokenis}} tokenis you can accept",
+    "tokens": "tokenis",
+    "chainInfo": "Chain {{chainId}} · {{nativeSymbol}}",
+    "blockExplorer": "block explorer →"
+  },
+  "register": {
+    "title": "Unda akaunti",
+    "subtitle": "Sign up with barua pepe, simu, or both",
+    "alreadyHaveAccount": "Already have an akaunti?",
+    "signIn": "Ingia",
+    "termsOfUse": "Masharti ya matumizi",
+    "privacyPolicy": "Sera ya faragha",
+    "name": "Name",
+    "namePlaceholder": "Yako name",
+    "email": "Barua pepe",
+    "emailPlaceholder": "you@example.com",
+    "phone": "Simu",
+    "phoneHint": "At least one of barua pepe or simu is inahitajika",
+    "invitationCode": "Mialiko code (si lazima)",
+    "invitationPlaceholder": "Ingiza a friend's code",
+    "invitedBy": "Invited by {{name}}",
+    "member": "mwanachama",
+    "password": "Nenosiri",
+    "confirmPassword": "Confirm nenosiri",
+    "legalAgreement": "I agree to the Masharti of Use and Faragha Policy.",
+    "createAccount": "Unda akaunti",
+    "errors": {
+      "contactRequired": "Ingiza an barua pepe anwani, simu number, or both",
+      "passwordMismatch": "Nenosiris do si match",
+      "fixInviteCode": "Fix the mialiko code before continuing",
+      "legalRequired": "You must accept the Masharti of Use and Faragha Policy to create an akaunti"
+    }
+  },
+  "admin": {
+    "title": "Mfumo Dashibodi",
+    "label": "Msimamizi",
+    "description": "Live muhtasari · refreshes every 20s · uptime {{uptime}}",
+    "sweepConfirmed": "Sweep {{count}} Imethibitishwa",
+    "sweepComplete": "Sweep complete: {{count}} payment(s) swept to treasury",
+    "overview": "Overview",
+    "users": "Mtumiajis",
+    "admins": "Msimamizis",
+    "payments": "Malipos",
+    "today": "Leo",
+    "pending": "Inasubiri",
+    "confirmed": "Imethibitishwa",
+    "swept": "Imekusanywa",
+    "successRate": "Mafanikio %",
+    "platformWallets": "Jukwaa Pochis",
+    "treasury": "Treasury (collects funds)",
+    "gasFunder": "Gas funder (index 0)",
+    "walletsGenerated": "Amana pochis generated",
+    "systemConfiguration": "Mfumo Configuration",
+    "defaultNetwork": "Default network",
+    "defaultChainId": "Default chain ID",
+    "balancePollInterval": "Salio poll interval",
+    "autoSweepInterval": "Auto-sweep interval",
+    "frontendUrl": "Frontend URL",
+    "serverStarted": "Server started",
+    "volume": "Volume",
+    "totalRequests": "Jumla maombi",
+    "approxTotalAmount": "Approx. total amount",
+    "confirmedSwept": "Imethibitishwa + swept",
+    "byNetwork": "By Mtandao",
+    "byToken": "By Tokeni",
+    "noPaymentsYet": "Hakuna payments yet",
+    "paymentsCount": "{{count}} payments",
+    "supportedNetworks": "Inayotumika Mtandaos ({{count}})",
+    "networkMeta": "{{native}} · {{tokenis}} tokenis · ID {{chainId}}",
+    "recentPayments": "Ya hivi karibuni Malipos",
+    "registeredUsers": "Registered Mtumiajis ({{count}})",
+    "email": "Barua pepe",
+    "phone": "Simu",
+    "name": "Name",
+    "joined": "Joined",
+    "deposit": "Amana",
+    "created": "Undad",
+    "paymentsLabel": "{{count}} payments",
+    "systemDashboard": "Mfumo Dashibodi",
+    "usersPage": {
+      "title": "Mtumiajis",
+      "label": "msimamizi · akauntis",
+      "description": "Zote registered akauntis · refreshes every 20s",
+      "total": "Jumla",
+      "withPayments": "With payments",
+      "role": "jukumu",
+      "search": "tafuta",
+      "searchPlaceholder": "barua pepe, simu, name…",
+      "emptyTitle": "Hakuna watumiaji found",
+      "emptyFiltered": "Try a different tafuta term or jukumu filter.",
+      "emptyDefault": "Hakuna watumiaji registered yet.",
+      "account": "Akaunti",
+      "roleHeader": "Role",
+      "roleAll": "zote",
+      "roleUsers": "watumiaji",
+      "roleAdmins": "msimamizis"
+    },
+    "packagesPage": {
+      "title": "Simamia Kifurushis",
+      "label": "msimamizi · uwekezajis",
+      "description": "Maelezo",
+      "newPackage": "Mpya Kifurushi",
+      "editPackage": "edit package",
+      "newPackageForm": "mpya package",
+      "name": "Name",
+      "slug": "Slug",
+      "slugPlaceholder": "auto from name",
+      "minAmount": "Min amount (USDT)",
+      "maxAmount": "Max amount (USDT)",
+      "maxPlaceholder": "leave empty for unlimited",
+      "dailyRate": "Daily rate (%)",
+      "durationDays": "Muda (days)",
+      "badgeColor": "Badge color",
+      "sortOrder": "Sort order",
+      "activeVisible": "Hai (visible to watumiaji)",
+      "saveChanges": "Hifadhi changes",
+      "createPackage": "Unda package",
+      "cancel": "Ghairi",
+      "allPackages": "zote packages ({{count}})",
+      "emptyTitle": "Hakuna packages yet",
+      "emptyDescription": "Unda yako ya kwanza uwekezaji package.",
+      "package": "Kifurushi",
+      "rate": "Rate",
+      "range": "Range",
+      "duration": "Muda",
+      "investments": "Uwekezajis",
+      "actions": "Actions",
+      "edit": "Hariri",
+      "deactivate": "Deactivate",
+      "activate": "Activate",
+      "statusActive": "active",
+      "statusInactive": "inactive",
+      "updated": "Kifurushi updated.",
+      "created": "Kifurushi created."
+    },
+    "referralsPage": {
+      "title": "Referral Program",
+      "label": "Msimamizi",
+      "description": "Configure mialiko kamisheni on ya kwanza package purchase",
+      "overview": "muhtasari",
+      "signupsWithInvite": "Signups w/ invite",
+      "commissionsPaid": "Kamishenis paid",
+      "totalPaidOut": "Jumla paid out",
+      "commissionRate": "kamisheni rate",
+      "firstPackageCommission": "Ya kwanza package kamisheni (%)",
+      "commissionHint": "Inviters earn this percentage of the invitee's ya kwanza package uwekezaji (USD).",
+      "saveRate": "Hifadhi rate",
+      "rateUpdated": "Kamisheni rate updated to {{percent}}%",
+      "recentCommissions": "ya hivi karibuni kamishenis",
+      "inviter": "Inviter",
+      "invitee": "Invitee",
+      "packageAmount": "Kifurushi $",
+      "rate": "Rate",
+      "earned": "Earned",
+      "noCommissions": "Hakuna kamishenis yet"
+    },
+    "recentPaymentsPage": {
+      "title": "Ya hivi karibuni Malipos",
+      "label": "msimamizi · zote watumiaji",
+      "description": "Jukwaa-wide payment shughuli · refreshes every 15s",
+      "inRange": "In range",
+      "users": "Mtumiajis",
+      "emptyTitle": "Hakuna payments found",
+      "emptyDescription": "Hakuna jukwaa payments match the current filters."
+    },
+    "testimonialsPage": {
+      "title": "Member Maonis",
+      "label": "Msimamizi",
+      "description": "Idhinisha public maonis submitted from the landing page",
+      "pendingApproval": "pending approval ({{count}})",
+      "noPending": "Hakuna pending maonis",
+      "pendingHint": "Public submissions will appear here for approval.",
+      "published": "imechapishwa ({{count}})",
+      "noPublished": "Hakuna imechapishwa maonis",
+      "approve": "Idhinisha",
+      "hide": "Hide",
+      "delete": "Futa",
+      "approved": "Idhinishad maoni from {{name}}",
+      "hidden": "Hidden maoni from {{name}}",
+      "deleted": "Futad maoni from {{name}}",
+      "deleteConfirm": "Futa maoni from {{name}}?",
+      "badgePublic": "public",
+      "badgePending": "pending"
+    },
+    "showcaseTeamPage": {
+      "title": "Landing Page Team",
+      "label": "Msimamizi",
+      "description": "Simamia the Jumuiya teams section on the public landing page",
+      "addMember": "Ongeza mwanachama",
+      "editMember": "edit mwanachama",
+      "newMember": "mpya mwanachama",
+      "name": "Name",
+      "roleTitle": "Role / title",
+      "rolePlaceholder": "Jumuiya Lead",
+      "avatarUrl": "Profile image URL (si lazima)",
+      "avatarPlaceholder": "https://...",
+      "sortOrder": "Sort order",
+      "visibleOnLanding": "Visible on landing page",
+      "saveChanges": "Hifadhi changes",
+      "addMemberBtn": "Ongeza mwanachama",
+      "cancel": "Ghairi",
+      "teamStructure": "team structure",
+      "emptyTitle": "Hakuna team mwanachamas yet",
+      "emptyDescription": "Ongeza people to onyesha on the landing page.",
+      "order": "order {{order}}",
+      "hidden": "hidden",
+      "edit": "Hariri",
+      "hide": "Hide",
+      "show": "Show",
+      "remove": "Remove",
+      "updated": "Team mwanachama updated",
+      "added": "Team mwanachama added",
+      "removed": "{{name}} removed",
+      "removeConfirm": "Ondoa {{name}} from the landing page team?"
+    }
+  },
+  "legal": {
+    "privacy": {
+      "title": "Sera ya faragha",
+      "lastUpdated": "August 12, 2026",
+      "intro": "Sera hii ya faragha inaeleza jinsi StackPay (\"sisi\") inavyokusanya, kutumia, kuhifadhi na kushiriki taarifa unapotumia tovuti yetu, programu na huduma husika (\"Huduma\").",
+      "s1": {
+        "title": "1. Information we collect",
+        "paragraphs": [
+          "Akaunti information: name, barua pepe anwani, simu number, username, nenosiri hash, profile image URL, and mialiko or referral relationships.",
+          "Usage and device data: app interactions, session tokenis, theme preferences, cookie consent choices, and technical logs such as IP anwani, browser type, and timestamps.",
+          "Transaction data: payment maombi, amana anwanies, blockchain transaction hashes, balances, package uwekezajis, utoajis, transfers, mkopos, and referral kamishenis.",
+          "Jumuiya content: messages, reactions, and profile information you chagua to shiriki in channels or direct messages."
+        ]
+      },
+      "s2": {
+        "title": "2. How we use information",
+        "intro": "We use collected information to:",
+        "list": [
+          "create and secure yako akaunti;",
+          "process payments, uwekezajis, utoajis, and referrals;",
+          "provide community and support features;",
+          "prevent fraud, abuse, and unauthorized access;",
+          "improve reliability, performance, and user experience;",
+          "comply with legal obligations and enforce our Masharti of Use."
+        ]
+      },
+      "s3": {
+        "title": "3. Cookies and local storage",
+        "body": "We use cookies and local storage to keep you signed in, remwanachama preferences such as theme, and store cookie consent choices. You can simamia non-essential cookies through the consent banner. Some features require essential storage to function."
+      },
+      "s4": {
+        "title": "4. How we shiriki information",
+        "body": "We do si sell yako personal information. We may shiriki data with service providers that help us operate the jukwaa (hosting, database, analytics), when inahitajika by law, to protect rights and safety, or in connection with a business transfer. Blockchain transaction data you submit is public by nature on the relevant network."
+      },
+      "s5": {
+        "title": "5. Data retention",
+        "body": "We retain akaunti and transaction records for as long as needed to provide the Service, meet legal and akauntiing requirements, resolve disputes, and enforce agreements. You may request akaunti deletion subject to legal retention obligations."
+      },
+      "s6": {
+        "title": "6. Security",
+        "body": "We use msimamiziistrative, technical, and organizational measures designed to protect yako information, including nenosiri hashing and access controls. Hakuna method of transmission or storage is completely secure, and you are responsible for safeguarding yako login credentials."
+      },
+      "s7": {
+        "title": "7. Yako choices",
+        "body": "You may update profile details in Settings, simamia cookie preferences through our consent banner, and contact us regarding access, correction, or deletion maombi where applicable law provides those rights."
+      },
+      "s8": {
+        "title": "8. International watumiaji",
+        "body": "If you access the Service from outside the country where our servers are located, yako information may be processed in jurisdictions with different data protection laws."
+      },
+      "s9": {
+        "title": "9. Children",
+        "body": "The Service is si intended for watumiaji under 18. We do si knowingly collect personal information from children."
+      },
+      "s10": {
+        "title": "10. Changes to this policy",
+        "body": "We may update this Faragha Policy from time to time. The \"Last updated\" date at the top of this page will reflect the latest version. Continued use of the Service after changes become effective constitutes acceptance of the updated policy."
+      }
+    },
+    "terms": {
+      "title": "Masharti ya matumizi",
+      "lastUpdated": "August 12, 2026",
+      "intro": "Masharti haya ya matumizi (\"Masharti\") yanasimamia ufikiaji wako na matumizi ya StackPay, ikiwa ni pamoja na tovuti yetu, programu, zana za malipo, vifurushi, programu ya mialiko, mikopo, vipengele vya jumuiya na huduma husika (\"Huduma\"). Kwa kuunda akaunti, unakubali Masharti haya.",
+      "s1": {
+        "title": "1. Eligibility",
+        "body": "You must be at least 18 years old and legally able to ingiza into a binding agreement. You are responsible for ensuring that yako use of the Service complies with applicable laws in yako jurisdiction, including rules related to digital assets, financial services, and taxation."
+      },
+      "s2": {
+        "title": "2. Akaunti registration",
+        "body": "You agree to provide accurate information when creating an akaunti and to keep yako credentials secure. You are responsible for zote shughuli under yako akaunti. We may suspend or terminate akauntis that violate these Masharti or pose a security or legal risk."
+      },
+      "s3": {
+        "title": "3. Crypto payments and balances",
+        "paragraphs": [
+          "StackPay facilitates crypto payments and tracks USD-denominated balances within the jukwaa. Blockchain transactions are irreversible once confirmed. You are solely responsible for verifying pochi anwanies, networks, and tokeni types before sending funds.",
+          "Displayed rates, balances, and confirmations depend on network conditions and third-party data sources. We do si guarantee uninterrupted availability of any blockchain network."
+        ]
+      },
+      "s4": {
+        "title": "4. Uwekezaji packages and mapato",
+        "paragraphs": [
+          "Uwekezaji packages, projected returns, and accrual schedules are jukwaa features subject to change. Past performance does si guarantee future results. Kifurushi masharti, rates, and mudas are shown in the app at the time of purchase.",
+          "You acknowledge that digital asset uwekezajis carry risk, including the risk of partial or total loss of value."
+        ]
+      },
+      "s5": {
+        "title": "5. Mialiko, mkopos, and utoajis",
+        "body": "Referral kamishenis, mkopo masharti, and utoaji inachakatwa are governed by the rules displayed in the Service at the time you use each feature. We may modify program rules, fees, limits, or eligibility with reasonable notice where inahitajika."
+      },
+      "s6": {
+        "title": "6. Jumuiya conduct",
+        "body": "When using community chat, direct messages, or other social features, you agree si to harass others, post unlawful content, attempt fraud, or interfere with the Service. We may ondoa content or restrict access to protect watumiaji and the jukwaa."
+      },
+      "s7": {
+        "title": "7. Prohibited use",
+        "body": "You may si use the Service for money laundering, sanctions evasion, unauthorized access, automated abuse, or any shughuli that violates applicable law. We may cooperate with law enforcement and block suspicious shughuli."
+      },
+      "s8": {
+        "title": "8. Disclaimers",
+        "body": "The Service is provided \"as is\" and \"as available\" without warranties of any kind, to the fullest extent permitted by law. StackPay is si a bank, broker-dealer, or licensed financial adviser unless explicitly stated otherwise in yako jurisdiction."
+      },
+      "s9": {
+        "title": "9. Limitation of liability",
+        "body": "To the maximum extent permitted by law, StackPay and its operators will si be liable for indirect, incidental, special, consequential, or punitive damages, or for losses arising from blockchain failures, user error, unauthorized akaunti access, or third-party services."
+      },
+      "s10": {
+        "title": "10. Changes and contact",
+        "paragraphs": [
+          "We may update these Masharti from time to time. Material changes will be reflected on this page with an updated date. Continued use of the Service after changes become effective constitutes acceptance of the revised Masharti.",
+          "Questions about these Masharti may be directed through the support channels available in the app or to yako jukwaa msimamiziistrator."
+        ]
+      }
+    }
+  },
+  "review": {
+    "rateStackPay": "Kadiria StackPay",
+    "shareExperience": "Shiriki yako experience with visitors",
+    "dialogLabel": "Shiriki yako experience",
+    "close": "Close",
+    "yourRating": "Yako rating",
+    "selectRating": "Chagua rating",
+    "star": "{{count}} star",
+    "stars": "{{count}} stars",
+    "name": "Name",
+    "namePlaceholder": "Yako name",
+    "role": "Role (si lazima)",
+    "rolePlaceholder": "Member, investor...",
+    "yourReview": "Yako maoni",
+    "reviewPlaceholder": "Tell visitors what you think about StackPay...",
+    "charCount": "{{count}}/500 characters",
+    "cancel": "Ghairi",
+    "submit": "Wasilisha maoni"
+  },
+  "pwa": {
+    "ariaLabel": "Sakinisha StackPay app",
+    "title": "Sakinisha StackPay",
+    "iosHint": "Tap Share, then Ongeza to Home Screen for a full-screen app.",
+    "defaultHint": "Ongeza to yako home screen for a fixed, app-like experience.",
+    "install": "Sakinisha",
+    "notNow": "Si sasa"
+  }
+}

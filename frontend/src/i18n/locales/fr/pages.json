@@ -1,0 +1,1025 @@
+{
+  "status": {
+    "pending": "En attente",
+    "confirmed": "Confirmé",
+    "swept": "Collecté",
+    "expired": "Expiré",
+    "processing": "En cours",
+    "completed": "Terminé",
+    "failed": "Échoué",
+    "cancelled": "Annulé",
+    "all": "tout"
+  },
+  "pageCommon": {
+    "retry": "Réessayer",
+    "open": "ouvrir →",
+    "viewAll": "tout voir →",
+    "view": "Voir",
+    "noData": "Aucune donnée",
+    "noDataYet": "Aucune donnée",
+    "chain": "Chaîne",
+    "amount": "Montant",
+    "date": "Date",
+    "time": "Heure",
+    "status": "Statut",
+    "network": "Réseau",
+    "address": "Adresse",
+    "user": "Utilisateur",
+    "create": "Créer",
+    "createOne": "en créer un",
+    "period": "période",
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "usdApprox": "≈ {{amount}} $ USD",
+    "loading": {
+      "dashboard": "chargement du tableau de bord",
+      "payments": "récupération des paiements",
+      "recentPayments": "chargement des paiements récents",
+      "payment": "chargement du paiement",
+      "transfer": "chargement du transfert",
+      "withdraw": "chargement du retrait",
+      "packages": "chargement des forfaits",
+      "portfolio": "chargement du portefeuille",
+      "referrals": "chargement des parrainages",
+      "loan": "chargement du programme de prêt",
+      "networks": "chargement des réseaux",
+      "users": "chargement des utilisateurs",
+      "referralSettings": "chargement des paramètres de parrainage",
+      "platformPayments": "chargement des paiements plateforme",
+      "testimonials": "chargement des avis",
+      "showcaseTeam": "chargement de l'équipe vitrine"
+    }
+  },
+  "landing": {
+    "logIn": "Se connecter",
+    "getStarted": "Commencer",
+    "createFreeAccount": "Créer un compte gratuit",
+    "alreadyHaveAccount": "J'ai déjà un compte",
+    "eyebrow": "Plateforme crypto tout-en-un",
+    "heroTitle1": "Empilez vos gains.",
+    "heroTitle2": "Grandir · retirer · recommencer.",
+    "heroBody": "StackPay combine paiements crypto, forfaits d'investissement, parrainages, prêts et communauté — pour financer, faire croître et retirer votre solde depuis un seul endroit.",
+    "heroTags": {
+      "noCard": "Sans carte bancaire",
+      "multiChain": "Multi-chaînes",
+      "mobileApp": "Application mobile"
+    },
+    "membersJoined": "Rejoignez {{count}} membres déjà sur StackPay",
+    "atAGlance": "En un coup d'œil",
+    "glance": {
+      "payments": {
+        "label": "Paiements",
+        "value": "Portefeuille crypto + adresses uniques"
+      },
+      "packages": {
+        "label": "Forfaits",
+        "value": "Revenu quotidien automatisé"
+      },
+      "withdraw": {
+        "label": "Retrait",
+        "value": "Paiement USDC et USDT"
+      },
+      "referrals": {
+        "label": "Parrainages",
+        "value": "Invitez et gagnez une commission"
+      }
+    },
+    "dashboardHint": "Tableau de bord en direct · portefeuille · suivi des prêts · chat communautaire",
+    "stats": {
+      "label": "Statistiques plateforme",
+      "title": "Grandir avec de vrais membres",
+      "members": {
+        "label": "Membres inscrits",
+        "value": "2.5k+",
+        "hint": "Communauté mondiale"
+      },
+      "investments": {
+        "label": "Investissements actifs",
+        "value": "840+",
+        "hint": "Portefeuilles de forfaits"
+      },
+      "payments": {
+        "label": "Paiements traités",
+        "value": "12k+",
+        "hint": "Confirmés on-chain"
+      },
+      "rating": {
+        "label": "Note des membres",
+        "value": "4.8/5",
+        "hint": "Avis des membres"
+      }
+    },
+    "why": {
+      "label": "Pourquoi StackPay",
+      "title": "Pourquoi nous avons créé cette app",
+      "subtitle": "La plupart des outils crypto s'arrêtent aux paiements. StackPay relie financement, gains, communauté et retrait au même endroit — car faire croître son solde doit être simple, social et reproductible.",
+      "items": [
+        {
+          "title": "Crypto-native, pas crypto-confusing",
+          "body": "Payez avec votre portefeuille crypto, gagnez en solde USD et retirez des stablecoins — sans jongler avec cinq applications différentes."
+        },
+        {
+          "title": "Built to grow with votre network",
+          "body": "Forfaits, parrainages et prêts s'intègrent dans un flux unique pour que vos gains et votre équipe grandissent ensemble."
+        },
+        {
+          "title": "Transparent balance, one portefeuille",
+          "body": "Paiements, revenus quotidiens, commissions de parrainage et activité de prêt alimentent le même solde que vous pouvez suivre à tout moment."
+        },
+        {
+          "title": "Communauté that keeps you in sync",
+          "body": "Canaux, messages privés et photos de profil aident les membres à se coordonner, partager leurs succès et rester actifs dans StackPay."
+        }
+      ]
+    },
+    "flow": {
+      "label": "Le flux",
+      "title": "Comment StackPay fonctionne",
+      "subtitle": "Du premier dépôt crypto aux gains quotidiens et au retrait — chaque étape est intégrée à la plateforme.",
+      "steps": [
+        "Inscription",
+        "Payer en crypto",
+        "Investir",
+        "Gains quotidiens",
+        "Retrait"
+      ]
+    },
+    "howItWorks": {
+      "label": "Étape par étape",
+      "title": "Votre parcours sur StackPay",
+      "items": [
+        {
+          "step": "01",
+          "title": "Créez votre compte",
+          "body": "Inscrivez-vous par e-mail ou téléphone. Les codes d'invitation optionnels vous lient au membre qui vous a invité."
+        },
+        {
+          "step": "02",
+          "title": "Financez en crypto",
+          "body": "Créez une demande de paiement, obtenez une adresse de dépôt unique et payez depuis n'importe quel portefeuille sur plus de 7 réseaux EVM."
+        },
+        {
+          "step": "03",
+          "title": "Investissez et gagnez quotidiennement",
+          "body": "Choisissez un forfait d'investissement, verrouillez votre solde et recevez un revenu quotidien automatique sur votre portefeuille."
+        },
+        {
+          "step": "04",
+          "title": "Développez votre réseau",
+          "body": "Partagez votre lien d'invitation, gagnez une commission quand vos amis investissent et débloquez l'éligibilité au prêt en développant votre équipe."
+        },
+        {
+          "step": "05",
+          "title": "Retirer ou transférer",
+          "body": "Retirez en USDC ou USDT vers votre adresse enregistrée, ou envoyez instantanément votre solde USD à un autre utilisateur StackPay."
+        }
+      ]
+    },
+    "features": {
+      "label": "Fonctionnalités",
+      "title": "Tout dans une seule app",
+      "subtitle": "Paiements, investissement, parrainages, prêts, transferts, retraits et communauté — conçus pour fonctionner ensemble.",
+      "items": [
+        {
+          "title": "Paiements crypto",
+          "body": "Acceptez et envoyez des crypto depuis n'importe quel portefeuille. Chaque paiement reçoit une adresse HD unique avec collecte automatique des fonds.",
+          "tags": [
+            "Tout portefeuille",
+            "Auto-sweep",
+            "HD portefeuilles"
+          ]
+        },
+        {
+          "title": "Forfaits d'investissement",
+          "body": "Placez votre solde USD dans des forfaits par paliers et gagnez des rendements quotidiens. Suivez vos investissements actifs dans votre portefeuille.",
+          "tags": [
+            "Daily revenu",
+            "Multiple tiers",
+            "Portefeuille"
+          ]
+        },
+        {
+          "title": "Retirer vers portefeuille",
+          "body": "Convertissez votre solde en USDC ou USDT sur Ethereum, Polygon, BSC, Arbitrum, Base, Optimism ou Avalanche. Votre adresse est enregistrée pour la prochaine fois.",
+          "tags": [
+            "USDC · USDT",
+            "Multi-chaînes",
+            "Enregistrerd portefeuille"
+          ]
+        },
+        {
+          "title": "Transferts instantanés",
+          "body": "Transférez instantanément votre solde USD à tout membre StackPay — transferts internes gratuits entre comptes.",
+          "tags": [
+            "Peer-to-peer",
+            "Instant",
+            "Aucun fees"
+          ]
+        },
+        {
+          "title": "Programme d'invitation",
+          "body": "Chaque membre reçoit un code d'invitation personnel. Gagnez une commission lorsque votre filleul investit dans son premier forfait.",
+          "tags": [
+            "Invite link",
+            "Commission",
+            "Referral tracking"
+          ]
+        },
+        {
+          "title": "Programme de prêt",
+          "body": "Les membres éligibles peuvent emprunter 75 % de leur investissement actif. Le remboursement se fait automatiquement sur les gains quotidiens avec 25 % d'intérêts.",
+          "tags": [
+            "75% advance",
+            "Auto-repay",
+            "Eligibility rules"
+          ]
+        },
+        {
+          "title": "Communauté",
+          "body": "Rejoignez des canaux, discutez avec les membres, envoyez des messages privés et restez connecté pendant que votre solde grandit.",
+          "tags": [
+            "Channels",
+            "DMs",
+            "Real-time"
+          ]
+        },
+        {
+          "title": "Installer comme app",
+          "body": "Ajoutez StackPay à votre écran d'accueil sur iPhone ou Android. Plein écran, mise en page fixe — comme une application mobile native.",
+          "tags": [
+            "PWA",
+            "Home screen",
+            "Offline shell"
+          ]
+        }
+      ]
+    },
+    "networks": {
+      "label": "Réseaus",
+      "title": "Multi-chaînes par défaut",
+      "body": "Payez et retirez sur les principaux réseaux EVM. Chaque paiement enregistre sa chaîne et son jeton — surveillance et paiements sur le bon réseau automatiquement.",
+      "list": [
+        "Ethereum",
+        "Polygon",
+        "BNB Chain",
+        "Arbitrum",
+        "Optimism",
+        "Base",
+        "Avalanche",
+        "Sepolia"
+      ]
+    },
+    "balance": {
+      "label": "Solde",
+      "title": "Un solde USD, de nombreuses actions",
+      "items": [
+        "Incoming crypto payments credit votre balance after confirmation",
+        "Forfait investissements and daily revenu update votre available USD",
+        "Referral commissions and prêt advances flow into the same portefeuille",
+        "Retrait USDC/USDT or transfer to another StackPay user anytime",
+        "Prêt repayments deduct automatically from daily gains"
+      ]
+    },
+    "testimonials": {
+      "label": "Ce que disent les clients",
+      "title": "Approuvé par les membres StackPay",
+      "averageFrom": "moyenne sur {{count}} avis de membres",
+      "loading": "Chargement des avis...",
+      "empty": "Les avis apparaîtront bientôt ici.",
+      "starRating": "{{rating}} sur 5 étoiles"
+    },
+    "communityTeam": {
+      "label": "Équipes communautaires",
+      "title": "Une structure d'équipe pour vous accompagner",
+      "body": "StackPay est géré par une équipe communautaire dédiée — avec des rôles clairs pour le support, la croissance et la réussite des membres. Les photos de profil apparaissent dans les canaux, messages privés et équipes de parrainage.",
+      "bullets": [
+        "Dedicated rôles for community leadership",
+        "Profile images in chat, DMs, and referral teams",
+        "Gérerd team shown on the landing page"
+      ],
+      "leadershipLabel": "équipe de direction",
+      "loadingTeam": "Chargement de l'équipe...",
+      "emptyTeam": "Notre équipe sera bientôt listée ici."
+    },
+    "cta": {
+      "eyebrow": "Prêt à commencer ?",
+      "title": "Rejoignez StackPay aujourd'hui",
+      "body": "Créez votre compte en quelques minutes. Financez en crypto, choisissez un forfait et commencez à accumuler des gains — sur le web ou en application mobile.",
+      "signUpFree": "Inscription gratuite"
+    }
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "label": "aperçu",
+    "description": "Stats en direct · actualisation toutes les 15 s",
+    "withdraw": "Retrait",
+    "transfer": "Transfert",
+    "newPayment": "Nouveau paiement",
+    "accountBalance": "solde du compte",
+    "available": "Disponible",
+    "totalPaid": "Total payé",
+    "invested": "Investi",
+    "confirmedPayments": "Paiements confirmés",
+    "balanceHint": "Tous les réseaux et jetons sont convertis en USD lors de la confirmation d'un paiement.",
+    "statistics": "statistiques",
+    "total": "Total",
+    "today": "Aujourd'hui",
+    "pending": "En attente",
+    "confirmed": "Confirmé",
+    "success": "Succès",
+    "volume": "volume",
+    "requests": "Requests",
+    "totalAmount": "Total amount",
+    "confirmedUsd": "Confirmé (USD)",
+    "byNetwork": "by network",
+    "byToken": "by jeton",
+    "recentPayments": "paiements récents",
+    "noPaymentsYet": "Aucun paiement —"
+  },
+  "home": {
+    "title": "Nouveau paiement",
+    "label": "Créer",
+    "description": "Demande de paiement crypto · {{userId}}",
+    "network": "Réseau",
+    "token": "Jeton",
+    "amount": "Montant",
+    "selectNetwork": "Sélectionner le réseau",
+    "selectToken": "Sélectionner le jeton",
+    "chainSublabel": "Chaîne {{chainId}}",
+    "continueToPayment": "Continuer vers le paiement",
+    "howItWorks": "Comment ça marche",
+    "steps": [
+      "Choisissez réseau, jeton et montant",
+      "Obtenez une adresse de dépôt unique",
+      "Payez depuis votre portefeuille"
+    ],
+    "selected": "Sélectionné"
+  },
+  "payments": {
+    "title": "Paiements",
+    "label": "gérer",
+    "description": "Toutes vos demandes · actualisation toutes les 15 s",
+    "recent": "Récent",
+    "newPayment": "Nouveau paiement",
+    "total": "Total",
+    "pending": "En attente",
+    "completed": "Terminé",
+    "emptyTitle": "Aucun paiement",
+    "emptyDescription": "Créez votre premier paiement crypto pour commencer.",
+    "createPayment": "Créer un paiement"
+  },
+  "payment": {
+    "title": "Paiement",
+    "description": "{{network}} · {{symbol}}",
+    "backToPayments": "← Retour aux paiements",
+    "steps": {
+      "create": "Créer",
+      "send": "Send",
+      "confirm": "Confirm"
+    },
+    "wrongNetwork": "mauvais réseau",
+    "requested": "demandé",
+    "received": "reçu {{amount}} {{symbol}}",
+    "name": "Name",
+    "email": "E-mail",
+    "depositAddress": "adresse de dépôt",
+    "viewOnExplorer": "Voir sur l'explorateur →",
+    "paymentReceived": "Paiement reçu",
+    "viewTransaction": "Voir la transaction →",
+    "switchNetwork": "Passez votre portefeuille sur {{network}} avant de payer.",
+    "connectWallet": "Connecter le portefeuille",
+    "connected": "Connecté",
+    "balance": "Solde :",
+    "needAtLeast": "Il faut au moins {{amount}} {{symbol}} sur {{network}}",
+    "pay": "Payer {{amount}} {{symbol}}",
+    "tx": "Tx :",
+    "balanceUpdates": "Solde actualisé toutes les 10 s",
+    "balanceError": "Impossible d'actualiser le solde. Les détails du paiement restent valides."
+  },
+  "transfer": {
+    "title": "Envoyer de l'argent",
+    "label": "transfert portefeuille",
+    "description": "Transférez des USD à un autre utilisateur StackPay — instantané et gratuit",
+    "withdraw": "Retrait",
+    "dashboard": "Tableau de bord",
+    "availableToSend": "disponible à envoyer",
+    "balanceSource": "Solde USD · des dépôts crypto confirmés",
+    "newTransfer": "Nouveau transfert",
+    "formHint": "Complétez les 3 étapes, puis vérifiez et envoyez",
+    "step1Title": "À qui envoyez-vous ?",
+    "step1Hint": "Utilisez @username (recommandé), e-mail ou téléphone",
+    "usernamePlaceholder": "@username",
+    "findUser": "Trouver l'utilisateur",
+    "change": "Modifier",
+    "recipientConfirmed": "Destinataire confirmé — prêt pour l'étape 2",
+    "step2Title": "Combien ?",
+    "step2Hint": "Saisissez le montant en USD",
+    "sendAll": "Tout envoyer (${{amount}})",
+    "notEnoughBalance": "Solde insuffisant — vous n'avez que ${{amount}}",
+    "step3Title": "Ajouter une note",
+    "step3Hint": "Optionnel — visible dans l'historique",
+    "notePlaceholder": "ex. Merci pour l'aide",
+    "review": "vérifier avant envoi",
+    "to": "À",
+    "amount": "Montant",
+    "balanceAfter": "Votre solde après",
+    "note": "Note",
+    "sendButton": "Envoyer ${{amount}} à {{recipient}}",
+    "enterValidAmount": "Saisissez un montant valide pour continuer",
+    "findRecipientFirst": "Trouvez d'abord un destinataire",
+    "receiveMoney": "recevoir de l'argent",
+    "shareUsername": "Partagez votre nom d'utilisateur pour recevoir des fonds :",
+    "copy": "Copier",
+    "copied": "Copié !",
+    "howItWorks": "comment ça marche",
+    "howSteps": [
+      {
+        "title": "Find the user",
+        "body": "Saisir their @username and tap Find user"
+      },
+      {
+        "title": "Choisir amount",
+        "body": "Pick a preset or type any amount up to votre balance"
+      },
+      {
+        "title": "Confirm & send",
+        "body": "Avis the summary, then envoyer — funds arrive instantly"
+      }
+    ],
+    "balanceBreakdown": "répartition du solde",
+    "totalReceived": "Total reçu",
+    "totalSentSpent": "Total envoyé / dépensé",
+    "availableNow": "Disponible maintenant",
+    "transferHistory": "historique des transferts",
+    "historyHint": "Tout l'argent envoyé et reçu",
+    "records": "{{count}} enregistrement",
+    "records_plural": "{{count}} enregistrements",
+    "noTransfers": "Aucun transfert",
+    "noTransfersHint": "Vos transferts apparaîtront ici",
+    "sentTo": "Envoyé à",
+    "receivedFrom": "Reçu de",
+    "directionSent": "envoyé",
+    "directionReceived": "reçu",
+    "successMessage": "Envoyé avec succès ${{amount}} à {{label}}"
+  },
+  "withdraw": {
+    "title": "Retrait",
+    "label": "portefeuille",
+    "description": "Retirez votre solde USD en USDC ou USDT vers votre portefeuille crypto",
+    "transfer": "Transfert",
+    "dashboard": "Tableau de bord",
+    "availableToWithdraw": "disponible à retirer",
+    "minMax": "Min {{min}} $ · Max {{max}} $ par demande",
+    "withdrawToWallet": "Retirer vers portefeuille",
+    "formHint": "Choisissez réseau, jeton, montant et adresse portefeuille",
+    "step1Title": "Choisir le réseau",
+    "step1Hint": "Où recevoir la crypto",
+    "step2Title": "Choisir le jeton",
+    "step2Hint": "Stablecoins — 1 USD ≈ 1 jeton",
+    "step3Title": "Combien en USD ?",
+    "step3Hint": "Vous recevez ~{{amount}} {{token}}",
+    "step4Title": "Votre adresse portefeuille",
+    "step4Hint": "Doit correspondre au réseau ci-dessus (0x…)",
+    "savedWallet": "portefeuille enregistré",
+    "tapToUseSaved": "Appuyez pour utiliser l'adresse enregistrée",
+    "addressPlaceholder": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+    "paste": "Coller",
+    "saveWallet": "Enregistrer pour la prochaine fois",
+    "savedForNext": "Enregistré pour le prochain retrait",
+    "removeSaved": "Supprimer l'enregistrement",
+    "invalidAddress": "Saisissez une adresse EVM valide (42 caractères commençant par 0x)",
+    "amountRangeError": "Saisissez entre {{min}} $ et {{max}} $",
+    "withdrawAll": "Tout retirer (${{amount}})",
+    "review": "vérification",
+    "youReceive": "Vous recevez",
+    "toAddress": "Vers l'adresse",
+    "balanceAfter": "Solde après",
+    "submitReady": "Retirer {{amount}} $ en {{token}}",
+    "enterValidAddress": "Saisissez une adresse valide",
+    "enterValidAmount": "Saisissez un montant valide",
+    "completeSteps": "Complétez les étapes ci-dessus",
+    "withdrawOptions": "options de retrait",
+    "options": [
+      "USDC and USDT on major networks",
+      "1 USD balance = 1 stablecoin jeton",
+      "Processed automatically within minutes",
+      "Échoué retraits are refunded to balance"
+    ],
+    "balanceBreakdown": "répartition du solde",
+    "totalReceived": "Total reçu",
+    "totalSpent": "Total spent",
+    "available": "Disponible",
+    "alsoAvailable": "également disponible",
+    "sendToUser": "→ Envoyer à un autre utilisateur StackPay",
+    "withdrawalHistory": "historique des retraits",
+    "historyHint": "Statut mis à jour automatiquement",
+    "noWithdrawals": "Aucun retrait",
+    "noWithdrawalsHint": "Vos demandes de retrait apparaîtront ici",
+    "viewTx": "Voir tx",
+    "inQueue": "En file d'attente…",
+    "balanceRefunded": " — solde remboursé",
+    "walletSaved": "Portefeuille saved for votre next retrait.",
+    "walletRemoved": "Enregistrerd portefeuille removed.",
+    "pasteError": "Could pas paste from clipboard. Paste manually into the field.",
+    "queuedSuccess": "Retraital queued — ${{amountUsd}} as {{jetonMontant}} {{jetonSymbol}} on {{networkName}}"
+  },
+  "packages": {
+    "title": "Investissement Forfaits",
+    "label": "Investir",
+    "description": "Choisir a package and invest from votre USD balance",
+    "myPortfolio": "My Portefeuille",
+    "availableBalance": "Disponible balance",
+    "dailyIncome": "Daily revenu",
+    "active": "Actif",
+    "invested": "Investi",
+    "totalEarned": "Total earned",
+    "allTimeInvested": "All-time invested",
+    "eligibleForYou": "éligible for you",
+    "noPackagesBalance": "Aucun packages available yet — votre balance is ${{balance}} USD.",
+    "increaseBalance": "Make a payment to increase votre balance and unlock packages below.",
+    "makePayment": "Make a Paiement",
+    "noActivePackages": "Aucun active packages available right now. Check retour later.",
+    "allPackages": "tous packages",
+    "needMoreBalance": "need more balance",
+    "needMore": "Need ${{amount}} more",
+    "minDaily": "Min ${{min}} USD · {{taux}}% daily",
+    "customAmount": "custom amount · {{name}}",
+    "earnPerDay": "you will earn per day",
+    "perDay": "/ day",
+    "basedOnAmount": "Based on ${{amount}} at {{taux}}% daily",
+    "atMinimum": "At minimum ${{min}} · {{taux}}% daily",
+    "availableMinMax": "Disponible: ${{available}} USD · Min ${{min}}{{max}}",
+    "maxSuffix": " · Max ${{max}}",
+    "insufficientBalance": "Insufficient balance. You need ${{needed}} but have ${{available}} USD.",
+    "activateInvestment": "Activate Investissement",
+    "activatedSuccess": "Forfait activated. Daily revenu starts accruing from tomorrow.",
+    "eligible": "éligible",
+    "locked": "verrouillé",
+    "daily": "daily",
+    "investAmount": "Invest amount",
+    "duration": "Durée",
+    "days": "{{count}} days",
+    "activate": "Activate · ${{amount}}",
+    "dailyReturn": "daily return · {{days}} days",
+    "atMin": "at min",
+    "fromUsd": "from ${{amount}} USD",
+    "needMoreShort": " · need ${{amount}} more"
+  },
+  "portfolio": {
+    "title": "My Portefeuille",
+    "label": "Revenu",
+    "description": "Votre active investissements and daily revenu historique · refreshes every 30s",
+    "browsePackages": "Browse Forfaits",
+    "dailyIncome": "Daily revenu",
+    "activePackages": "Actif packages",
+    "activeInvested": "Actif invested",
+    "investments": "investissements",
+    "emptyTitle": "Aucun investissements yet",
+    "emptyDescription": "Choisir a package and start earning daily revenu.",
+    "daysLeft": "{{taux}}% daily · {{days}} days left",
+    "earned": "+{{amount}} earned",
+    "started": "Démarré",
+    "ends": "Ends",
+    "lastAccrual": "Last accrual",
+    "pending": "En attente",
+    "incomeHistory": "daily revenu historique",
+    "incomeEmpty": "Revenu accrues daily after votre premier full day. Check retour tomorrow.",
+    "package": "Forfait",
+    "statusActive": "active",
+    "statusCompleted": "completed",
+    "statusCancelled": "annulé"
+  },
+  "referrals": {
+    "title": "Invitations",
+    "label": "referrals",
+    "description": "Earn {{percent}}% when someone you invite buys their premier package",
+    "invitationCode": "votre invitation code",
+    "copyCode": "Copier code",
+    "shareLink": "partager link",
+    "copyLink": "Copier link",
+    "howItWorks": "Nouveau utilisateurs saisir votre code when signing up. When they invest in their premier package, you recevoir {{percent}}% of that investissement amount as USD balance.",
+    "invitedBy": "you were invited by",
+    "aMember": "A membre",
+    "codeLabel": "Code: {{code}}",
+    "earnings": "gains",
+    "invited": "Invited",
+    "paidReferrals": "Paid referrals",
+    "totalEarned": "Total earned",
+    "invitedUsers": "invited utilisateurs",
+    "noInvitees": "Aucun one has signed up with votre code yet. Partager votre link to invite friends.",
+    "joined": "Inscrit",
+    "yourEarn": "Votre earn",
+    "statusEarned": "Commission paid",
+    "statusInvested": "Investi",
+    "statusAwaiting": "Awaiting premier package",
+    "commissionHistory": "commission historique",
+    "noCommissions": "Aucun commissions yet. Partager votre code to start earning.",
+    "firstPackage": "Premier package · ${{amount}} · {{percent}}%",
+    "userFallback": "Utilisateur"
+  },
+  "loans": {
+    "title": "Prêt Program",
+    "label": "finance",
+    "description": "Borrow against votre package investissement — repaid automatically from daily gains",
+    "portfolio": "Portefeuille",
+    "acceptTermsError": "Please accept the prêt conditions",
+    "approvedSuccess": "Prêt approuverd! ${{amount}} credited to votre balance.",
+    "activeLoan": "active prêt",
+    "remainingOf": "remaining of ${{total}} total",
+    "repaidProgress": "{{percent}}% repaid · ${{paid}} paid",
+    "principal": "Principal",
+    "interest": "Interest ({{taux}}%)",
+    "basedOnInvestment": "Based on investissement",
+    "disbursed": "Disbursed",
+    "earningsApplied": "Votre daily package gains are applied to this prêt until it is fully cleared.",
+    "loanOffer": "prêt offer",
+    "canBorrow": "You can borrow",
+    "interest25": "Interest (25%)",
+    "totalToRepay": "Total to repay",
+    "offerDetail": "{{principalPercent}}% of votre active investissement (${{investissement}}) + {{interestPercent}}% interest",
+    "eligibility": "eligibility",
+    "qualifiedInvitees": "qualified invitees ({{count}})",
+    "noInvitees": "Aucun invitees yet. Partager votre code on the Invitations page.",
+    "invitationsLink": "Invitations",
+    "hasPackage": "Has package",
+    "noPackage": "Aucun package",
+    "terms": "conditions",
+    "termsBody": "I agree that tous daily package gains will be applied to repay my prêt (principal + {{interestPercent}}% interest) until the full amount of ${{totalOwed}} is cleared. The prêt principal of ${{principal}} will be credited to my USD balance immediately.",
+    "acceptCheckbox": "I accept these prêt conditions",
+    "applyFor": "Apply for ${{amount}} prêt",
+    "balanceAfterApproval": "Disponible balance after approval: ${{before}} → ${{after}}",
+    "loanHistory": "prêt historique",
+    "borrowed": "${{amount}} borrowed",
+    "repayDetail": "Repay ${{total}} · {{date}}",
+    "recentRepayments": "récent repayments from gains",
+    "statusPaid": "PAID",
+    "statusActive": "ACTIVE"
+  },
+  "community": {
+    "title": "Communauté",
+    "label": "workspace",
+    "description": "Channels for everyone · reactions · reply privately in DMs"
+  },
+  "networks": {
+    "title": "Réseaus",
+    "labelPlatform": "Plateforme",
+    "labelSupported": "Pris en charge",
+    "descriptionAdmin": "{{networks}} EVM networks · {{jetons}} jetons configured",
+    "descriptionUser": "{{networks}} networks · {{jetons}} jetons you can accept",
+    "tokens": "jetons",
+    "chainInfo": "Chain {{chainId}} · {{nativeSymbol}}",
+    "blockExplorer": "block explorer →"
+  },
+  "register": {
+    "title": "Créer compte",
+    "subtitle": "Sign up with e-mail, téléphone, or both",
+    "alreadyHaveAccount": "Already have an compte?",
+    "signIn": "Sign in",
+    "termsOfUse": "Conditions of Use",
+    "privacyPolicy": "Confidentialité Policy",
+    "name": "Name",
+    "namePlaceholder": "Votre name",
+    "email": "E-mail",
+    "emailPlaceholder": "you@example.com",
+    "phone": "Téléphone",
+    "phoneHint": "At least one of e-mail or téléphone is requis",
+    "invitationCode": "Invitation code (optionnel)",
+    "invitationPlaceholder": "Saisir a friend's code",
+    "invitedBy": "Invited by {{name}}",
+    "member": "membre",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirm mot de passe",
+    "legalAgreement": "I agree to the Conditions of Use and Confidentialité Policy.",
+    "createAccount": "Créer Compte",
+    "errors": {
+      "contactRequired": "Saisir an e-mail adresse, téléphone number, or both",
+      "passwordMismatch": "Mot de passes do pas match",
+      "fixInviteCode": "Fix the invitation code before continuing",
+      "legalRequired": "You must accept the Conditions of Use and Confidentialité Policy to create an compte"
+    }
+  },
+  "admin": {
+    "title": "Système Tableau de bord",
+    "label": "Admin",
+    "description": "Live aperçu · refreshes every 20s · uptime {{uptime}}",
+    "sweepConfirmed": "Sweep {{count}} Confirmé",
+    "sweepComplete": "Sweep complete: {{count}} payment(s) swept to trésorerie",
+    "overview": "Aperçu",
+    "users": "Utilisateurs",
+    "admins": "Admins",
+    "payments": "Paiements",
+    "today": "Aujourd'hui",
+    "pending": "En attente",
+    "confirmed": "Confirmé",
+    "swept": "Collecté",
+    "successRate": "Succès %",
+    "platformWallets": "Plateforme Portefeuilles",
+    "treasury": "Trésorerie (collects funds)",
+    "gasFunder": "Gas funder (index 0)",
+    "walletsGenerated": "Dépôt portefeuilles genetauxd",
+    "systemConfiguration": "Système Configuration",
+    "defaultNetwork": "Par défaut network",
+    "defaultChainId": "Par défaut chain ID",
+    "balancePollInterval": "Solde poll intervalle",
+    "autoSweepInterval": "Auto-sweep intervalle",
+    "frontendUrl": "Frontend URL",
+    "serverStarted": "Server démarré",
+    "volume": "Volume",
+    "totalRequests": "Total demandes",
+    "approxTotalAmount": "Approx. total amount",
+    "confirmedSwept": "Confirmé + swept",
+    "byNetwork": "By Réseau",
+    "byToken": "By Jeton",
+    "noPaymentsYet": "Aucun paiement",
+    "paymentsCount": "{{count}} payments",
+    "supportedNetworks": "Pris en charge Réseaus ({{count}})",
+    "networkMeta": "{{native}} · {{jetons}} jetons · ID {{chainId}}",
+    "recentPayments": "Récent Paiements",
+    "registeredUsers": "Registered Utilisateurs ({{count}})",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "name": "Name",
+    "joined": "Inscrit",
+    "deposit": "Dépôt",
+    "created": "Créerd",
+    "paymentsLabel": "{{count}} payments",
+    "systemDashboard": "Système Tableau de bord",
+    "usersPage": {
+      "title": "Utilisateurs",
+      "label": "admin · comptes",
+      "description": "Tous registered comptes · refreshes every 20s",
+      "total": "Total",
+      "withPayments": "With payments",
+      "role": "rôle",
+      "search": "recherche",
+      "searchPlaceholder": "e-mail, téléphone, name…",
+      "emptyTitle": "Aucun utilisateurs found",
+      "emptyFiltered": "Try a different recherche term or rôle filter.",
+      "emptyDefault": "Aucun utilisateurs registered yet.",
+      "account": "Compte",
+      "roleHeader": "Role",
+      "roleAll": "tout",
+      "roleUsers": "utilisateurs",
+      "roleAdmins": "admins"
+    },
+    "packagesPage": {
+      "title": "Gérer Forfaits",
+      "label": "admin · investissements",
+      "description": "Description",
+      "newPackage": "Nouveau Forfait",
+      "editPackage": "edit package",
+      "newPackageForm": "nouveau package",
+      "name": "Name",
+      "slug": "Slug",
+      "slugPlaceholder": "auto from name",
+      "minAmount": "Min amount (USDT)",
+      "maxAmount": "Max amount (USDT)",
+      "maxPlaceholder": "leave vide for unlimited",
+      "dailyRate": "Daily taux (%)",
+      "durationDays": "Durée (days)",
+      "badgeColor": "Badge color",
+      "sortOrder": "Sort order",
+      "activeVisible": "Actif (visible to utilisateurs)",
+      "saveChanges": "Enregistrer changes",
+      "createPackage": "Créer package",
+      "cancel": "Annuler",
+      "allPackages": "tous packages ({{count}})",
+      "emptyTitle": "Aucun packages yet",
+      "emptyDescription": "Créer votre premier investissement package.",
+      "package": "Forfait",
+      "rate": "Taux",
+      "range": "Plage",
+      "duration": "Durée",
+      "investments": "Investissements",
+      "actions": "Actions",
+      "edit": "Modifier",
+      "deactivate": "Deactivate",
+      "activate": "Activate",
+      "statusActive": "active",
+      "statusInactive": "inactive",
+      "updated": "Forfait updated.",
+      "created": "Forfait créé."
+    },
+    "referralsPage": {
+      "title": "Referral Program",
+      "label": "Admin",
+      "description": "Configure invitation commission on premier package purchase",
+      "overview": "aperçu",
+      "signupsWithInvite": "Signups w/ invite",
+      "commissionsPaid": "Commissions paid",
+      "totalPaidOut": "Total paid out",
+      "commissionRate": "commission taux",
+      "firstPackageCommission": "Premier package commission (%)",
+      "commissionHint": "Inviters earn this percentage of the invitee's premier package investissement (USD).",
+      "saveRate": "Enregistrer taux",
+      "rateUpdated": "Commission taux updated to {{percent}}%",
+      "recentCommissions": "récent commissions",
+      "inviter": "Inviter",
+      "invitee": "Invitee",
+      "packageAmount": "Forfait $",
+      "rate": "Taux",
+      "earned": "Earned",
+      "noCommissions": "Aucun commissions yet"
+    },
+    "recentPaymentsPage": {
+      "title": "Récent Paiements",
+      "label": "admin · tous utilisateurs",
+      "description": "Plateforme-wide payment activité · refreshes every 15s",
+      "inRange": "In plage",
+      "users": "Utilisateurs",
+      "emptyTitle": "Aucun payments found",
+      "emptyDescription": "Aucun plateforme payments match the current filters."
+    },
+    "testimonialsPage": {
+      "title": "Member Aviss",
+      "label": "Admin",
+      "description": "Approuver public aviss submitted from the landing page",
+      "pendingApproval": "en attente d'approbation ({{count}})",
+      "noPending": "Aucun pending aviss",
+      "pendingHint": "Public submissions will appear here for approval.",
+      "published": "publié ({{count}})",
+      "noPublished": "Aucun publié aviss",
+      "approve": "Approuver",
+      "hide": "Hide",
+      "delete": "Supprimer",
+      "approved": "Approuverd avis from {{name}}",
+      "hidden": "Hidden avis from {{name}}",
+      "deleted": "Supprimerd avis from {{name}}",
+      "deleteConfirm": "Supprimer avis from {{name}}?",
+      "badgePublic": "public",
+      "badgePending": "pending"
+    },
+    "showcaseTeamPage": {
+      "title": "Landing Page Team",
+      "label": "Admin",
+      "description": "Gérer the Communauté teams section on the public landing page",
+      "addMember": "Ajouter membre",
+      "editMember": "edit membre",
+      "newMember": "nouveau membre",
+      "name": "Name",
+      "roleTitle": "Role / title",
+      "rolePlaceholder": "Communauté Lead",
+      "avatarUrl": "Profile image URL (optionnel)",
+      "avatarPlaceholder": "https://...",
+      "sortOrder": "Sort order",
+      "visibleOnLanding": "Visible on landing page",
+      "saveChanges": "Enregistrer changes",
+      "addMemberBtn": "Ajouter membre",
+      "cancel": "Annuler",
+      "teamStructure": "team structure",
+      "emptyTitle": "Aucun team membres yet",
+      "emptyDescription": "Ajouter people to afficher on the landing page.",
+      "order": "order {{order}}",
+      "hidden": "hidden",
+      "edit": "Modifier",
+      "hide": "Hide",
+      "show": "Show",
+      "remove": "Remove",
+      "updated": "Team membre updated",
+      "added": "Team membre added",
+      "removed": "{{name}} removed",
+      "removeConfirm": "Supprimer {{name}} from the landing page team?"
+    }
+  },
+  "legal": {
+    "privacy": {
+      "title": "Confidentialité Policy",
+      "lastUpdated": "August 12, 2026",
+      "intro": "Cette politique de confidentialité explique comment StackPay (« nous ») collecte, utilise, stocke et partage les informations lorsque vous utilisez notre site, applications et services connexes (le « Service »).",
+      "s1": {
+        "title": "1. Information we collect",
+        "paragraphs": [
+          "Compte information: name, e-mail adresse, téléphone number, username, mot de passe hash, profile image URL, and invitation or referral relationships.",
+          "Usage and device data: app interactions, session jetons, theme preferences, cookie consent choices, and technical logs such as IP adresse, browser type, and timestamps.",
+          "Transaction data: payment demandes, dépôt adressees, blockchain transaction hashes, balances, package investissements, retraits, transfers, prêts, and referral commissions.",
+          "Communauté content: messages, reactions, and profile information you choisir to partager in channels or direct messages."
+        ]
+      },
+      "s2": {
+        "title": "2. How we use information",
+        "intro": "We use collected information to:",
+        "list": [
+          "create and secure votre compte;",
+          "process payments, investissements, retraits, and referrals;",
+          "provide community and support features;",
+          "prevent fraud, abuse, and unauthorized access;",
+          "improve reliability, performance, and user experience;",
+          "comply with legal obligations and enforce our Conditions of Use."
+        ]
+      },
+      "s3": {
+        "title": "3. Cookies and local storage",
+        "body": "We use cookies and local storage to keep you signed in, remembre preferences such as theme, and store cookie consent choices. You can gérer non-essential cookies through the consent banner. Some features require essential storage to function."
+      },
+      "s4": {
+        "title": "4. How we partager information",
+        "body": "We do pas sell votre personal information. We may partager data with service providers that help us opetaux the plateforme (hosting, database, analytics), when requis by law, to protect rights and safety, or in connection with a business transfer. Blockchain transaction data you submit is public by nature on the relevant network."
+      },
+      "s5": {
+        "title": "5. Data retention",
+        "body": "We retain compte and transaction records for as long as needed to provide the Service, meet legal and compteing requirements, resolve disputes, and enforce agreements. You may request compte deletion subject to legal retention obligations."
+      },
+      "s6": {
+        "title": "6. Security",
+        "body": "We use administrative, technical, and organizational measures designed to protect votre information, including mot de passe hashing and access controls. Aucun method of transmission or storage is completely secure, and you are responsible for safeguarding votre login credentials."
+      },
+      "s7": {
+        "title": "7. Votre choices",
+        "body": "You may update profile details in Settings, gérer cookie preferences through our consent banner, and contact us regarding access, correction, or deletion demandes where applicable law provides those rights."
+      },
+      "s8": {
+        "title": "8. International utilisateurs",
+        "body": "If you access the Service from outside the country where our servers are located, votre information may be processed in jurisdictions with different data protection laws."
+      },
+      "s9": {
+        "title": "9. Children",
+        "body": "The Service is pas intended for utilisateurs under 18. We do pas knowingly collect personal information from children."
+      },
+      "s10": {
+        "title": "10. Changes to this policy",
+        "body": "We may update this Confidentialité Policy from time to time. The \"Last updated\" date at the top of this page will reflect the latest version. Continued use of the Service after changes become effective constitutes acceptance of the updated policy."
+      }
+    },
+    "terms": {
+      "title": "Conditions of Use",
+      "lastUpdated": "August 12, 2026",
+      "intro": "Ces conditions d'utilisation (« Conditions ») régissent votre accès et utilisation de StackPay, y compris notre site, applications, outils de paiement, forfaits, programme de parrainage, prêts, fonctionnalités communautaires et services connexes (collectivement, le « Service »). En créant un compte, vous acceptez ces Conditions.",
+      "s1": {
+        "title": "1. Eligibility",
+        "body": "You must be at least 18 years old and legally able to saisir into a binding agreement. You are responsible for ensuring that votre use of the Service complies with applicable laws in votre jurisdiction, including rules related to digital assets, financial services, and taxation."
+      },
+      "s2": {
+        "title": "2. Compte registration",
+        "body": "You agree to provide accutaux information when creating an compte and to keep votre credentials secure. You are responsible for tous activité under votre compte. We may suspend or terminate comptes that violate these Conditions or pose a security or legal risk."
+      },
+      "s3": {
+        "title": "3. Crypto payments and balances",
+        "paragraphs": [
+          "StackPay facilitates crypto payments and tracks USD-denominated balances within the plateforme. Blockchain transactions are irreversible once confirmed. You are solely responsible for verifying portefeuille adressees, networks, and jeton types before sending funds.",
+          "Displayed tauxs, balances, and confirmations depend on network conditions and third-party data sources. We do pas guarantee uninterrupted availability of any blockchain network."
+        ]
+      },
+      "s4": {
+        "title": "4. Investissement packages and gains",
+        "paragraphs": [
+          "Investissement packages, projected returns, and accrual schedules are plateforme features subject to change. Past performance does pas guarantee future results. Forfait conditions, tauxs, and durées are shown in the app at the time of purchase.",
+          "You acknowledge that digital asset investissements carry risk, including the risk of partial or total loss of value."
+        ]
+      },
+      "s5": {
+        "title": "5. Parrainages, prêts, and retraits",
+        "body": "Referral commissions, prêt conditions, and retrait en cours are governed by the rules displayed in the Service at the time you use each feature. We may modify program rules, fees, limits, or eligibility with reasonable notice where requis."
+      },
+      "s6": {
+        "title": "6. Communauté conduct",
+        "body": "When using community chat, direct messages, or other social features, you agree pas to harass others, post unlawful content, attempt fraud, or interfere with the Service. We may supprimer content or restrict access to protect utilisateurs and the plateforme."
+      },
+      "s7": {
+        "title": "7. Prohibited use",
+        "body": "You may pas use the Service for money laundering, sanctions evasion, unauthorized access, automated abuse, or any activité that violates applicable law. We may coopetaux with law enforcement and block suspicious activité."
+      },
+      "s8": {
+        "title": "8. Disclaimers",
+        "body": "The Service is provided \"as is\" and \"as available\" without warranties of any kind, to the fullest extent permitted by law. StackPay is pas a bank, broker-dealer, or licensed financial adviser unless explicitly stated otherwise in votre jurisdiction."
+      },
+      "s9": {
+        "title": "9. Limitation of liability",
+        "body": "To the maximum extent permitted by law, StackPay and its operators will pas be liable for indirect, incidental, special, consequential, or punitive damages, or for losses arising from blockchain failures, user error, unauthorized compte access, or third-party services."
+      },
+      "s10": {
+        "title": "10. Changes and contact",
+        "paragraphs": [
+          "We may update these Conditions from time to time. Material changes will be reflected on this page with an updated date. Continued use of the Service after changes become effective constitutes acceptance of the revised Conditions.",
+          "Questions about these Conditions may be directed through the support channels available in the app or to votre plateforme administrator."
+        ]
+      }
+    }
+  },
+  "review": {
+    "rateStackPay": "Taux StackPay",
+    "shareExperience": "Partagez votre expérience avec les visiteurs",
+    "dialogLabel": "Partagez votre expérience",
+    "close": "Close",
+    "yourRating": "Votre note",
+    "selectRating": "Sélectionner la note",
+    "star": "{{count}} étoile",
+    "stars": "{{count}} étoiles",
+    "name": "Name",
+    "namePlaceholder": "Votre name",
+    "role": "Rôle (optionnel)",
+    "rolePlaceholder": "Membre, investisseur...",
+    "yourReview": "Votre avis",
+    "reviewPlaceholder": "Dites aux visiteurs ce que vous pensez de StackPay...",
+    "charCount": "{{count}}/500 caractères",
+    "cancel": "Annuler",
+    "submit": "Envoyer l'avis"
+  },
+  "pwa": {
+    "ariaLabel": "Installer l'app StackPay",
+    "title": "Installer StackPay",
+    "iosHint": "Appuyez sur Partager, puis Sur l'écran d'accueil pour une app plein écran.",
+    "defaultHint": "Ajoutez à l'écran d'accueil pour une expérience type application.",
+    "install": "Installer",
+    "notNow": "Pas maintenant"
+  }
+}

@@ -1,0 +1,359 @@
+{
+  "language": {
+    "label": "Lugha",
+    "en": "Kiingereza",
+    "fr": "Kifaransa",
+    "sw": "Kiswahili"
+  },
+  "common": {
+    "createAccount": "Unda akaunti",
+    "createFreeAccount": "Unda akaunti bure",
+    "logIn": "Ingia",
+    "getStarted": "Anza",
+    "home": "Nyumbani",
+    "menu": "Menyu",
+    "send": "Tuma",
+    "askQuestion": "Uliza swali…",
+    "save": "Hifadhi",
+    "cancel": "Ghairi",
+    "loading": "Inapakia…",
+    "processing": "inachakata",
+    "version": "Toleo",
+    "developedBy": "Imetengenezwa na {{team}}.",
+    "allRights": "© {{year}} {{name}}. Haki zote zimehifadhiwa.",
+    "accept": "Kubali",
+    "decline": "Kataa",
+    "continue": "Endelea",
+    "backToHome": "Rudi nyumbani",
+    "needHelp": "Unahitaji msaada?",
+    "closeHelp": "Funga msaada",
+    "openHelp": "Fungua mazungumzo ya msaada",
+    "you": "Wewe",
+    "helpBot": "Msaidizi",
+    "typing": "Inaandika…",
+    "readyToStart": "Uko tayari kuanza?",
+    "publicFreeRead": "Umma · Bure kusoma",
+    "documentation": "Nyaraka",
+    "developers": "Wasanidi",
+    "onThisPage": "Kwenye ukurasa huu",
+    "tableOfContents": "Yaliyomo",
+    "hideContents": "Ficha yaliyomo",
+    "userGuide": "Mwongozo wa mtumiaji",
+    "apiDocs": "Nyaraka za API",
+    "apiReference": "Rejea ya API",
+    "termsOfUse": "Masharti ya matumizi",
+    "privacyPolicy": "Sera ya faragha",
+    "admin": "msimamizi",
+    "session": "kipindi",
+    "signOut": "toka"
+  },
+  "nav": {
+    "overview": "muhtasari",
+    "dashboard": "dashibodi",
+    "payments": "malipo",
+    "newPayment": "malipo mapya",
+    "recentPayments": "malipo ya hivi karibuni",
+    "managePayments": "simamia malipo",
+    "wallet": "mkoba",
+    "transfer": "hamisha",
+    "withdraw": "toa",
+    "invitations": "mialiko",
+    "loan": "mkopo",
+    "packages": "vifurushi",
+    "browsePackages": "angalia vifurushi",
+    "myPortfolio": "kwingineko yangu",
+    "community": "jamii",
+    "platform": "jukwaa",
+    "networks": "mitandao",
+    "systemAdmin": "msimamizi wa mfumo",
+    "allRecentPayments": "malipo yote ya hivi karibuni",
+    "users": "watumiaji",
+    "referrals": "rufaa",
+    "landingTeam": "timu ya landing",
+    "reviews": "maoni",
+    "settings": " mipangilio",
+    "home": "Nyumbani",
+    "pay": "Lipa",
+    "chat": "Gumzo",
+    "mainNav": "Urambazaji mkuu"
+  },
+  "auth": {
+    "welcomeBack": "Karibu tena",
+    "signInSubtitle": "Ingia kwenye dashibodi yako",
+    "noAccount": "Huna akaunti?",
+    "createOne": "Unda moja",
+    "emailUsername": "Barua pepe / Jina la mtumiaji",
+    "phone": "Simu",
+    "phoneNumber": "Nambari ya simu",
+    "password": "Nenosiri",
+    "signIn": "Ingia",
+    "enterEmailOrUsername": "Weka barua pepe au jina la mtumiaji",
+    "enterPhone": "Weka nambari yako ya simu",
+    "enterEmailOrUsername": "Weka barua pepe au jina la mtumiaji",
+    "createAccountTitle": "Unda akaunti yako",
+    "createAccountSubtitle": "Jiunge na StackPay na uanze kupata mapato",
+    "alreadyHaveAccount": "Tayari una akaunti?",
+    "signInLink": "Ingia",
+    "fullName": "Jina kamili",
+    "email": "Barua pepe",
+    "confirmPassword": "Thibitisha nenosiri",
+    "invitationCode": "Msimbo wa mwaliko (si lazima)",
+    "acceptTerms": "Nakubali Masharti ya matumizi na Sera ya faragha",
+    "register": "Unda akaunti",
+    "eyebrow": "Programu · Malipo · 2025",
+    "heroTitle": "Jenga mapato yako",
+    "heroHighlight": "kua · toa · rudia",
+    "heroBody": "Wekeza kwenye vifurushi, pata kila siku, waalike marafiki, na toa kwenye mkoba wako wa crypto — kwenye mitandao 7+ ya EVM.",
+    "account": "Akaunti"
+  },
+  "footer": {
+    "tagline": "{{name}} · malipo ya crypto · vifurushi vya uwekezaji · rufaa · mikopo · jamii"
+  },
+  "status": {
+    "all": "zote",
+    "pending": "inasubiri",
+    "confirmed": "imethibitishwa",
+    "expired": "imekwisha muda",
+    "swept": "imekusanywa"
+  },
+  "cookie": {
+    "title": "Tunatumia vidakuzi",
+    "body": "StackPay inatumia vidakuzi na hifadhi ya ndani kukuweka umeingia, kukumbuka mandhari yako, na kuboresha uzoefu. Ukiendelea, unakubali matumizi haya.",
+    "accept": "Kubali vidakuzi",
+    "essentialOnly": "Muhimu tu"
+  },
+  "settings": {
+    "title": "Mipangilio",
+    "description": "Simamia akaunti yako · {{user}}",
+    "username": "Jina la mtumiaji",
+    "usernameHint": "Imetolewa kiotomatiki · shiriki kwa uhamisho",
+    "profileImage": "Picha ya wasifu",
+    "profileImageHint": "Bandika URL ya picha ya umma, au acha tupu kwa avatar inayotengenezwa kiotomatiki katika jamii na mialiko.",
+    "profileImagePlaceholder": "https://mfano.com/picha.jpg",
+    "saveChanges": "Hifadhi mabadiliko",
+    "profileUpdated": "Wasifu umesasishwa",
+    "keepEmailOrPhone": "Weka angalau barua pepe au simu kwenye akaunti yako",
+    "language": "Lugha",
+    "languageHint": "Inatumika kwenye programu, msaidizi na nyaraka"
+  },
+  "help": {
+    "title": "Msaada wa StackPay",
+    "subtitle": "Majibu kuhusu usajili, malipo, vifurushi na zaidi",
+    "devSubtitle": "Kufungua API, bei, malipo na ujumuishaji",
+    "greeting": "Habari! Mimi ni msaidizi wa StackPay. Uliza kuhusu usajili, malipo, vifurushi, utoaji, rufaa, mikopo, au soma mwongozo bure kwenye /guide.",
+    "devGreeting": "Habari! Ninaweza kukusaidia kufungua nyaraka za API za StackPay, kueleza bei na hatua za malipo, na kuongoza ujumuishaji wako.",
+    "fallback": "Sijui bado. Jaribu kuuliza kuhusu usajili, malipo ya crypto, vifurushi, utoaji au rufaa. Unaweza pia kusoma mwongozo bure kwenye /guide au kuunda akaunti bure.",
+    "publicGuideLink": "Msaada wa umma:",
+    "userGuideLink": "Mwongozo wa mtumiaji",
+    "quickQuestions": {
+      "account": "Ninawezaje kuunda akaunti?",
+      "guide": "Mwongozo wa mtumiaji uko wapi?",
+      "networks": "Mitandao gani ya crypto inaungwa mkono?",
+      "packages": "Vifurushi vya uwekezaji vinafanyaje kazi?",
+      "withdraw": "Utoaji unafanyaje kazi?"
+    },
+    "devQuickQuestions": {
+      "unlock": "Ninawezaje kufungua nyaraka za API?",
+      "pricing": "Ufikiaji wa API unagharimu kiasi gani?",
+      "payment": "Ninalipaje ufikiaji wa msanidi?",
+      "auth": "Ninathibitishaje maombi ya API?",
+      "included": "Nyaraka za API zinajumuisha nini?"
+    },
+    "entries": {
+      "signup": {
+        "question": "Ninawezaje kuunda akaunti?",
+        "answer": "Bofya Anza au Unda akaunti bure kwenye ukurasa wa kwanza. Jisajili kwa barua pepe, simu, au zote mbili. Lazima ukubali Masharti na Sera ya faragha. Msimbo wa mwaliko si lazima.",
+        "keywords": ["jisajili", "unda akaunti", "jiunge", "akaunti", "barua pepe", "simu", "sign up", "register"]
+      },
+      "login": {
+        "question": "Ninawezaje kuingia?",
+        "answer": "Tumia Ingia kwenye menyu. Ingia kwa jina la mtumiaji, barua pepe, au simu na nenosiri lako. Baada ya kuingia utaenda kwenye dashibodi yako.",
+        "keywords": ["ingia", "nenosiri", "login", "log in"]
+      },
+      "payments": {
+        "question": "Malipo ya crypto yanafanyaje kazi?",
+        "answer": "Unda ombi la malipo katika programu, pokea anwani ya kipekee ya amana, na ulipe kutoka pochi yoyote ya crypto kwenye mtandao wa EVM unaoungwa mkono. Unaweza pia kunakili anwani ya amana na kutuma kwa mkono kutoka soko la exchange au pochi ya simu. Miamala ikithibitishwa, salio lako la USD linaongezwa kiotomatiki.",
+        "keywords": ["malipo", "amana", "crypto", "pochi", "usdc", "usdt", "anwani"]
+      },
+      "networks": {
+        "question": "Mitandao gani inaungwa mkono?",
+        "answer": "StackPay inaunga mkono mitandao kuu ya EVM ikiwa ni pamoja na Ethereum, Polygon, BNB Chain, Arbitrum, Optimism, Base, Avalanche, na Sepolia testnet.",
+        "keywords": ["mtandao", "polygon", "bsc", "arbitrum", "optimism", "base", "avalanche", "ethereum"]
+      },
+      "packages": {
+        "question": "Vifurushi vya uwekezaji vinafanyaje kazi?",
+        "answer": "Weka salio lako la USD kwenye vifurushi vya viwango ili kupata mapato ya kila siku. Angalia vifurushi, chagua kiasi, na fuata uwekezaji wako kwenye kwingineko yako.",
+        "keywords": ["kifurushi", "wekeza", "uwekezaji", "mapato", "kwingineko", "package"]
+      },
+      "withdraw": {
+        "question": "Utoaji unafanyaje kazi?",
+        "answer": "Toa salio lako la USD kama USDC au USDT kwenye mkoba wako wa crypto kwenye mitandao inayoungwa mkono. Kikomo cha chini na juu kinaonyeshwa kwenye sehemu ya utoaji.",
+        "keywords": ["toa", "utoaji", "mkoba", "withdraw"]
+      },
+      "transfer": {
+        "question": "Naweza kuhamisha kwa watumiaji wengine?",
+        "answer": "Ndiyo. StackPay inaunga mkono uhamisho wa ndani wa haraka kati ya wanachama kutoka ukurasa wa uhamisho — bila ada za blockchain kwa uhamisho wa ndani.",
+        "keywords": ["hamisha", "tuma", "mwanachama", "ndani", "transfer"]
+      },
+      "referrals": {
+        "question": "Programu ya rufaa inafanyaje kazi?",
+        "answer": "Kila mwanachama anapata msimbo na kiungo cha mwaliko. Mtu uliyemwalika akifanya uwekezaji wake wa kwanza, unapata kamisheni kwenye salio lako la USD.",
+        "keywords": ["rufaa", "mwaliko", "kamisheni", "msimbo", "referral"]
+      },
+      "loans": {
+        "question": "Mikopo inafanyaje kazi?",
+        "answer": "Wanachama wanaostahili wanaweza kukopa hadi 75% ya uwekezaji wao hai. Malipo yanafanywa kiotomatiki kutoka mapato ya kila siku ya vifurushi.",
+        "keywords": ["mkopo", "kopa", "malipo", "loan"]
+      },
+      "community": {
+        "question": "Kipengele cha jamii ni nini?",
+        "answer": "StackPay ina vijiji vya jamii na ujumbe wa moja kwa moja ili wanachama waweze kuwasiliana. Picha za wasifu zinaonekana kwenye gumzo na orodha za wanachama.",
+        "keywords": ["jamii", "gumzo", "kituo", "ujumbe", "community"]
+      },
+      "mobile": {
+        "question": "Naweza kusakinisha StackPay kwenye simu yangu?",
+        "answer": "Ndiyo. StackPay ni PWA. Kwenye simu, tumia Ongeza kwenye Skrini ya Nyumbani kuisakinisha kama programu ya asili.",
+        "keywords": ["simu", "programu", "pwa", "sakinisha", "iphone", "android"]
+      },
+      "balance": {
+        "question": "Salio langu la USD linafanyaje kazi?",
+        "answer": "Salio lako la USD ni mkoba mkuu ndani ya StackPay. Malipo, mapato, kamisheni, mikopo, uhamisho na utoaji yote hupitia salio hili unaloona kwenye dashibodi.",
+        "keywords": ["salio", "usd", "mkoba", "balance"]
+      },
+      "fees": {
+        "question": "Kuna ada?",
+        "answer": "Uhamisho wa ndani kati ya wanachama wa StackPay ni bure. Ada za gas za mtandao zinatumika kwa amana na utoaji wa on-chain kulingana na blockchain unayotumia.",
+        "keywords": ["ada", "gharama", "bure", "fees"]
+      },
+      "security": {
+        "question": "Je, StackPay ni salama?",
+        "answer": "Akaunti zinatumia hashing salama ya nenosiri na tokeni za kipindi. Kila malipo yanapata anwani ya kipekee. Usishiriki nenosiri au maneno ya siri.",
+        "keywords": ["usalama", "salama", "nenosiri", "security"]
+      },
+      "guide": {
+        "question": "Mwongozo wa mtumiaji uko wapi?",
+        "answer": "Mwongozo wa umma bure uko kwenye /guide. Unaeleza usajili, malipo, vifurushi, utoaji, rufaa, mikopo na jamii — bila akaunti au malipo. Rejea ya API ya msanidi iko kwenye /docs.",
+        "keywords": ["mwongozo", "msaada", "nyaraka", "jifunze", "public"]
+      },
+      "support": {
+        "question": "Ninawezaje kupata msaada wa binadamu?",
+        "answer": "Kwa maswali ya jumla, soma mwongozo kwenye /guide au endelea na msaidizi huyu. Kwa msaada wa akaunti, ingia na wasiliana kupitia vijiji vya jamii.",
+        "keywords": ["msaada", "wasiliana", "timu", "tatizo", "support"]
+      },
+      "api": {
+        "question": "Nyaraka za API za msanidi ziko wapi?",
+        "answer": "Nyaraka ziko kwenye /docs. Rejea kamili ya REST na WebSocket inafunguliwa baada ya malipo ya mara moja (100 $ Binafsi / 250 $ Kampuni kwa USDC kwenye Polygon).",
+        "keywords": ["api", "msanidi", "nyaraka", "docs", "ujumuishaji"]
+      },
+      "terms": {
+        "question": "Masharti na Faragha yako wapi?",
+        "answer": "Viungo vya Masharti ya matumizi na Sera ya faragha viko kwenye footer. Lazima ukubali vyote unapounda akaunti.",
+        "keywords": ["masharti", "faragha", "sera", "kisheria", "cookies"]
+      },
+      "apiUnlock": {
+        "question": "Ninawezaje kufungua nyaraka za API?",
+        "answer": "Nenda kwenye /docs, jisajili kwa jina na barua pepe, chagua Binafsi (100 $) au Kampuni (250 $), kisha lipa kiasi halisi cha USDC kwenye Polygon kwenye anwani iliyoonyeshwa.",
+        "keywords": ["fungua", "nyaraka api", "ufikiaji", "documentation"]
+      },
+      "apiPricing": {
+        "question": "Ufikiaji wa API unagharimu kiasi gani?",
+        "answer": "Malipo ya mara moja: 100 $ USDC kwa wasanidi binafsi na 250 $ USDC kwa akaunti za kampuni. Malipo kwenye Polygon tu.",
+        "keywords": ["bei", "gharama", "100", "250"]
+      },
+      "apiPayment": {
+        "question": "Ninalipaje ufikiaji wa msanidi?",
+        "answer": "Baada ya kujisajili kwenye /docs, nakili anwani ya amana na tuma kiasi halisi cha USDC kwenye Polygon. Ukurasa huu unajisasisha kila sekunde 10.",
+        "keywords": ["lipa", "usdc", "polygon", "amana", "pochi", "tuma", "anwani"]
+      },
+      "apiAuth": {
+        "question": "Ninathibitishaje maombi ya API?",
+        "answer": "Sehemu za wanachama zinahitaji JWT kutoka POST /api/auth/login au /register. Tuma Authorization: Bearer <token>. Tokeni zinaisha baada ya siku 7.",
+        "keywords": ["thibitisha", "jwt", "bearer", "token", "auth"]
+      }
+    }
+  },
+  "guide": {
+    "title": "Mwongozo wa mtumiaji",
+    "subtitle": "Nyaraka za umma bure za {{name}}. Jifunze usajili, malipo, vifurushi, rufaa na zaidi — bila kuingia au kulipa.",
+    "intro": "{{name}} inakusaidia kulipa kwa crypto, kukuza salio la USD kupitia vifurushi vya uwekezaji, kupata kamisheni za rufaa, kukopa dhidi ya uwekezaji, na kuungana na wanachama wengine. Mwongozo huu ni bure kwa kila mtu — bila akaunti au malipo.",
+    "publicNote": "Mtu yeyote anaweza kusoma mwongozo huu. Kwa rejea ya API ya msanidi iliyolipwa, angalia",
+    "introduction": "Utangulizi",
+    "introHelp": "Tumia sehemu hapa chini au gumzo la Unahitaji msaada? — linatumia msingi sawa wa maarifa na ukurasa huu.",
+    "readyToJoin": "Uko tayari kujiunga?",
+    "joinBody": "Unda akaunti bure ya {{name}} ili uanze kulipa, kuwekeza na kupata mapato.",
+    "sections": {
+      "getting-started": "Kuanza",
+      "money": "Malipo na salio",
+      "grow": "Wekeza na pata",
+      "move-money": "Uhamisho na utoaji",
+      "community": "Jamii",
+      "trust": "Usalama na kisheria",
+      "developers": "Wasanidi"
+    },
+    "getStarted": "Anza"
+  },
+  "docs": {
+    "title": "Nyaraka za API",
+    "subtitle": "Jumuisha na {{name}} kupitia API yetu ya REST na WebSocket ya jamii. Rejea kamili ya endpoints inafunguliwa baada ya ada ya mara moja (100 $ binafsi / 250 $ kampuni).",
+    "publicGuideHint": "Unatafuta msaada wa jumla kuhusu {{name}}? Soma",
+    "publicGuideLink": "mwongozo wa umma",
+    "publicGuideSuffix": "— bure.",
+    "unlockTitle": "Fungua nyaraka za msanidi",
+    "unlockBody": "Rejea kamili ya REST na WebSocket inapatikana baada ya malipo ya mara moja. Jisajili kwa barua pepe na jina, chagua binafsi au kampuni, kisha lipa USDC kwenye Polygon.",
+    "individual": "Binafsi",
+    "company": "Kampuni",
+    "soloDev": "Wasanidi peke yao na wajiriwa huru",
+    "teamsOrg": "Timu na mashirika",
+    "register": "Jisajili",
+    "name": "Jina",
+    "namePlaceholder": "Jina lako kamili",
+    "emailPlaceholder": "wewe@kampuni.com",
+    "companyName": "Jina la kampuni",
+    "companyPlaceholder": "Kampuni Ltd",
+    "continuePayment": "Endelea kwenye malipo · USDC {{amount}}",
+    "paymentRequired": "Malipo yanahitajika",
+    "paymentInstructions": "Tuma USDC {{amount}} halisi kwenye {{network}} ili kufungua nyaraka kwa {{email}}.",
+    "depositAddress": "Anwani ya amana",
+    "amount": "Kiasi",
+    "network": "Mtandao",
+    "status": "Hali",
+    "waitingPayment": "Inasubiri uthibitisho wa malipo. Ukurasa huu unajisasisha kila sekunde 10.",
+    "differentEmail": "Tumia barua pepe tofauti",
+    "docsHidden": "Nyaraka zimefichwa hadi malipo yathibitishwe",
+    "checkingAccess": "inakagua ufikiaji wa API",
+    "unlockFeeIndividual": "kufungua ${amount}"
+  },
+  "docsNav": {
+    "overview": "Muhtasari",
+    "auth": "Uthibitishaji",
+    "public": "API ya umma",
+    "accounts": "Akaunti",
+    "payments": "Malipo",
+    "packages": "Vifurushi",
+    "transfers": "Uhamisho",
+    "withdrawals": "Utoaji",
+    "referrals": "Rufaa",
+    "loans": "Mikopo",
+    "community": "Jamii",
+    "realtime": "WebSocket",
+    "admin": "API ya msimamizi",
+    "errors": "Hitilafu"
+  },
+  "landing": {
+    "logIn": "Ingia",
+    "getStarted": "Anza",
+    "createFreeAccount": "Unda akaunti bure",
+    "goToDashboard": "Nenda kwenye dashibodi"
+  },
+  "errors": {
+    "generic": "Hitilafu imetokea. Tafadhali jaribu tena.",
+    "network": "Hitilafu ya mtandao. Angalia muunganisho wako.",
+    "invalidCredentials": "Hati batili",
+    "emailRequired": "Barua pepe inahitajika",
+    "validEmailRequired": "Barua pepe halali inahitajika",
+    "nameRequired": "Jina linahitajika",
+    "passwordRequired": "Nenosiri linahitajika",
+    "passwordMismatch": "Manenosiri hayalingani",
+    "termsRequired": "Lazima ukubali Masharti na Sera ya faragha"
+  }
+}

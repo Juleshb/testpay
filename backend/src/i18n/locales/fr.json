@@ -1,0 +1,22 @@
+{
+  "failedLoadShowcase": "Échec du chargement de la vitrine",
+  "failedSubmitReview": "Échec de l'envoi de l'avis",
+  "thanksReview": "Merci pour votre avis ! Il apparaîtra sur la page d'accueil après approbation.",
+  "failedRegisterDeveloper": "Échec de l'inscription pour l'accès API",
+  "invalidAccessToken": "Jeton d'accès invalide",
+  "emailRequired": "L'e-mail est requis",
+  "validEmailRequired": "Un e-mail valide est requis",
+  "nameRequired": "Le nom est requis",
+  "nameTooLong": "Le nom doit contenir 80 caractères ou moins",
+  "companyNameRequired": "Le nom de l'entreprise est requis pour les inscriptions entreprise",
+  "invalidCredentials": "Identifiants invalides",
+  "passwordRequired": "Le mot de passe est requis",
+  "passwordMismatch": "Les mots de passe ne correspondent pas",
+  "termsRequired": "Vous devez accepter les Conditions et la Politique de confidentialité",
+  "registrationFailed": "Échec de l'inscription",
+  "loginFailed": "Échec de la connexion",
+  "updateFailed": "Échec de la mise à jour",
+  "unauthorized": "Non autorisé",
+  "forbidden": "Interdit",
+  "notFound": "Introuvable"
+}
