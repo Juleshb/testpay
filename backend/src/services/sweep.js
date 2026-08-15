@@ -1,7 +1,8 @@
 import { prisma } from '../db.js';
 import { config } from '../config/index.js';
-import { sweepPayment } from './wallet.js';
+import { sweepPayment, getPaymentBalance } from './wallet.js';
 import { creditPaymentBalance } from './userBalance.js';
+import { notifyTreasuryChanged } from './treasuryRealtime.js';
 
 export async function sweepConfirmedPayments() {
   const confirmed = await prisma.payment.findMany({
@@ -12,7 +13,28 @@ export async function sweepConfirmedPayments() {
 
   for (const payment of confirmed) {
     try {
-      const sweep = await sweepPayment(payment, config.treasuryAddress);
+      // Refresh paid amount in case more arrived after first confirm
+      let working = payment;
+      try {
+        const live = await getPaymentBalance(
+          payment.depositAddress,
+          payment.chainId,
+          payment.tokenSymbol
+        );
+        const liveNum = parseFloat(live) || 0;
+        const paidNum = parseFloat(payment.paidAmount || '0') || 0;
+        if (liveNum > paidNum + 1e-12) {
+          working = await prisma.payment.update({
+            where: { id: payment.id },
+            data: { paidAmount: live },
+          });
+          await creditPaymentBalance(working);
+        }
+      } catch (err) {
+        console.warn(`Pre-sweep balance refresh failed for ${payment.id}:`, err.message);
+      }
+
+      const sweep = await sweepPayment(working, config.treasuryAddress);
 
       if (sweep) {
         const updated = await prisma.payment.update({
@@ -21,6 +43,7 @@ export async function sweepConfirmedPayments() {
             status: 'SWEPT',
             sweptAt: new Date(),
             sweepTxHash: sweep.txHash,
+            paidAmount: sweep.amount || working.paidAmount,
           },
         });
 
@@ -41,6 +64,7 @@ export async function sweepConfirmedPayments() {
         console.log(
           `Swept ${sweep.amount} ${payment.tokenSymbol} from ${payment.depositAddress} -> ${config.treasuryAddress}`
         );
+        notifyTreasuryChanged();
       }
     } catch (err) {
       results.push({

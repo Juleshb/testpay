@@ -6,11 +6,11 @@ import {
   getDepositAddress,
   getPaymentBalance,
 } from '../services/wallet.js';
-import { getPaymentStatus } from '../services/paymentMonitor.js';
+import { getPaymentStatus, confirmFromBalance, MIN_CONFIRM_AMOUNT } from '../services/paymentMonitor.js';
 import { validatePaymentRequest, getNetwork } from '../config/networks.js';
 import { authMiddleware } from '../middleware/auth.js';
-import { getUserBalanceSummary, getPaymentUsdStats, creditPaymentBalance, ensureUserPaymentCredits } from '../services/userBalance.js';
-import { tryActivateDeveloperAccess } from '../services/developerAccess.js';
+import { getUserBalanceSummary, getPaymentUsdStats, ensureUserPaymentCredits } from '../services/userBalance.js';
+import { convertUsdToToken } from '../services/priceConversion.js';
 
 const router = Router();
 
@@ -133,11 +133,7 @@ router.get('/stats/balance', authMiddleware(true), async (req, res) => {
 
 router.post('/', authMiddleware(true), async (req, res) => {
   try {
-    const { amount, email, name, chainId, tokenSymbol } = req.body;
-
-    if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
-      return res.status(400).json({ error: 'Valid amount is required' });
-    }
+    const { amount, amountUsd, email, name, chainId, tokenSymbol } = req.body;
 
     const resolvedChainId = chainId ? parseInt(chainId, 10) : config.defaultChainId;
     const resolvedToken = tokenSymbol || getNetwork(resolvedChainId)?.nativeSymbol;
@@ -147,12 +143,33 @@ router.post('/', authMiddleware(true), async (req, res) => {
       return res.status(400).json({ error: validation.error });
     }
 
+    let tokenAmount = amount != null ? String(amount) : null;
+    let usdAmount = null;
+    let usdRate = null;
+
+    if (amountUsd != null && amountUsd !== '') {
+      const usdNum = parseFloat(amountUsd);
+      if (isNaN(usdNum) || usdNum <= 0) {
+        return res.status(400).json({ error: 'Valid USD amount is required' });
+      }
+      const decimals = Math.min(validation.token.decimals, 8);
+      const converted = await convertUsdToToken(usdNum, resolvedToken, decimals);
+      if (!(parseFloat(converted.tokenAmount) > 0)) {
+        return res.status(400).json({ error: 'Converted token amount is too small' });
+      }
+      tokenAmount = converted.tokenAmount;
+      usdAmount = usdNum.toFixed(2);
+      usdRate = converted.usdRate;
+    } else if (!tokenAmount || isNaN(parseFloat(tokenAmount)) || parseFloat(tokenAmount) <= 0) {
+      return res.status(400).json({ error: 'Valid amount is required' });
+    }
+
     const derivationIndex = await getNextDerivationIndex(prisma);
     const depositAddress = getDepositAddress(derivationIndex);
 
     const payment = await prisma.payment.create({
       data: {
-        amount: String(amount),
+        amount: String(tokenAmount),
         chainId: resolvedChainId,
         tokenSymbol: resolvedToken,
         tokenAddress: validation.token.address,
@@ -161,13 +178,14 @@ router.post('/', authMiddleware(true), async (req, res) => {
         depositAddress,
         derivationIndex,
         userId: req.user.id,
+        ...(usdAmount ? { usdAmount, usdRate } : {}),
       },
     });
 
     res.status(201).json(formatPaymentResponse(payment));
   } catch (err) {
     console.error('Create payment error:', err);
-    res.status(500).json({ error: 'Failed to create payment' });
+    res.status(500).json({ error: err.message || 'Failed to create payment' });
   }
 });
 
@@ -188,33 +206,16 @@ router.post('/:id/tx', authMiddleware(true), async (req, res) => {
       payment.chainId,
       payment.tokenSymbol
     );
-    const isSufficient = parseFloat(received) >= parseFloat(payment.amount);
+    const receivedNum = parseFloat(received) || 0;
+    const hasDeposit = receivedNum > MIN_CONFIRM_AMOUNT;
 
-    const updated = await prisma.payment.update({
+    let updated = await prisma.payment.update({
       where: { id: payment.id },
-      data: {
-        txHash,
-        ...(isSufficient
-          ? {
-              status: 'CONFIRMED',
-              paidAmount: received,
-              paidAt: new Date(),
-            }
-          : {}),
-      },
+      data: { txHash },
     });
 
-    if (isSufficient) {
-      try {
-        await creditPaymentBalance(updated);
-      } catch (err) {
-        console.error(`Balance credit failed for payment ${payment.id}:`, err.message);
-      }
-      try {
-        await tryActivateDeveloperAccess(updated);
-      } catch (err) {
-        console.error(`Developer access activation failed for payment ${payment.id}:`, err.message);
-      }
+    if (hasDeposit && updated.status === 'PENDING') {
+      updated = (await confirmFromBalance(updated, received, { txHash })) || updated;
     }
 
     res.json(formatPaymentResponse(updated));
@@ -253,6 +254,7 @@ router.get('/:id/balance', authMiddleware(true), async (req, res) => {
     );
     const required = parseFloat(payment.amount);
     const receivedNum = parseFloat(received);
+    const hasDeposit = receivedNum > MIN_CONFIRM_AMOUNT;
 
     res.json({
       depositAddress: payment.depositAddress,
@@ -261,6 +263,7 @@ router.get('/:id/balance', authMiddleware(true), async (req, res) => {
       tokenSymbol: payment.tokenSymbol,
       chainId: payment.chainId,
       isSufficient: receivedNum >= required,
+      hasDeposit,
       status: payment.status,
     });
   } catch (err) {

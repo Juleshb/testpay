@@ -9,6 +9,7 @@ import Button from '../components/ui/Button';
 import BarRow from '../components/ui/BarRow';
 import { Card, CardContent, CardTitle } from '../components/ui/Card';
 import { PageLoader } from '../components/ui/Spinner';
+import LiveQuotes from '../components/LiveQuotes';
 
 export default function OverviewDashboardPage() {
   const { t } = useTranslation();
@@ -98,6 +99,8 @@ export default function OverviewDashboardPage() {
           {t('dashboard.balanceHint')}
         </p>
       </section>
+
+      <LiveQuotes />
 
       <section>
         <p className="section-label mb-4">{t('dashboard.statistics')}</p>

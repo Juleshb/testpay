@@ -1,5 +1,6 @@
 {
   "failedLoadShowcase": "Failed to load showcase",
+  "failedLoadQuotes": "Failed to load quotes",
   "failedSubmitReview": "Failed to submit review",
   "thanksReview": "Thanks for your review! It will appear on the landing page after approval.",
   "failedRegisterDeveloper": "Failed to register for API access",

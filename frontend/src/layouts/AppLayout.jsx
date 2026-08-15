@@ -77,8 +77,11 @@ function SidebarContent({ onNavigate }) {
             <SidebarLink to="/transfer" icon={IconTransfer} onClick={onNavigate}>
               {t('nav.transfer')}
             </SidebarLink>
-            <SidebarLink to="/withdraw" icon={IconWithdraw} onClick={onNavigate}>
+            <SidebarLink to="/withdraw" end icon={IconWithdraw} onClick={onNavigate}>
               {t('nav.withdraw')}
+            </SidebarLink>
+            <SidebarLink to="/withdraw/history" icon={IconWithdrawHistory} onClick={onNavigate}>
+              {t('nav.withdrawHistory')}
             </SidebarLink>
             <SidebarLink to="/referrals" icon={IconReferrals} onClick={onNavigate}>
               {t('nav.invitations')}
@@ -97,6 +100,18 @@ function SidebarContent({ onNavigate }) {
             </SidebarLink>
             <SidebarLink to="/packages/portfolio" icon={IconPortfolio} onClick={onNavigate}>
               {t('nav.myPortfolio')}
+            </SidebarLink>
+          </div>
+        </div>
+
+        <div>
+          <p className="section-label px-2 mb-2">{t('nav.mining')}</p>
+          <div className="space-y-1">
+            <SidebarLink to="/mining" end icon={IconMining} onClick={onNavigate}>
+              {t('nav.browseMining')}
+            </SidebarLink>
+            <SidebarLink to="/mining/portfolio" icon={IconPortfolio} onClick={onNavigate}>
+              {t('nav.myMiners')}
             </SidebarLink>
           </div>
         </div>
@@ -121,6 +136,9 @@ function SidebarContent({ onNavigate }) {
                 <SidebarLink to="/admin" end icon={IconAdmin} onClick={onNavigate}>
                   {t('nav.systemAdmin')}
                 </SidebarLink>
+                <SidebarLink to="/admin/reports" icon={IconReport} onClick={onNavigate}>
+                  {t('nav.reports')}
+                </SidebarLink>
                 <SidebarLink to="/admin/payments/recent" icon={IconRecent} onClick={onNavigate}>
                   {t('nav.allRecentPayments')}
                 </SidebarLink>
@@ -130,8 +148,14 @@ function SidebarContent({ onNavigate }) {
                 <SidebarLink to="/admin/packages" icon={IconPackages} onClick={onNavigate}>
                   {t('nav.packages')}
                 </SidebarLink>
+                <SidebarLink to="/admin/mining" icon={IconMining} onClick={onNavigate}>
+                  {t('nav.mining')}
+                </SidebarLink>
                 <SidebarLink to="/admin/referrals" icon={IconReferrals} onClick={onNavigate}>
                   {t('nav.referrals')}
+                </SidebarLink>
+                <SidebarLink to="/admin/withdrawals" icon={IconWithdraw} onClick={onNavigate}>
+                  {t('nav.withdrawSettings')}
                 </SidebarLink>
                 <SidebarLink to="/admin/showcase-team" icon={IconCommunity} onClick={onNavigate}>
                   {t('nav.landingTeam')}
@@ -222,7 +246,7 @@ export default function AppLayout() {
 
       {/* Main column — offset for fixed sidebar on desktop */}
       <div className="app-layout-column flex flex-col min-h-[100dvh] min-w-0 lg:pl-64 lg:min-h-screen">
-        <main className="app-layout-main flex-1 p-3 sm:p-6 lg:p-8 max-w-6xl w-full mx-auto pt-[calc(0.75rem+env(safe-area-inset-top,0px))] lg:pt-8 mobile-main-pad min-w-0">
+        <main className="app-layout-main flex-1 p-3 sm:p-6 lg:p-8 max-w-6xl w-full mx-auto pt-[calc(0.75rem+env(safe-area-inset-top,0px))] lg:pt-8 mobile-main-pad min-w-0 overflow-x-hidden flex flex-col">
           <Outlet />
         </main>
 
@@ -297,6 +321,14 @@ function IconAdmin() {
   );
 }
 
+function IconReport() {
+  return (
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M9 17v-6m4 6V7m4 10v-3M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z" />
+    </svg>
+  );
+}
+
 function IconCommunity() {
   return (
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -309,6 +341,14 @@ function IconWithdraw() {
   return (
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M12 8v8m0 0l-3-3m3 3l3-3M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M4 12V7a3 3 0 013-3h4l2 2h4a3 3 0 013 3v5" />
+    </svg>
+  );
+}
+
+function IconWithdrawHistory() {
+  return (
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
     </svg>
   );
 }
@@ -350,6 +390,19 @@ function IconPortfolio() {
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+    </svg>
+  );
+}
+
+function IconMining() {
+  return (
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.75}
+        d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"
+      />
     </svg>
   );
 }

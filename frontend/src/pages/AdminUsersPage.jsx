@@ -44,7 +44,7 @@ export default function AdminUsersPage() {
     return users.filter((u) => {
       if (role !== 'all' && u.role !== role) return false;
       if (!q) return true;
-      return [u.email, u.phone, u.name, u.id]
+      return [u.email, u.phone, u.name, u.username, u.id]
         .filter(Boolean)
         .some((v) => String(v).toLowerCase().includes(q));
     });
@@ -126,7 +126,9 @@ export default function AdminUsersPage() {
                     <th className="px-4 py-3 font-medium">{t('admin.name')}</th>
                     <th className="px-4 py-3 font-medium">{t('admin.usersPage.roleHeader')}</th>
                     <th className="px-4 py-3 font-medium">{t('admin.payments')}</th>
+                    <th className="px-4 py-3 font-medium">{t('admin.usersPage.transactions')}</th>
                     <th className="px-4 py-3 font-medium">{t('admin.joined')}</th>
+                    <th className="px-4 py-3 font-medium">{t('admin.usersPage.actions')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -150,8 +152,18 @@ export default function AdminUsersPage() {
                         <RoleBadge role={u.role} />
                       </td>
                       <td className="px-4 py-3.5 font-mono tabular-nums">{u.paymentCount}</td>
+                      <td className="px-4 py-3.5 font-mono tabular-nums">{u.transactionCount ?? 0}</td>
                       <td className="px-4 py-3.5 font-mono text-xs tabular-nums whitespace-nowrap" style={{ color: 'var(--color-text-muted)' }}>
                         {new Date(u.createdAt).toLocaleString()}
+                      </td>
+                      <td className="px-4 py-3.5">
+                        <Link
+                          to={`/admin/users/${u.id}`}
+                          className="font-mono text-xs hover:underline"
+                          style={{ color: 'var(--color-accent)' }}
+                        >
+                          {t('admin.usersPage.viewAccount')}
+                        </Link>
                       </td>
                     </tr>
                   ))}
@@ -162,7 +174,7 @@ export default function AdminUsersPage() {
 
           <div className="md:hidden space-y-3">
             {filtered.map((u) => (
-              <div key={u.id} className="glass-panel p-4">
+              <Link key={u.id} to={`/admin/users/${u.id}`} className="block glass-panel p-4">
                 <div className="flex items-start justify-between gap-3 mb-2">
                   <div className="min-w-0">
                     <p className="font-mono font-semibold truncate">{userLabel(u)}</p>
@@ -180,11 +192,15 @@ export default function AdminUsersPage() {
                     <dd>{u.paymentCount}</dd>
                   </div>
                   <div>
+                    <dt style={{ color: 'var(--color-text-muted)' }}>{t('admin.usersPage.transactions')}</dt>
+                    <dd>{u.transactionCount ?? 0}</dd>
+                  </div>
+                  <div>
                     <dt style={{ color: 'var(--color-text-muted)' }}>{t('admin.joined')}</dt>
                     <dd>{new Date(u.createdAt).toLocaleDateString()}</dd>
                   </div>
                 </dl>
-              </div>
+              </Link>
             ))}
           </div>
         </>

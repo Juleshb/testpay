@@ -7,6 +7,17 @@ const COINGECKO_IDS = {
   MATIC: 'matic-network',
   AVAX: 'avalanche-2',
   WBTC: 'wrapped-bitcoin',
+  USDT: 'tether',
+  USDC: 'usd-coin',
+};
+
+const BINANCE_SYMBOLS = {
+  ETH: 'ETHUSDT',
+  WBTC: 'BTCUSDT',
+  BNB: 'BNBUSDT',
+  AVAX: 'AVAXUSDT',
+  POL: 'POLUSDT',
+  USDC: 'USDCUSDT',
 };
 
 const FALLBACK_USD = {
@@ -20,38 +31,122 @@ const FALLBACK_USD = {
   USDC: 1,
 };
 
-let priceCache = { prices: {}, fetchedAt: 0 };
-const CACHE_MS = 5 * 60 * 1000;
+const QUOTE_SYMBOLS = ['ETH', 'WBTC', 'BNB', 'AVAX', 'POL', 'USDT', 'USDC'];
 
-async function fetchPricesFromApi() {
-  const ids = [...new Set(Object.values(COINGECKO_IDS))].join(',');
-  const res = await fetch(
-    `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`,
-    { headers: { Accept: 'application/json' } }
-  );
-  if (!res.ok) throw new Error(`Price API error: ${res.status}`);
-  const data = await res.json();
-  const bySymbol = {};
-  for (const [symbol, id] of Object.entries(COINGECKO_IDS)) {
-    if (data[id]?.usd != null) bySymbol[symbol] = data[id].usd;
+let priceCache = { prices: {}, changes: {}, fetchedAt: 0, source: 'fallback' };
+const CACHE_MS = 2 * 1000;
+
+async function fetchPricesFromBinance() {
+  const pairs = [...new Set(Object.values(BINANCE_SYMBOLS))];
+  const url = `https://api.binance.com/api/v3/ticker/24hr?symbols=${encodeURIComponent(JSON.stringify(pairs))}`;
+  const res = await fetch(url, { headers: { Accept: 'application/json' } });
+  if (!res.ok) throw new Error(`Binance price API error: ${res.status}`);
+  const rows = await res.json();
+  if (!Array.isArray(rows)) throw new Error('Binance price API returned invalid payload');
+
+  const byPair = new Map(rows.map((row) => [row.symbol, row]));
+  const prices = {};
+  const changes = {};
+
+  for (const [symbol, pair] of Object.entries(BINANCE_SYMBOLS)) {
+    const row = byPair.get(pair);
+    if (!row) continue;
+    const lastPrice = Number(row.lastPrice);
+    const change = Number(row.priceChangePercent);
+    if (Number.isFinite(lastPrice) && lastPrice > 0) prices[symbol] = lastPrice;
+    if (Number.isFinite(change)) changes[symbol] = change;
   }
-  return bySymbol;
+
+  if (Object.keys(prices).length === 0) {
+    throw new Error('Binance returned no usable prices');
+  }
+
+  if (prices.USDT == null) {
+    prices.USDT = 1;
+    changes.USDT = 0;
+  }
+
+  return { prices, changes, source: 'binance' };
 }
 
-async function getUsdPrices() {
+async function fetchPricesFromCoinGecko() {
+  const ids = [...new Set(Object.values(COINGECKO_IDS))].join(',');
+  const res = await fetch(
+    `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`,
+    { headers: { Accept: 'application/json' } }
+  );
+  if (!res.ok) throw new Error(`CoinGecko price API error: ${res.status}`);
+  const data = await res.json();
+  const prices = {};
+  const changes = {};
+  for (const [symbol, id] of Object.entries(COINGECKO_IDS)) {
+    if (data[id]?.usd != null) prices[symbol] = data[id].usd;
+    if (data[id]?.usd_24h_change != null) changes[symbol] = data[id].usd_24h_change;
+  }
+  return { prices, changes, source: 'coingecko' };
+}
+
+async function fetchPricesFromApi() {
+  try {
+    return await fetchPricesFromBinance();
+  } catch (binanceErr) {
+    console.warn('Binance price fetch failed, trying CoinGecko:', binanceErr.message);
+    return fetchPricesFromCoinGecko();
+  }
+}
+
+async function getUsdPrices({ force = false } = {}) {
   const now = Date.now();
-  if (now - priceCache.fetchedAt < CACHE_MS && Object.keys(priceCache.prices).length > 0) {
+  if (
+    !force &&
+    now - priceCache.fetchedAt < CACHE_MS &&
+    Object.keys(priceCache.prices).length > 0
+  ) {
     return priceCache.prices;
   }
   try {
-    const prices = await fetchPricesFromApi();
-    priceCache = { prices, fetchedAt: now };
+    const { prices, changes, source } = await fetchPricesFromApi();
+    priceCache = { prices, changes, fetchedAt: now, source: source || 'live' };
     return prices;
   } catch (err) {
     console.warn('Price fetch failed, using fallback rates:', err.message);
     if (Object.keys(priceCache.prices).length > 0) return priceCache.prices;
     return FALLBACK_USD;
   }
+}
+
+function formatPriceUsd(value) {
+  if (value >= 1000) return value.toFixed(2);
+  if (value >= 1) return value.toFixed(4);
+  return value.toFixed(6);
+}
+
+export async function getLiveQuotes({ force = false } = {}) {
+  await getUsdPrices({ force });
+  const prices =
+    Object.keys(priceCache.prices).length > 0 ? priceCache.prices : FALLBACK_USD;
+  const changes = priceCache.changes || {};
+  const source =
+    Object.keys(priceCache.prices).length > 0 ? priceCache.source || 'cache' : 'fallback';
+
+  const quotes = QUOTE_SYMBOLS.map((symbol) => {
+    const livePrice = prices[symbol] ?? FALLBACK_USD[symbol] ?? null;
+    const priceUsd = livePrice;
+    const change24h = changes[symbol] ?? (STABLECOINS.has(symbol) ? 0 : null);
+
+    return {
+      symbol,
+      priceUsd: priceUsd == null ? null : Number(priceUsd),
+      priceUsdFormatted: priceUsd == null ? null : formatPriceUsd(Number(priceUsd)),
+      change24h: change24h == null ? null : Number(change24h),
+    };
+  }).filter((q) => q.priceUsd != null);
+
+  return {
+    quotes,
+    updatedAt: new Date(priceCache.fetchedAt || Date.now()).toISOString(),
+    source,
+  };
 }
 
 export async function getTokenUsdRate(tokenSymbol) {

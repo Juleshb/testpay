@@ -8,12 +8,12 @@ import {
   getWithdrawHistory,
   saveWithdrawWallet,
   clearSavedWithdrawWallet,
-  explorerTxUrl,
 } from '../withdrawalsApi';
 import PageHeader from '../components/ui/PageHeader';
 import Button from '../components/ui/Button';
 import Alert from '../components/ui/Alert';
 import { PageLoader } from '../components/ui/Spinner';
+import TxHashDisplay from '../components/TxHashDisplay';
 import { cn } from '../lib/cn';
 
 function StepBadge({ n, active, done }) {
@@ -114,19 +114,38 @@ export default function WithdrawPage() {
         }
 
         if (saved?.tokenSymbol) {
-          setTokenSymbol(saved.tokenSymbol);
+          const net =
+            opts.networks.find((n) => n.chainId === (saved?.chainId || opts.defaultChainId)) ||
+            opts.networks[0];
+          if (net?.tokens.some((tok) => tok.symbol === saved.tokenSymbol)) {
+            setTokenSymbol(saved.tokenSymbol);
+          } else if (net?.tokens.some((tok) => tok.symbol === opts.defaultToken)) {
+            setTokenSymbol(opts.defaultToken);
+          } else {
+            setTokenSymbol(net?.tokens[0]?.symbol || '');
+          }
         } else {
           const preferred =
             opts.networks.find((n) => n.chainId === opts.defaultChainId) || opts.networks[0];
           if (preferred?.tokens.some((tok) => tok.symbol === opts.defaultToken)) {
             setTokenSymbol(opts.defaultToken);
           } else {
-            setTokenSymbol(preferred?.tokens[0]?.symbol || 'USDC');
+            setTokenSymbol(preferred?.tokens[0]?.symbol || '');
           }
         }
 
         setAddress(saved?.destinationAddress || '');
         initialWalletApplied.current = true;
+      } else if (opts.networks?.length) {
+        setChainId((prev) => {
+          if (prev && opts.networks.some((n) => String(n.chainId) === prev)) return prev;
+          const preferred =
+            opts.networks.find((n) => n.chainId === opts.defaultChainId) || opts.networks[0];
+          return preferred ? String(preferred.chainId) : '';
+        });
+      } else {
+        setChainId('');
+        setTokenSymbol('');
       }
       setError('');
     } catch (err) {
@@ -148,16 +167,60 @@ export default function WithdrawPage() {
   );
 
   const availableTokens = selectedNetwork?.tokens || [];
+  const selectedToken = availableTokens.find((tok) => tok.symbol === tokenSymbol);
   const amountNum = parseFloat(amount) || 0;
   const availableUsd = parseFloat(balance?.availableUsd || '0');
   const minUsd = options?.minWithdrawUsd ?? 5;
-  const maxUsd = Math.min(options?.maxWithdrawUsd ?? 50000, availableUsd);
+  const maxPerTx = options?.maxWithdrawUsd ?? 50000;
+  const remainingVolume = parseFloat(options?.usage?.remainingVolumeUsd ?? String(maxPerTx));
+  const remainingCount = options?.usage?.remainingCount ?? options?.maxWithdrawalsPerDay ?? 5;
+
+  const walletCapUsd = Math.min(
+    maxPerTx,
+    availableUsd,
+    remainingVolume > 0 ? remainingVolume : 0
+  );
+
+  const tokenMaxFor = (token) => {
+    const liq = parseFloat(token?.availableUsd || '0');
+    if (!(liq > 0) || !(walletCapUsd > 0)) return 0;
+    return Math.min(walletCapUsd, liq);
+  };
+
+  const liquidityMax = parseFloat(selectedToken?.availableUsd || '0');
+  const maxUsd = tokenMaxFor(selectedToken);
+  const feePercent = options?.feePercent ?? 0;
+  const feeFlatUsd = options?.feeFlatUsd ?? 0;
+  const feeUsd = Math.min(
+    amountNum,
+    Math.round((feeFlatUsd + (amountNum * feePercent) / 100) * 100) / 100
+  );
+  const netUsd = Math.max(0, Math.round((amountNum - feeUsd) * 100) / 100);
+  const usdRate = parseFloat(selectedToken?.usdRate || '0');
+  const estimatedTokenAmount =
+    usdRate > 0 && netUsd > 0
+      ? netUsd / usdRate
+      : netUsd;
+  const tokenDecimals = Math.min(selectedToken?.decimals ?? 6, 8);
+  const estimatedTokenDisplay = estimatedTokenAmount.toFixed(
+    tokenSymbol === 'USDC' || tokenSymbol === 'USDT' ? 2 : Math.min(6, tokenDecimals)
+  );
+  const hasFundedNetworks = (options?.networks || []).length > 0;
+  const maxLiquidityUsd = Math.max(
+    0,
+    ...(options?.networks || []).flatMap((n) =>
+      (n.tokens || []).map((tok) => parseFloat(tok.availableUsd || '0'))
+    )
+  );
+  const liquidityBelowMin = hasFundedNetworks && maxLiquidityUsd + 0.00000001 < minUsd;
 
   const networkOk = Boolean(selectedNetwork);
   const tokenOk = availableTokens.some((tok) => tok.symbol === tokenSymbol);
-  const amountOk = amountNum >= minUsd && amountNum <= maxUsd;
+  const amountOk = amountNum >= minUsd && amountNum <= maxUsd && netUsd > 0 && netUsd <= liquidityMax + 0.00000001;
+  const dailyOk = remainingCount > 0 && remainingVolume >= minUsd;
   const addressOk = /^0x[a-fA-F0-9]{40}$/.test(address.trim());
-  const canSubmit = networkOk && tokenOk && amountOk && addressOk && !submitting;
+  const canSubmit =
+    hasFundedNetworks && networkOk && tokenOk && amountOk && addressOk && dailyOk && !submitting;
   const addressMatchesSaved =
     savedWallet?.destinationAddress &&
     address.trim().toLowerCase() === savedWallet.destinationAddress.toLowerCase();
@@ -288,8 +351,29 @@ export default function WithdrawPage() {
               ${balance?.availableUsd ?? '0.00'}
             </p>
             <p className="font-mono text-xs mt-2" style={{ color: 'var(--color-text-muted)' }}>
-              {t('withdraw.minMax', { min: minUsd.toFixed(2), max: maxUsd.toFixed(2) })}
+              {t('withdraw.minMax', { min: minUsd.toFixed(2), max: maxPerTx.toFixed(2) })}
             </p>
+            <p className="font-mono text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
+              {t('withdraw.dailyLimits', {
+                count: remainingCount,
+                maxCount: options?.maxWithdrawalsPerDay ?? 5,
+                remaining: Math.max(0, remainingVolume).toFixed(2),
+                maxDay: (options?.maxWithdrawUsdPerDay ?? maxPerTx).toFixed(2),
+              })}
+            </p>
+            {(feePercent > 0 || feeFlatUsd > 0) && (
+              <p className="font-mono text-xs mt-1" style={{ color: 'var(--color-accent)' }}>
+                {t('withdraw.feeSummary', {
+                  percent: Number(feePercent).toFixed(2),
+                  flat: Number(feeFlatUsd).toFixed(2),
+                })}
+              </p>
+            )}
+            {!dailyOk && (
+              <p className="font-mono text-xs mt-2" style={{ color: 'var(--color-danger)' }}>
+                {t('withdraw.dailyLimitReached')}
+              </p>
+            )}
           </div>
 
           <form
@@ -305,6 +389,31 @@ export default function WithdrawPage() {
             </div>
 
             <div className="p-6 space-y-8">
+              {!hasFundedNetworks ? (
+                <div
+                  className="rounded-xl border p-5 text-center"
+                  style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface-700)' }}
+                >
+                  <p className="font-semibold mb-1">{t('withdraw.noNetworksTitle')}</p>
+                  <p className="font-mono text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                    {t('withdraw.noNetworksHint')}
+                  </p>
+                </div>
+              ) : (
+                <>
+              {liquidityBelowMin && (
+                <div
+                  className="rounded-xl border p-4"
+                  style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface-700)' }}
+                >
+                  <p className="font-mono text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                    {t('withdraw.lowLiquidityHint', {
+                      available: maxLiquidityUsd.toFixed(2),
+                      min: minUsd.toFixed(2),
+                    })}
+                  </p>
+                </div>
+              )}
               {/* Step 1: Network */}
               <section className="space-y-3">
                 <div className="flex items-center gap-3">
@@ -319,6 +428,11 @@ export default function WithdrawPage() {
                 <div className="ml-0 sm:ml-10 grid sm:grid-cols-2 gap-2">
                   {options?.networks.map((network) => {
                     const active = chainId === String(network.chainId);
+                    const networkMax = Math.max(0, ...network.tokens.map((tok) => tokenMaxFor(tok)));
+                    const tokenLines = network.tokens.map((tok) => {
+                      const max = tokenMaxFor(tok);
+                      return `${tok.symbol} ${t('withdraw.tokenMax', { amount: max.toFixed(2) })}`;
+                    });
                     return (
                       <button
                         key={network.chainId}
@@ -340,9 +454,17 @@ export default function WithdrawPage() {
                             : { borderColor: 'var(--color-border)' }
                         }
                       >
-                        <p className="font-semibold text-sm">{network.name}</p>
+                        <div className="flex items-start justify-between gap-2">
+                          <p className="font-semibold text-sm">{network.name}</p>
+                          <p
+                            className="font-mono text-[10px] font-semibold shrink-0"
+                            style={{ color: 'var(--color-accent)' }}
+                          >
+                            {t('withdraw.networkMax', { amount: networkMax.toFixed(2) })}
+                          </p>
+                        </div>
                         <p className="font-mono text-[10px] mt-1" style={{ color: 'var(--color-text-muted)' }}>
-                          {network.tokens.map((tok) => tok.symbol).join(' · ')}
+                          {tokenLines.join(' · ')}
                         </p>
                       </button>
                     );
@@ -362,26 +484,45 @@ export default function WithdrawPage() {
                   </div>
                 </div>
                 <div className="ml-0 sm:ml-10 flex flex-wrap gap-2">
-                  {availableTokens.map((token) => (
-                    <button
-                      key={token.symbol}
-                      type="button"
-                      onClick={() => setTokenSymbol(token.symbol)}
-                      className={cn(
-                        'px-4 py-2 rounded-xl border font-mono text-sm font-semibold transition-colors',
-                        tokenSymbol === token.symbol
-                          ? 'border-[var(--color-accent)] text-[var(--color-accent)]'
-                          : 'hover:bg-white/[0.03]'
-                      )}
-                      style={
-                        tokenSymbol === token.symbol
-                          ? { background: 'color-mix(in srgb, var(--color-accent) 10%, transparent)' }
-                          : { borderColor: 'var(--color-border)' }
-                      }
-                    >
-                      {token.symbol}
-                    </button>
-                  ))}
+                  {availableTokens.map((token) => {
+                    const tokenMax = tokenMaxFor(token);
+                    const showUnits =
+                      token.availableBalance != null &&
+                      token.symbol !== 'USDC' &&
+                      token.symbol !== 'USDT';
+                    return (
+                      <button
+                        key={token.symbol}
+                        type="button"
+                        onClick={() => setTokenSymbol(token.symbol)}
+                        className={cn(
+                          'min-w-[7.5rem] px-4 py-2.5 rounded-xl border font-mono text-sm font-semibold transition-colors text-left',
+                          tokenSymbol === token.symbol
+                            ? 'border-[var(--color-accent)] text-[var(--color-accent)]'
+                            : 'hover:bg-white/[0.03]'
+                        )}
+                        style={
+                          tokenSymbol === token.symbol
+                            ? { background: 'color-mix(in srgb, var(--color-accent) 10%, transparent)' }
+                            : { borderColor: 'var(--color-border)' }
+                        }
+                      >
+                        <span className="block">{token.symbol}</span>
+                        <span
+                          className="block font-mono text-[10px] font-normal mt-0.5"
+                          style={{ color: 'var(--color-text-muted)' }}
+                        >
+                          {showUnits
+                            ? t('withdraw.tokenMaxWithUnits', {
+                                amount: tokenMax.toFixed(2),
+                                balance: token.availableBalance,
+                                symbol: token.symbol,
+                              })
+                            : t('withdraw.tokenMax', { amount: tokenMax.toFixed(2) })}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </section>
 
@@ -393,8 +534,9 @@ export default function WithdrawPage() {
                     <p className="font-semibold">{t('withdraw.step3Title')}</p>
                     <p className="font-mono text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
                       {t('withdraw.step3Hint', {
-                        amount: amountNum > 0 ? amountNum.toFixed(2) : '0.00',
+                        amount: amountNum > 0 ? netUsd.toFixed(2) : '0.00',
                         token: tokenSymbol,
+                        max: maxUsd.toFixed(2),
                       })}
                     </p>
                   </div>
@@ -419,15 +561,15 @@ export default function WithdrawPage() {
                     />
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    {availableUsd >= minUsd && (
+                    {maxUsd >= minUsd && (
                       <button
                         type="button"
                         className="font-mono text-xs px-3 py-1.5 rounded-lg border"
                         style={{ borderColor: 'var(--color-border)', color: 'var(--color-accent)' }}
-                        onClick={() => setAmount(Math.min(availableUsd, maxUsd).toFixed(2))}
+                        onClick={() => setAmount(maxUsd.toFixed(2))}
                       >
                         {t('withdraw.withdrawAll', {
-                          amount: Math.min(availableUsd, maxUsd).toFixed(2),
+                          amount: maxUsd.toFixed(2),
                         })}
                       </button>
                     )}
@@ -539,8 +681,23 @@ export default function WithdrawPage() {
                     <div>
                       <p style={{ color: 'var(--color-text-muted)' }}>{t('withdraw.youReceive')}</p>
                       <p className="font-semibold text-[var(--color-accent)]">
-                        {amountNum.toFixed(2)} {tokenSymbol}
+                        ~{estimatedTokenDisplay} {tokenSymbol}
                       </p>
+                      {usdRate > 0 && tokenSymbol !== 'USDC' && tokenSymbol !== 'USDT' && (
+                        <p className="font-mono text-[10px] mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
+                          ${netUsd.toFixed(2)} @ ${usdRate.toLocaleString()} / {tokenSymbol}
+                        </p>
+                      )}
+                    </div>
+                    {(feeUsd > 0 || feePercent > 0 || feeFlatUsd > 0) && (
+                      <div>
+                        <p style={{ color: 'var(--color-text-muted)' }}>{t('withdraw.fee')}</p>
+                        <p className="font-semibold">${feeUsd.toFixed(2)}</p>
+                      </div>
+                    )}
+                    <div>
+                      <p style={{ color: 'var(--color-text-muted)' }}>{t('withdraw.debited')}</p>
+                      <p className="font-semibold">${amountNum.toFixed(2)}</p>
                     </div>
                     <div className="sm:col-span-2">
                       <p style={{ color: 'var(--color-text-muted)' }}>{t('withdraw.toAddress')}</p>
@@ -563,6 +720,8 @@ export default function WithdrawPage() {
                       ? t('withdraw.enterValidAmount')
                       : t('withdraw.completeSteps')}
               </Button>
+                </>
+              )}
             </div>
           </form>
         </div>
@@ -616,6 +775,13 @@ export default function WithdrawPage() {
               {t('withdraw.historyHint')}
             </p>
           </div>
+          <Link
+            to="/withdraw/history"
+            className="font-mono text-xs hover:underline shrink-0"
+            style={{ color: 'var(--color-accent)' }}
+          >
+            {t('withdraw.viewAllHistory')}
+          </Link>
         </div>
 
         {withdrawals.length === 0 ? (
@@ -628,8 +794,7 @@ export default function WithdrawPage() {
           </div>
         ) : (
           <div className="space-y-2">
-            {withdrawals.map((w) => {
-              const txUrl = explorerTxUrl(w.explorer, w.txHash);
+            {withdrawals.slice(0, 5).map((w) => {
               return (
                 <div
                   key={w.id}
@@ -644,13 +809,26 @@ export default function WithdrawPage() {
                         </p>
                         <StatusBadge status={w.status} />
                       </div>
+                      {parseFloat(w.feeUsd || '0') > 0 && (
+                        <p className="font-mono text-[11px] mt-1" style={{ color: 'var(--color-accent)' }}>
+                          {t('withdraw.feeLine', {
+                            fee: w.feeUsd,
+                            net: w.netAmountUsd || w.amountUsd,
+                          })}
+                        </p>
+                      )}
                       <p className="font-mono text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
                         {w.networkName} · {formatTime(w.createdAt)}
                       </p>
-                      <p className="font-mono text-[10px] mt-1 break-all" style={{ color: 'var(--color-text-muted)' }}>
-                        {w.destinationAddress}
-                      </p>
-                      {w.failureReason && (
+                      {w.txHash && (
+                        <TxHashDisplay
+                          txHash={w.txHash}
+                          explorer={w.explorer}
+                          className="mt-2"
+                          showExplorerLink={false}
+                        />
+                      )}
+                      {w.failureReason && (w.status === 'FAILED' || w.status === 'CANCELLED') && (
                         <p className="font-mono text-xs mt-2" style={{ color: 'var(--color-danger)' }}>
                           {w.failureReason}
                           {w.status === 'FAILED' && t('withdraw.balanceRefunded')}
@@ -658,19 +836,11 @@ export default function WithdrawPage() {
                       )}
                     </div>
                     <div className="text-right shrink-0">
-                      {txUrl ? (
-                        <a
-                          href={txUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="font-mono text-xs underline"
-                          style={{ color: 'var(--color-accent)' }}
-                        >
-                          {t('withdraw.viewTx')}
-                        </a>
-                      ) : (
+                      {!w.txHash && (
                         <span className="font-mono text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
-                          {w.status === 'PENDING' ? t('withdraw.inQueue') : '—'}
+                          {w.status === 'PENDING' || w.status === 'PROCESSING'
+                            ? t('withdraw.inQueue')
+                            : '—'}
                         </span>
                       )}
                     </div>
@@ -678,6 +848,15 @@ export default function WithdrawPage() {
                 </div>
               );
             })}
+            {withdrawals.length > 5 && (
+              <Link
+                to="/withdraw/history"
+                className="block text-center font-mono text-xs py-3 hover:underline"
+                style={{ color: 'var(--color-accent)' }}
+              >
+                {t('withdraw.viewAllHistoryCount', { count: withdrawals.length })}
+              </Link>
+            )}
           </div>
         )}
       </section>

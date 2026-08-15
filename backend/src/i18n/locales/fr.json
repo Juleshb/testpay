@@ -1,5 +1,6 @@
 {
   "failedLoadShowcase": "Échec du chargement de la vitrine",
+  "failedLoadQuotes": "Échec du chargement des cotations",
   "failedSubmitReview": "Échec de l'envoi de l'avis",
   "thanksReview": "Merci pour votre avis ! Il apparaîtra sur la page d'accueil après approbation.",
   "failedRegisterDeveloper": "Échec de l'inscription pour l'accès API",

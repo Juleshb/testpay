@@ -51,8 +51,9 @@ export async function requestWithdrawal({ amountUsd, chainId, tokenSymbol, desti
   return data;
 }
 
-export async function getWithdrawHistory(limit = 30) {
+export async function getWithdrawHistory(limit = 50, { status } = {}) {
   const params = new URLSearchParams({ limit: String(limit) });
+  if (status && status !== 'all') params.set('status', status);
   const res = await fetch(`${API_BASE}?${params}`, { headers: authHeaders() });
   if (!res.ok) throw new Error(await parseError(res, 'Failed to load withdrawals'));
   return res.json();

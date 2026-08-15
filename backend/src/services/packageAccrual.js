@@ -1,5 +1,6 @@
 import { prisma } from '../db.js';
 import { applyLoanRepaymentFromIncome } from './loans.js';
+import { creditPackageIncome } from './userBalance.js';
 
 function startOfUtcDay(date) {
   return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
@@ -59,7 +60,7 @@ export async function accruePackageDailyIncome() {
 
       if (!existing) {
         const prevEarned = parseFloat(investment.totalEarned || '0');
-        const incomeRecord = await prisma.$transaction(async (tx) => {
+        await prisma.$transaction(async (tx) => {
           const created = await tx.packageIncome.create({
             data: {
               userId: investment.userId,
@@ -78,20 +79,23 @@ export async function accruePackageDailyIncome() {
             },
           });
 
-          await applyLoanRepaymentFromIncome(
+          const repayment = await applyLoanRepaymentFromIncome(
             investment.userId,
             created.id,
             incomeAmount,
             tx
           );
 
-          return created;
+          const repaid = parseFloat(repayment?.repaymentUsd || '0') || 0;
+          const netCredit = Math.max(0, incomeNum - repaid);
+          if (netCredit > 0) {
+            await creditPackageIncome(investment.userId, created.id, netCredit, tx);
+          }
         });
 
         investment.totalEarned = (prevEarned + incomeNum).toFixed(8);
         investment.lastAccruedAt = cursor;
         accrued += 1;
-        void incomeRecord;
       }
 
       cursor = addUtcDays(cursor, 1);

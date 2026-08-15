@@ -17,11 +17,11 @@ export async function getDashboardStats() {
   return res.json();
 }
 
-export async function createPayment({ amount, email, name, chainId, tokenSymbol }) {
+export async function createPayment({ amount, amountUsd, email, name, chainId, tokenSymbol }) {
   const res = await fetch(`${API_BASE}/payments`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...authHeaders() },
-    body: JSON.stringify({ amount, email, name, chainId, tokenSymbol }),
+    body: JSON.stringify({ amount, amountUsd, email, name, chainId, tokenSymbol }),
   });
   if (!res.ok) {
     const err = await res.json();
@@ -73,5 +73,14 @@ export async function registerPaymentTx(id, txHash) {
 export async function getConfig() {
   const res = await fetch(`${API_BASE}/config`);
   if (!res.ok) throw new Error('Failed to get config');
+  return res.json();
+}
+
+export async function getLiveQuotes() {
+  const res = await fetch(`${API_BASE}/public/quotes`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to load quotes');
+  }
   return res.json();
 }

@@ -5,11 +5,15 @@ export default function AmountInput({
   value,
   onChange,
   tokenSymbol,
+  unit,
+  leading,
   placeholder = '0.00',
   className,
   disabled,
   ...props
 }) {
+  const suffix = unit || tokenSymbol;
+
   return (
     <div
       className={cn(
@@ -31,7 +35,7 @@ export default function AmountInput({
           background: 'color-mix(in srgb, var(--color-accent) 6%, var(--color-surface-700))',
         }}
       >
-        <TokenIcon symbol={tokenSymbol} size={32} />
+        {leading || <TokenIcon symbol={tokenSymbol} size={32} />}
       </div>
 
       <input
@@ -55,7 +59,7 @@ export default function AmountInput({
           background: 'color-mix(in srgb, var(--color-surface-800) 50%, transparent)',
         }}
       >
-        {tokenSymbol}
+        {suffix}
       </div>
     </div>
   );

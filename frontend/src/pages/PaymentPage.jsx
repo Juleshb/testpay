@@ -211,10 +211,19 @@ export default function PaymentPage() {
             </p>
             <p
               className="font-mono text-xs sm:text-sm tabular-nums mt-2 sm:mt-3 break-all"
-              style={{ color: isSufficient ? 'var(--color-success)' : 'var(--color-text-secondary)' }}
+              style={{ color: isPaid || receivedNum > 0 ? 'var(--color-success)' : 'var(--color-text-secondary)' }}
             >
               {t('payment.received', { amount: receivedNum.toFixed(6), symbol })}
             </p>
+            {isPaid && (
+              <p className="font-mono text-[10px] mt-2" style={{ color: 'var(--color-text-muted)' }}>
+                {receivedNum + 1e-12 < requiredNum
+                  ? t('payment.underpaidNote')
+                  : receivedNum > requiredNum + 1e-12
+                    ? t('payment.overpaidNote')
+                    : t('payment.creditedNote')}
+              </p>
+            )}
             {!isPaid && (
               <div className="mt-3 sm:mt-4 max-w-xs mx-auto px-1">
                 <div

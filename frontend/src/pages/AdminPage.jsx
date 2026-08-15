@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getAdminDashboard, triggerSweep, formatUptime } from '../adminApi';
+import { getAdminDashboard, openAdminTreasuryStream, triggerSweep, formatUptime } from '../adminApi';
 import { shortenAddress } from '../wallet';
 import PageHeader from '../components/ui/PageHeader';
 import StatCard from '../components/ui/StatCard';
@@ -9,18 +9,60 @@ import Badge from '../components/ui/Badge';
 import Alert from '../components/ui/Alert';
 import Button from '../components/ui/Button';
 import { PageLoader } from '../components/ui/Spinner';
+import { TokenIcon, NetworkIcon } from '../components/CryptoIcon';
+import TxHashDisplay from '../components/TxHashDisplay';
+
+const QUICK_LINKS = [
+  { to: '/admin/reports', labelKey: 'admin.hubReports' },
+  { to: '/admin/users', labelKey: 'admin.hubUsers' },
+  { to: '/admin/payments/recent', labelKey: 'admin.hubPayments' },
+  { to: '/admin/withdrawals', labelKey: 'admin.hubWithdraw' },
+  { to: '/admin/packages', labelKey: 'admin.hubPackages' },
+  { to: '/admin/mining', labelKey: 'admin.hubMining' },
+  { to: '/admin/referrals', labelKey: 'admin.hubReferrals' },
+];
 
 export default function AdminPage() {
   const { t } = useTranslation();
   const [data, setData] = useState(null);
+  const [treasury, setTreasury] = useState(null);
+  const [treasuryLoading, setTreasuryLoading] = useState(true);
+  const [treasuryError, setTreasuryError] = useState('');
+  const [treasuryLive, setTreasuryLive] = useState(false);
+  const [activity, setActivity] = useState(null);
+  const [activityLoading, setActivityLoading] = useState(true);
+  const [activityError, setActivityError] = useState('');
+  const [activityFilter, setActivityFilter] = useState('all');
+  const [showZeroTokens, setShowZeroTokens] = useState(false);
   const [loading, setLoading] = useState(true);
   const [sweeping, setSweeping] = useState(false);
   const [message, setMessage] = useState('');
+  const [copied, setCopied] = useState('');
+  const [streamKey, setStreamKey] = useState(0);
+
+  const applyTreasuryPayload = (payload) => {
+    if (payload?.error && !payload.balances && !payload.activity) {
+      setTreasuryError(payload.error);
+      setActivityError(payload.error);
+      setTreasuryLive(false);
+      return;
+    }
+    if (payload.balances) {
+      setTreasury(payload.balances);
+      setTreasuryLoading(false);
+      setTreasuryError('');
+    }
+    if (payload.activity) {
+      setActivity(payload.activity);
+      setActivityLoading(false);
+      setActivityError('');
+    }
+    setTreasuryLive(Boolean(payload.live));
+  };
 
   const load = async () => {
     try {
-      const dashboard = await getAdminDashboard();
-      setData(dashboard);
+      setData(await getAdminDashboard());
     } catch (err) {
       console.error(err);
     } finally {
@@ -30,9 +72,33 @@ export default function AdminPage() {
 
   useEffect(() => {
     load();
-    const interval = setInterval(load, 20000);
+    const interval = setInterval(load, 30000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    setTreasuryLoading(true);
+    setActivityLoading(true);
+    let reconnectTimer = null;
+
+    const stop = openAdminTreasuryStream({
+      onOpen: () => setTreasuryLive(true),
+      onData: (payload) => applyTreasuryPayload(payload),
+      onError: (err) => {
+        setTreasuryLive(false);
+        setTreasuryError(err.message || t('admin.treasuryStreamError'));
+        setActivityError(err.message || t('admin.treasuryStreamError'));
+        setTreasuryLoading(false);
+        setActivityLoading(false);
+        reconnectTimer = setTimeout(() => setStreamKey((k) => k + 1), 4000);
+      },
+    });
+
+    return () => {
+      stop();
+      if (reconnectTimer) clearTimeout(reconnectTimer);
+    };
+  }, [streamKey, t]);
 
   const handleSweep = async () => {
     setSweeping(true);
@@ -42,6 +108,7 @@ export default function AdminPage() {
       const ok = result.swept.filter((r) => r.success).length;
       setMessage(t('admin.sweepComplete', { count: ok }));
       await load();
+      setStreamKey((k) => k + 1);
     } catch (err) {
       setMessage(err.message);
     } finally {
@@ -49,296 +116,493 @@ export default function AdminPage() {
     }
   };
 
+  const copyTreasury = async () => {
+    if (!treasury?.address && !data?.system?.treasuryAddress) return;
+    try {
+      await navigator.clipboard.writeText(treasury?.address || data.system.treasuryAddress);
+      setCopied('treasury');
+      setTimeout(() => setCopied(''), 1500);
+    } catch {
+      /* ignore */
+    }
+  };
+
+  const fundedNetworks = useMemo(() => {
+    if (!treasury?.networks) return [];
+    return treasury.networks
+      .map((network) => {
+        const tokens = showZeroTokens
+          ? network.tokens
+          : network.tokens.filter((tok) => parseFloat(tok.balance) > 0 || tok.error);
+        return { ...network, tokens };
+      })
+      .filter((n) => n.tokens.length > 0);
+  }, [treasury, showZeroTokens]);
+
+  const filteredActivity = useMemo(() => {
+    const events = activity?.events || [];
+    if (activityFilter === 'in') return events.filter((e) => e.kind === 'IN');
+    if (activityFilter === 'out') return events.filter((e) => e.kind === 'OUT');
+    return events;
+  }, [activity, activityFilter]);
+
   if (loading || !data) return <PageLoader message={t('pageCommon.loading.dashboard')} />;
 
-  const { overview, volume, breakdown, system, recentPayments, users } = data;
-  const maxNetworkCount = Math.max(...breakdown.byNetwork.map((n) => n.count), 1);
+  const { overview, volume, system, recentPayments, users, modules } = data;
+  const treasuryAddress = treasury?.address || system.treasuryAddress;
 
   return (
-    <div className="space-y-8">
+    <div className="mx-auto max-w-6xl space-y-8">
       <PageHeader
         title={t('admin.title')}
         label={t('admin.label')}
         description={t('admin.description', { uptime: formatUptime(system.uptimeSeconds) })}
         actions={
-          <Button
-            size="md"
-            onClick={handleSweep}
-            loading={sweeping}
-            disabled={overview.confirmed === 0}
-          >
+          <Button size="md" onClick={handleSweep} loading={sweeping} disabled={overview.confirmed === 0}>
             {t('admin.sweepConfirmed', { count: overview.confirmed })}
           </Button>
         }
       />
 
-      {message && <Alert variant="warning" className="mb-6">{message}</Alert>}
+      {message && <Alert variant="warning">{message}</Alert>}
 
+      {/* 1. Snapshot */}
       <section>
-        <SectionTitle>{t('admin.overview')}</SectionTitle>
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+        <h2 className="section-label mb-3">{t('admin.reportSnapshot')}</h2>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           <StatCard label={t('admin.users')} value={overview.users} />
-          <StatCard label={t('admin.admins')} value={overview.admins} />
-          <StatCard label={t('admin.payments')} value={overview.payments} />
-          <StatCard label={t('admin.today')} value={overview.paymentsToday} color="text-[var(--color-accent)]" />
-          <StatCard label={t('admin.pending')} value={overview.pending} color="text-[var(--color-warning)]" />
-          <StatCard label={t('admin.confirmed')} value={overview.confirmed} color="text-[var(--color-success)]" />
-          <StatCard label={t('admin.swept')} value={overview.swept} color="text-[var(--color-accent)]" />
-          <StatCard label={t('admin.successRate')} value={`${overview.successRate}%`} color="text-[var(--color-success)]" />
+          <StatCard
+            label={t('admin.pendingDeposits')}
+            value={overview.pending}
+            color="text-[var(--color-warning)]"
+          />
+          <StatCard
+            label={t('admin.withdrawQueue')}
+            value={modules.withdrawals.pending}
+            color="text-[var(--color-warning)]"
+          />
+          <StatCard
+            label={t('admin.treasuryTotal')}
+            value={`$${treasury?.totalUsd ?? '—'}`}
+            color="text-[var(--color-accent)]"
+          />
+        </div>
+        <div
+          className="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-2 rounded-xl border px-4 py-3 font-mono text-xs"
+          style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface-700)' }}
+        >
+          <MiniStat label={t('admin.today')} value={overview.paymentsToday} />
+          <MiniStat label={t('admin.toSweep')} value={overview.confirmed} accent />
+          <MiniStat label={t('admin.confirmedUsd')} value={`$${volume.confirmedUsd || '0.00'}`} />
+          <MiniStat label={t('admin.successRate')} value={`${overview.successRate}%`} />
         </div>
       </section>
 
-      <section className="grid md:grid-cols-2 gap-4">
-        <div className="glass-panel p-6">
-          <SectionTitle>{t('admin.platformWallets')}</SectionTitle>
-          <dl className="space-y-3 text-sm">
-            <InfoRow label={t('admin.treasury')} value={system.treasuryAddress} mono />
-            <InfoRow label={t('admin.gasFunder')} value={system.gasFunderAddress} mono />
-            <InfoRow label={t('admin.walletsGenerated')} value={system.walletsGenerated} />
-          </dl>
-        </div>
-        <div className="glass-panel p-6">
-          <SectionTitle>{t('admin.systemConfiguration')}</SectionTitle>
-          <dl className="space-y-3 text-sm">
-            <InfoRow label={t('admin.defaultNetwork')} value={system.defaultNetwork} />
-            <InfoRow label={t('admin.defaultChainId')} value={system.defaultChainId} />
-            <InfoRow label={t('admin.balancePollInterval')} value={`${system.pollIntervalMs / 1000}s`} />
-            <InfoRow label={t('admin.autoSweepInterval')} value={`${system.sweepIntervalMs / 1000}s`} />
-            <InfoRow label={t('admin.frontendUrl')} value={system.frontendUrl} />
-            <InfoRow label={t('admin.serverStarted')} value={new Date(system.serverStartedAt).toLocaleString()} />
-          </dl>
-        </div>
-      </section>
-
-      <section className="grid md:grid-cols-3 gap-4">
-        <div className="glass-panel p-6">
-          <SectionTitle>{t('admin.volume')}</SectionTitle>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-muted">{t('admin.totalRequests')}</span>
-              <span>{volume.totalPaymentRequests}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted">{t('admin.approxTotalAmount')}</span>
-              <span className="text-accent">{volume.approximateVolume}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted">{t('admin.confirmedSwept')}</span>
-              <span className="text-green-400">{volume.confirmedVolume}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="glass-panel p-6">
-          <SectionTitle>{t('admin.byNetwork')}</SectionTitle>
-          <div className="space-y-2">
-            {breakdown.byNetwork.length === 0 ? (
-              <p className="text-muted text-sm">{t('admin.noPaymentsYet')}</p>
-            ) : (
-              breakdown.byNetwork.map((n) => (
-                <BarRow key={n.name} label={n.name} count={n.count} max={maxNetworkCount} />
-              ))
-            )}
-          </div>
-        </div>
-
-        <div className="glass-panel p-6">
-          <SectionTitle>{t('admin.byToken')}</SectionTitle>
-          <div className="space-y-2">
-            {breakdown.byToken.length === 0 ? (
-              <p className="text-muted text-sm">{t('admin.noPaymentsYet')}</p>
-            ) : (
-              breakdown.byToken.map((token) => (
-                <div key={token.symbol} className="flex justify-between text-sm">
-                  <span className="text-accent font-medium">{token.symbol}</span>
-                  <span className="text-muted">{t('admin.paymentsCount', { count: token.count })}</span>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      </section>
-
+      {/* 2. Quick links */}
       <section>
-        <SectionTitle>{t('admin.supportedNetworks', { count: system.supportedNetworks.length })}</SectionTitle>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {system.supportedNetworks.map((n) => (
-            <div key={n.chainId} className="bg-surface/60 border border-border rounded-xl p-3 text-sm">
-              <div className="font-medium">{n.name}</div>
-              <div className="text-muted text-xs mt-1">
-                {t('admin.networkMeta', { native: n.nativeSymbol, tokens: n.tokenCount, chainId: n.chainId })}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <div className="flex items-center justify-between mb-4">
-          <SectionTitle>{t('admin.recentPayments')}</SectionTitle>
-          <Link to="/admin/payments/recent" className="font-mono text-xs hover:underline" style={{ color: 'var(--color-accent)' }}>
-            {t('pageCommon.viewAll')}
-          </Link>
-        </div>
-        <div className="hidden lg:block glass-panel overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border text-muted text-left text-xs uppercase tracking-wider">
-                  <th className="px-4 py-3">{t('pageCommon.amount')}</th>
-                  <th className="px-4 py-3">{t('pageCommon.user')}</th>
-                  <th className="px-4 py-3">{t('pageCommon.network')}</th>
-                  <th className="px-4 py-3">{t('pageCommon.status')}</th>
-                  <th className="px-4 py-3">{t('admin.deposit')}</th>
-                  <th className="px-4 py-3">{t('admin.created')}</th>
-                  <th className="px-4 py-3"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentPayments.map((p) => (
-                  <tr key={p.id} className="border-b border-border/50 hover:bg-white/[0.02]">
-                    <td className="px-4 py-3 font-medium whitespace-nowrap">
-                      {p.amount} {p.tokenSymbol}
-                    </td>
-                    <td className="px-4 py-3 text-muted text-xs">{p.userEmail}</td>
-                    <td className="px-4 py-3 text-muted text-xs">{p.networkName}</td>
-                    <td className="px-4 py-3">
-                      <Badge status={p.status} />
-                    </td>
-                    <td className="px-4 py-3 font-mono text-xs">
-                      <a
-                        href={`${system.supportedNetworks.find((n) => n.chainId === p.chainId)?.explorer || 'https://etherscan.io'}/address/${p.depositAddress}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary hover:underline"
-                      >
-                        {shortenAddress(p.depositAddress)}
-                      </a>
-                    </td>
-                    <td className="px-4 py-3 text-muted text-xs whitespace-nowrap">
-                      {new Date(p.createdAt).toLocaleString()}
-                    </td>
-                    <td className="px-4 py-3">
-                      <Link to={`/pay/${p.id}`} className="text-primary hover:underline text-xs">{t('pageCommon.view')}</Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div className="lg:hidden space-y-3">
-          {recentPayments.map((p) => (
+        <h2 className="section-label mb-3">{t('admin.reportManage')}</h2>
+        <div className="flex flex-wrap gap-2">
+          {QUICK_LINKS.map((item) => (
             <Link
-              key={p.id}
-              to={`/pay/${p.id}`}
-              className="block glass-panel p-4 transition-colors hover:border-[color-mix(in_srgb,var(--color-accent)_30%,transparent)]"
+              key={item.to}
+              to={item.to}
+              className="font-mono text-xs px-3 py-2 rounded-lg border transition-colors hover:border-[color-mix(in_srgb,var(--color-accent)_45%,transparent)]"
+              style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface-700)' }}
             >
-              <div className="flex items-start justify-between gap-3 mb-2">
-                <div className="min-w-0">
-                  <p className="font-mono font-semibold tabular-nums">
-                    {p.amount} {p.tokenSymbol}
-                  </p>
-                  <p className="font-mono text-xs mt-0.5 truncate" style={{ color: 'var(--color-text-secondary)' }}>
-                    {p.userEmail} · {p.networkName}
-                  </p>
-                </div>
-                <Badge status={p.status} />
-              </div>
-              <p className="font-mono text-xs truncate" style={{ color: 'var(--color-text-muted)' }}>
-                {shortenAddress(p.depositAddress)}
-              </p>
+              {t(item.labelKey)}
             </Link>
           ))}
         </div>
       </section>
 
-      <section>
-        <div className="flex items-center justify-between mb-4">
-          <SectionTitle>{t('admin.registeredUsers', { count: overview.users })}</SectionTitle>
-          <Link to="/admin/users" className="font-mono text-xs hover:underline" style={{ color: 'var(--color-accent)' }}>
-            {t('pageCommon.viewAll')}
-          </Link>
-        </div>
-        <div className="hidden md:block glass-panel overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border text-muted text-left text-xs uppercase tracking-wider">
-                  <th className="px-4 py-3">{t('admin.email')}</th>
-                  <th className="px-4 py-3">{t('admin.phone')}</th>
-                  <th className="px-4 py-3">{t('admin.name')}</th>
-                  <th className="px-4 py-3">{t('admin.payments')}</th>
-                  <th className="px-4 py-3">{t('admin.joined')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((u) => (
-                  <tr key={u.id} className="border-b border-border/50 hover:bg-white/[0.02]">
-                    <td className="px-4 py-3">{u.email || '—'}</td>
-                    <td className="px-4 py-3 text-muted">{u.phone || '—'}</td>
-                    <td className="px-4 py-3 text-muted">{u.name || '—'}</td>
-                    <td className="px-4 py-3">{u.paymentCount}</td>
-                    <td className="px-4 py-3 text-muted text-xs">
-                      {new Date(u.createdAt).toLocaleString()}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      {/* 3. Treasury */}
+      <section className="rounded-2xl border overflow-hidden" style={{ borderColor: 'var(--color-glass-border)' }}>
+        <div
+          className="flex flex-wrap items-start justify-between gap-3 px-5 py-4 border-b"
+          style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface-700)' }}
+        >
+          <div className="min-w-0">
+            <h2 className="section-label mb-1">{t('admin.treasuryBalances')}</h2>
+            <p className="font-mono text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
+              {t('admin.treasuryBalancesHint')}
+            </p>
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              <p className="font-mono text-[11px] break-all" style={{ color: 'var(--color-accent)' }}>
+                {shortenAddress(treasuryAddress)}
+              </p>
+              <button
+                type="button"
+                onClick={copyTreasury}
+                className="font-mono text-[10px] hover:underline"
+                style={{ color: 'var(--color-accent)' }}
+              >
+                {copied === 'treasury' ? t('admin.copied') : t('admin.copy')}
+              </button>
+              {treasury?.checkedAt && (
+                <span className="font-mono text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
+                  · {t('admin.treasuryCheckedAt', { time: new Date(treasury.checkedAt).toLocaleTimeString() })}
+                </span>
+              )}
+              <span
+                className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider"
+                style={{ color: treasuryLive ? 'var(--color-success)' : 'var(--color-text-muted)' }}
+              >
+                <span
+                  className="h-1.5 w-1.5 rounded-full"
+                  style={{ background: treasuryLive ? 'var(--color-success)' : 'var(--color-text-muted)' }}
+                />
+                {treasuryLive ? t('admin.treasuryLive') : t('admin.treasuryOffline')}
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button size="sm" variant="ghost" onClick={() => setShowZeroTokens((v) => !v)}>
+              {showZeroTokens ? t('admin.treasuryHideZeros') : t('admin.treasuryShowZeros')}
+            </Button>
+            <Button size="sm" variant="primary" loading={treasuryLoading} onClick={() => setStreamKey((k) => k + 1)}>
+              {treasuryLoading ? t('admin.treasuryRefreshing') : t('admin.treasuryRefresh')}
+            </Button>
           </div>
         </div>
 
-        <div className="md:hidden space-y-3">
-          {users.map((u) => (
-            <article key={u.id} className="glass-panel p-4">
-              <p className="font-medium truncate">{u.email || u.phone || '—'}</p>
-              {u.name && (
-                <p className="text-sm mt-0.5 truncate" style={{ color: 'var(--color-text-secondary)' }}>
-                  {u.name}
-                </p>
+        <div className="px-5 py-4 space-y-4" style={{ background: 'var(--color-surface-800)' }}>
+          <div className="flex items-end justify-between gap-3">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>
+                {t('admin.treasuryTotal')}
+              </p>
+              <p className="font-mono text-3xl font-bold tabular-nums mt-1" style={{ color: 'var(--color-accent)' }}>
+                ${treasury?.totalUsd ?? '—'}
+              </p>
+            </div>
+          </div>
+
+          {treasuryError && <Alert>{treasuryError}</Alert>}
+
+          {treasuryLoading && !treasury ? (
+            <p className="font-mono text-xs" style={{ color: 'var(--color-text-muted)' }}>
+              {t('admin.treasuryRefreshing')}
+            </p>
+          ) : fundedNetworks.length === 0 ? (
+            <p className="font-mono text-xs" style={{ color: 'var(--color-text-muted)' }}>
+              {t('admin.treasuryEmpty')}
+            </p>
+          ) : (
+            <div className="grid sm:grid-cols-2 gap-3">
+              {fundedNetworks.map((network) => (
+                <div
+                  key={network.chainId}
+                  className="rounded-xl border p-3"
+                  style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface-700)' }}
+                >
+                  <div className="flex items-center justify-between gap-2 mb-3">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <NetworkIcon chainId={network.chainId} name={network.networkName} size={24} />
+                      <p className="font-semibold text-sm truncate">{network.networkName}</p>
+                    </div>
+                    <p className="font-mono text-xs font-semibold tabular-nums" style={{ color: 'var(--color-accent)' }}>
+                      ${network.networkUsd}
+                    </p>
+                  </div>
+                  <ul className="space-y-2">
+                    {network.tokens.map((tok) => (
+                      <li key={`${network.chainId}-${tok.symbol}`} className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <TokenIcon symbol={tok.symbol} size={18} />
+                          <span className="font-mono text-xs font-semibold">{tok.symbol}</span>
+                        </div>
+                        <div className="text-right font-mono text-xs tabular-nums">
+                          <p>
+                            {tok.balance} {tok.symbol}
+                          </p>
+                          <p style={{ color: 'var(--color-text-muted)' }}>
+                            {tok.availableUsd != null ? `$${tok.availableUsd}` : tok.error ? t('admin.treasuryError') : '—'}
+                          </p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* 3b. Treasury activity */}
+      <section className="rounded-2xl border overflow-hidden" style={{ borderColor: 'var(--color-glass-border)' }}>
+        <div
+          className="flex flex-wrap items-start justify-between gap-3 px-5 py-4 border-b"
+          style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface-700)' }}
+        >
+          <div>
+            <h2 className="section-label mb-1">{t('admin.treasuryActivity')}</h2>
+            <p className="font-mono text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
+              {t('admin.treasuryActivityHint')}
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            {[
+              { value: 'all', label: t('admin.treasuryFilterAll') },
+              { value: 'in', label: t('admin.treasuryFilterIn') },
+              { value: 'out', label: t('admin.treasuryFilterOut') },
+            ].map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => setActivityFilter(opt.value)}
+                className="font-mono text-[11px] px-2.5 py-1 rounded-lg border"
+                style={{
+                  borderColor:
+                    activityFilter === opt.value
+                      ? 'var(--color-accent)'
+                      : 'var(--color-border)',
+                  color: activityFilter === opt.value ? 'var(--color-accent)' : 'var(--color-text-muted)',
+                  background:
+                    activityFilter === opt.value
+                      ? 'color-mix(in srgb, var(--color-accent) 10%, transparent)'
+                      : 'transparent',
+                }}
+              >
+                {opt.label}
+              </button>
+            ))}
+            <Button size="sm" variant="ghost" loading={activityLoading} onClick={() => setStreamKey((k) => k + 1)}>
+              {t('admin.treasuryRefresh')}
+            </Button>
+          </div>
+        </div>
+
+        <div className="px-5 py-4 space-y-3">
+          {activity && (
+            <div className="flex flex-wrap gap-4 font-mono text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
+              <span>
+                {t('admin.treasuryActivityIn')}: {activity.summary?.sweepsIn ?? 0}
+              </span>
+              <span>
+                {t('admin.treasuryActivityOut')}: {activity.summary?.payoutsOut ?? 0}
+              </span>
+              {(activity.explorerLinks || []).slice(0, 3).map((link) =>
+                link.addressUrl ? (
+                  <a
+                    key={link.chainId}
+                    href={link.addressUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                    style={{ color: 'var(--color-accent)' }}
+                  >
+                    {link.networkName} ↗
+                  </a>
+                ) : null
               )}
-              <div className="flex items-center justify-between gap-2 mt-2 font-mono text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                <span>{t('admin.paymentsLabel', { count: u.paymentCount })}</span>
-                <span>{new Date(u.createdAt).toLocaleDateString()}</span>
-              </div>
-            </article>
-          ))}
+            </div>
+          )}
+
+          {activityError && <Alert>{activityError}</Alert>}
+
+          {activityLoading && !activity ? (
+            <p className="font-mono text-xs" style={{ color: 'var(--color-text-muted)' }}>
+              {t('admin.treasuryRefreshing')}
+            </p>
+          ) : filteredActivity.length === 0 ? (
+            <p className="font-mono text-xs" style={{ color: 'var(--color-text-muted)' }}>
+              {t('admin.treasuryActivityEmpty')}
+            </p>
+          ) : (
+            <div className="space-y-2">
+              {filteredActivity.map((ev) => (
+                <div
+                  key={ev.id}
+                  className="rounded-xl border px-3 py-3 space-y-2"
+                  style={{ borderColor: 'var(--color-border)' }}
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span
+                          className="font-mono text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded"
+                          style={{
+                            color: ev.kind === 'IN' ? 'var(--color-success)' : 'var(--color-warning)',
+                            background:
+                              ev.kind === 'IN'
+                                ? 'color-mix(in srgb, var(--color-success) 12%, transparent)'
+                                : 'color-mix(in srgb, var(--color-warning) 12%, transparent)',
+                          }}
+                        >
+                          {ev.kind === 'IN' ? t('admin.treasuryKindIn') : t('admin.treasuryKindOut')}
+                        </span>
+                        <p className="font-semibold text-sm">
+                          {ev.amount} {ev.tokenSymbol}
+                          {ev.amountUsd ? (
+                            <span className="font-mono text-xs font-normal ml-2" style={{ color: 'var(--color-text-muted)' }}>
+                              · ${ev.amountUsd}
+                            </span>
+                          ) : null}
+                        </p>
+                      </div>
+                      <p className="font-mono text-[10px] mt-1" style={{ color: 'var(--color-text-muted)' }}>
+                        {ev.networkName}
+                        {ev.userLabel ? ` · ${ev.userLabel}` : ''}
+                        {ev.at ? ` · ${new Date(ev.at).toLocaleString()}` : ''}
+                      </p>
+                    </div>
+                    {ev.referencePath && (
+                      <Link
+                        to={ev.referencePath}
+                        className="font-mono text-[11px] hover:underline shrink-0"
+                        style={{ color: 'var(--color-accent)' }}
+                      >
+                        {t('admin.treasuryOpen')}
+                      </Link>
+                    )}
+                  </div>
+                  {ev.txHash && (
+                    <TxHashDisplay txHash={ev.txHash} explorer={ev.explorer} compact />
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* 4. Attention + recent */}
+      <section className="grid lg:grid-cols-2 gap-4">
+        <div className="rounded-2xl border p-5 space-y-4" style={{ borderColor: 'var(--color-glass-border)' }}>
+          <h2 className="section-label">{t('admin.reportAttention')}</h2>
+          <div className="space-y-2">
+            <AttentionRow
+              label={t('admin.pendingDeposits')}
+              value={overview.pending}
+              hint={t('admin.attentionPendingHint')}
+              warn={overview.pending > 0}
+            />
+            <AttentionRow
+              label={t('admin.toSweep')}
+              value={overview.confirmed}
+              hint={t('admin.attentionSweepHint')}
+              warn={overview.confirmed > 0}
+            />
+            <AttentionRow
+              label={t('admin.withdrawQueue')}
+              value={modules.withdrawals.pending}
+              hint={t('admin.attentionWithdrawHint')}
+              to="/admin/withdrawals"
+              warn={modules.withdrawals.pending > 0}
+            />
+            <AttentionRow
+              label={t('admin.failedWithdrawals')}
+              value={modules.withdrawals.failed}
+              to="/admin/withdrawals"
+              warn={modules.withdrawals.failed > 0}
+            />
+          </div>
+        </div>
+
+        <div className="rounded-2xl border p-5 space-y-4" style={{ borderColor: 'var(--color-glass-border)' }}>
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="section-label">{t('admin.recentPayments')}</h2>
+            <Link to="/admin/payments/recent" className="font-mono text-[11px] hover:underline" style={{ color: 'var(--color-accent)' }}>
+              {t('pageCommon.viewAll')}
+            </Link>
+          </div>
+          <div className="space-y-2">
+            {recentPayments.length === 0 ? (
+              <p className="font-mono text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                {t('admin.noPaymentsYet')}
+              </p>
+            ) : (
+              recentPayments.slice(0, 5).map((p) => (
+                <Link
+                  key={p.id}
+                  to={`/pay/${p.id}`}
+                  className="flex items-center justify-between gap-3 rounded-xl border px-3 py-2.5 transition-colors hover:border-[color-mix(in_srgb,var(--color-accent)_35%,transparent)]"
+                  style={{ borderColor: 'var(--color-border)' }}
+                >
+                  <div className="min-w-0">
+                    <p className="font-mono text-sm font-semibold tabular-nums">
+                      {p.amount} {p.tokenSymbol}
+                    </p>
+                    <p className="font-mono text-[10px] truncate" style={{ color: 'var(--color-text-muted)' }}>
+                      {p.networkName} · {p.userEmail}
+                    </p>
+                  </div>
+                  <Badge status={p.status} />
+                </Link>
+              ))
+            )}
+          </div>
+
+          <div className="pt-2 border-t" style={{ borderColor: 'var(--color-border)' }}>
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <p className="font-mono text-[10px] uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>
+                {t('admin.registeredUsers', { count: overview.users })}
+              </p>
+              <Link to="/admin/users" className="font-mono text-[11px] hover:underline" style={{ color: 'var(--color-accent)' }}>
+                {t('pageCommon.viewAll')}
+              </Link>
+            </div>
+            <div className="space-y-1.5">
+              {users.slice(0, 4).map((u) => (
+                <Link
+                  key={u.id}
+                  to={`/admin/users/${u.id}`}
+                  className="flex items-center justify-between gap-2 font-mono text-xs py-1"
+                >
+                  <span className="truncate">{u.username || u.email || u.phone || '—'}</span>
+                  <span style={{ color: 'var(--color-text-muted)' }}>
+                    {t('admin.paymentsLabel', { count: u.paymentCount })}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
     </div>
   );
 }
 
-function SectionTitle({ children }) {
-  return <h2 className="eyebrow mb-4">{children}</h2>;
-}
-
-function InfoRow({ label, value, mono }) {
+function MiniStat({ label, value, accent }) {
   return (
-    <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
-      <dt className="text-muted shrink-0">{label}</dt>
-      <dd className={mono ? 'font-mono text-xs text-accent break-all text-right' : 'text-right'}>
+    <div>
+      <p className="uppercase tracking-wider text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
+        {label}
+      </p>
+      <p className="font-semibold tabular-nums mt-0.5" style={{ color: accent ? 'var(--color-accent)' : 'inherit' }}>
         {value}
-      </dd>
+      </p>
     </div>
   );
 }
 
-function BarRow({ label, count, max }) {
-  return (
-    <div>
-      <div className="flex justify-between text-xs mb-1">
-        <span className="text-muted truncate">{label}</span>
-        <span>{count}</span>
+function AttentionRow({ label, value, hint, to, warn }) {
+  const inner = (
+    <div
+      className="flex items-start justify-between gap-3 rounded-xl border px-3 py-2.5"
+      style={{ borderColor: 'var(--color-border)' }}
+    >
+      <div className="min-w-0">
+        <p className="text-sm font-medium">{label}</p>
+        {hint && (
+          <p className="font-mono text-[10px] mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
+            {hint}
+          </p>
+        )}
       </div>
-      <div className="h-1.5 bg-surface rounded-full overflow-hidden">
-        <div
-          className="h-full bg-gradient-to-r from-primary to-accent"
-          style={{ width: `${(count / max) * 100}%` }}
-        />
-      </div>
+      <p
+        className="font-mono text-lg font-bold tabular-nums shrink-0"
+        style={{ color: warn && value > 0 ? 'var(--color-warning)' : 'inherit' }}
+      >
+        {value}
+      </p>
     </div>
+  );
+  if (!to) return inner;
+  return (
+    <Link to={to} className="block hover:opacity-90">
+      {inner}
+    </Link>
   );
 }

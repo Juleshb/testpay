@@ -14,8 +14,14 @@ const router = Router();
 
 router.use(authMiddleware(true));
 
-router.get('/options', (_req, res) => {
-  res.json(getWithdrawOptions());
+router.get('/options', async (req, res) => {
+  try {
+    const options = await getWithdrawOptions(req.user.id);
+    res.json(options);
+  } catch (err) {
+    console.error('Withdraw options error:', err);
+    res.status(500).json({ error: 'Failed to load withdraw options' });
+  }
 });
 
 router.get('/balance', async (req, res) => {
@@ -113,6 +119,8 @@ router.post('/', async (req, res) => {
       message.includes('Invalid') ||
       message.includes('Minimum') ||
       message.includes('Maximum') ||
+      message.includes('Daily') ||
+      message.includes('fee') ||
       message.includes('supported')
         ? 400
         : 500;
@@ -122,15 +130,28 @@ router.post('/', async (req, res) => {
 
 router.get('/', async (req, res) => {
   try {
-    const limit = Math.min(parseInt(req.query.limit, 10) || 30, 100);
-    const withdrawals = await prisma.withdrawal.findMany({
-      where: { userId: req.user.id },
-      orderBy: { createdAt: 'desc' },
-      take: limit,
-    });
+    const limit = Math.min(parseInt(req.query.limit, 10) || 50, 500);
+    const status = String(req.query.status || '')
+      .trim()
+      .toUpperCase();
+    const where = { userId: req.user.id };
+    if (['PENDING', 'PROCESSING', 'COMPLETED', 'FAILED', 'CANCELLED'].includes(status)) {
+      where.status = status;
+    }
+
+    const [withdrawals, total] = await Promise.all([
+      prisma.withdrawal.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        take: limit,
+      }),
+      prisma.withdrawal.count({ where: { userId: req.user.id } }),
+    ]);
 
     res.json({
       withdrawals: withdrawals.map(formatWithdrawal),
+      total,
+      limit,
     });
   } catch (err) {
     console.error('Withdraw history error:', err);

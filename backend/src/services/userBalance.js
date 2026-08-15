@@ -24,46 +24,124 @@ export async function getUserBalanceSummary(userId, tx = prisma) {
 
 export async function creditPaymentBalance(payment, tx = prisma) {
   if (!payment.userId) return null;
-  if (payment.balanceCreditedAt) return null;
   if (payment.status !== 'CONFIRMED' && payment.status !== 'SWEPT') return null;
 
   const paid = payment.paidAmount || payment.amount;
   const { usdAmount, usdRate } = await convertToUsd(paid, payment.tokenSymbol);
-  const usdNum = parseFloat(usdAmount);
-  if (usdNum <= 0) return null;
+  const targetUsd = parseFloat(usdAmount);
+  if (!(targetUsd > 0)) return null;
 
-  const existing = await tx.balanceEntry.findUnique({
+  const entries = await tx.balanceEntry.findMany({
     where: {
-      sourceType_sourceId: {
-        sourceType: 'PAYMENT',
-        sourceId: payment.id,
-      },
+      userId: payment.userId,
+      sourceType: 'PAYMENT',
+      OR: [{ sourceId: payment.id }, { sourceId: { startsWith: `${payment.id}:` } }],
     },
   });
-  if (existing) return existing;
+  const alreadyCredited = entries
+    .filter((e) => e.type === 'CREDIT')
+    .reduce((sum, e) => sum + (parseFloat(e.amountUsd) || 0), 0);
+  const delta = Math.round((targetUsd - alreadyCredited) * 100) / 100;
+  if (delta <= 0.00000001) {
+    if (!payment.balanceCreditedAt) {
+      await tx.payment.update({
+        where: { id: payment.id },
+        data: { usdAmount, usdRate, balanceCreditedAt: new Date() },
+      });
+    }
+    return { usdAmount, usdRate, credited: 0 };
+  }
 
   const now = new Date();
+  const sourceId =
+    alreadyCredited > 0 ? `${payment.id}:topup:${Date.now()}` : payment.id;
+
   await tx.$transaction([
     tx.payment.update({
       where: { id: payment.id },
-      data: { usdAmount, usdRate, balanceCreditedAt: now },
+      data: { usdAmount, usdRate, balanceCreditedAt: payment.balanceCreditedAt || now },
     }),
     tx.balanceEntry.create({
       data: {
         userId: payment.userId,
         type: 'CREDIT',
-        amountUsd: usdAmount,
+        amountUsd: delta.toFixed(2),
         sourceType: 'PAYMENT',
-        sourceId: payment.id,
+        sourceId,
       },
     }),
   ]);
 
   console.log(
-    `Balance credited: ${usdAmount} USD for payment ${payment.id} (${paid} ${payment.tokenSymbol})`
+    `Balance credited: $${delta.toFixed(2)} USD for payment ${payment.id} (${paid} ${payment.tokenSymbol}, total ~$${targetUsd.toFixed(2)})`
   );
 
-  return { usdAmount, usdRate };
+  return { usdAmount, usdRate, credited: delta };
+}
+
+export async function creditPackageIncome(userId, packageIncomeId, amountUsd, tx = prisma) {
+  const num = parseFloat(amountUsd);
+  if (isNaN(num) || num <= 0) return null;
+
+  const existing = await tx.balanceEntry.findUnique({
+    where: {
+      sourceType_sourceId: {
+        sourceType: 'PACKAGE_INCOME',
+        sourceId: packageIncomeId,
+      },
+    },
+  });
+  if (existing) return existing;
+
+  return tx.balanceEntry.create({
+    data: {
+      userId,
+      type: 'CREDIT',
+      amountUsd: num.toFixed(8),
+      sourceType: 'PACKAGE_INCOME',
+      sourceId: packageIncomeId,
+    },
+  });
+}
+
+export async function backfillPackageIncomeCredits() {
+  const incomes = await prisma.packageIncome.findMany({
+    select: {
+      id: true,
+      userId: true,
+      amount: true,
+      loanRepaymentUsd: true,
+    },
+  });
+
+  let credited = 0;
+  for (const income of incomes) {
+    try {
+      const existing = await prisma.balanceEntry.findUnique({
+        where: {
+          sourceType_sourceId: {
+            sourceType: 'PACKAGE_INCOME',
+            sourceId: income.id,
+          },
+        },
+      });
+      if (existing) continue;
+
+      const amount = parseFloat(income.amount) || 0;
+      const repaid = parseFloat(income.loanRepaymentUsd || '0') || 0;
+      const net = Math.max(0, amount - repaid);
+      if (net <= 0) continue;
+
+      await creditPackageIncome(income.userId, income.id, net);
+      credited += 1;
+    } catch (err) {
+      console.error(`Package income backfill failed for ${income.id}:`, err.message);
+    }
+  }
+
+  if (credited > 0) {
+    console.log(`Backfilled USD balance credits for ${credited} package income(s)`);
+  }
 }
 
 export async function debitPackageInvestment(userId, investmentId, amountUsd, tx = prisma) {

@@ -133,6 +133,11 @@ export async function tryActivateDeveloperAccess(payment) {
   if (!payment?.id) return;
   if (payment.status !== 'CONFIRMED' && payment.status !== 'SWEPT') return;
 
+  const paid = parseFloat(payment.paidAmount || '0') || 0;
+  const required = parseFloat(payment.amount || '0') || 0;
+  // API unlock still requires the full requested fee
+  if (!(paid + 1e-12 >= required) || required <= 0) return;
+
   const row = await prisma.apiDeveloperAccess.findFirst({
     where: { paymentId: payment.id, status: 'PENDING_PAYMENT' },
   });

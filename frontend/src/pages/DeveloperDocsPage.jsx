@@ -326,6 +326,7 @@ export default function DeveloperDocsPage() {
           endpoints:
         </p>
         <DocEndpoint method="GET" path="/api/admin/dashboard" auth="Admin Bearer" description="System dashboard stats." />
+        <DocEndpoint method="GET" path="/api/admin/reports" auth="Admin Bearer" description="Daily report: deposits, investments, top users. Query date=YYYY-MM-DD (UTC)." />
         <DocEndpoint method="GET" path="/api/admin/users" auth="Admin Bearer" description="Registered users." />
         <DocEndpoint method="GET" path="/api/admin/payments" auth="Admin Bearer" description="All payments." />
         <DocEndpoint method="GET" path="/api/admin/packages" auth="Admin Bearer" description="Manage investment packages." />

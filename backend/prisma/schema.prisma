@@ -20,6 +20,8 @@ model User {
   payments             Payment[]
   packageInvestments   PackageInvestment[]
   packageIncomes       PackageIncome[]
+  miningPositions      MiningPosition[]
+  miningIncomes        MiningIncome[]
   balanceEntries       BalanceEntry[]
   communityPosts       CommunityPost[]
   communityReactions   CommunityPostReaction[]
@@ -169,10 +171,76 @@ enum BalanceEntryType {
 enum BalanceSourceType {
   PAYMENT
   PACKAGE_INVESTMENT
+  PACKAGE_INCOME
+  MINING_PURCHASE
   USER_TRANSFER
   WITHDRAWAL
   REFERRAL
   LOAN
+}
+
+model MiningOption {
+  id           String           @id @default(uuid())
+  name         String           @unique
+  slug         String           @unique
+  minAmount    String
+  maxAmount    String?
+  dailyRate    String
+  durationDays Int
+  hashRate     String
+  coin         String           @default("BTC")
+  description  String?
+  badgeColor   String           @default("#A2D5C6")
+  sortOrder    Int              @default(0)
+  active       Boolean          @default(true)
+  isFree       Boolean          @default(false)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  positions    MiningPosition[]
+}
+
+enum MiningPositionStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+model MiningPosition {
+  id            String               @id @default(uuid())
+  userId        String
+  user          User                 @relation(fields: [userId], references: [id])
+  optionId      String
+  option        MiningOption         @relation(fields: [optionId], references: [id])
+  amount        String
+  tokenSymbol   String               @default("USD")
+  status        MiningPositionStatus @default(ACTIVE)
+  totalEarned   String               @default("0")
+  startedAt     DateTime             @default(now())
+  endsAt        DateTime
+  lastAccruedAt DateTime?
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  incomes       MiningIncome[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([optionId])
+}
+
+model MiningIncome {
+  id          String         @id @default(uuid())
+  userId      String
+  user        User           @relation(fields: [userId], references: [id])
+  positionId  String
+  position    MiningPosition @relation(fields: [positionId], references: [id])
+  amount      String
+  tokenSymbol String         @default("USD")
+  accrualDate DateTime       @db.Date
+  createdAt   DateTime       @default(now())
+
+  @@unique([positionId, accrualDate])
+  @@index([userId])
+  @@index([accrualDate])
 }
 
 model BalanceEntry {
@@ -217,6 +285,8 @@ model Withdrawal {
   userId             String
   user               User             @relation(fields: [userId], references: [id])
   amountUsd          String
+  feeUsd             String           @default("0")
+  netAmountUsd       String?
   chainId            Int
   tokenSymbol        String
   tokenAmount        String
@@ -232,6 +302,17 @@ model Withdrawal {
   @@index([userId])
   @@index([status])
   @@index([createdAt])
+}
+
+model WithdrawSettings {
+  id                   Int      @id @default(1)
+  minWithdrawUsd       String   @default("5")
+  maxWithdrawUsd       String   @default("50000")
+  maxWithdrawUsdPerDay String   @default("50000")
+  maxWithdrawalsPerDay Int      @default(5)
+  feePercent           String   @default("0")
+  feeFlatUsd           String   @default("0")
+  updatedAt            DateTime @updatedAt
 }
 
 model CommunityChannel {

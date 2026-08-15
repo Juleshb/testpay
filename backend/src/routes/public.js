@@ -10,6 +10,8 @@ import {
   API_ACCESS_INDIVIDUAL_USD,
   API_ACCESS_COMPANY_USD,
 } from '../services/developerAccess.js';
+import { getLiveQuotes } from '../services/priceConversion.js';
+import { attachQuotesStream } from '../services/quotesRealtime.js';
 
 const router = Router();
 
@@ -52,6 +54,20 @@ router.get('/showcase', async (req, res) => {
 
 router.get('/meta', (_req, res) => {
   res.json({ version: APP_VERSION, name: 'StackPay' });
+});
+
+router.get('/quotes', async (req, res) => {
+  try {
+    const data = await getLiveQuotes();
+    res.json(data);
+  } catch (err) {
+    console.error('Public quotes error:', err);
+    res.status(500).json({ error: req.t('failedLoadQuotes') });
+  }
+});
+
+router.get('/quotes/stream', (req, res) => {
+  attachQuotesStream(req, res);
 });
 
 router.post('/testimonials', async (req, res) => {

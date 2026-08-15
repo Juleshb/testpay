@@ -5,6 +5,9 @@ import { getToken, isNativeToken } from '../config/networks.js';
 import { creditPaymentBalance } from './userBalance.js';
 import { tryActivateDeveloperAccess } from './developerAccess.js';
 
+/** Any positive on-chain deposit confirms (under or over the requested amount). */
+const MIN_CONFIRM_AMOUNT = 1e-12;
+
 export async function checkPendingPayments() {
   const pending = await prisma.payment.findMany({
     where: { status: 'PENDING' },
@@ -15,6 +18,56 @@ export async function checkPendingPayments() {
   }
 }
 
+async function confirmFromBalance(payment, balance, { txHash } = {}) {
+  const balanceNum = parseFloat(balance);
+  if (!(balanceNum > MIN_CONFIRM_AMOUNT)) return null;
+
+  let resolvedTx = txHash || payment.txHash;
+  if (!resolvedTx) {
+    try {
+      resolvedTx = await findIncomingTx(payment);
+    } catch (err) {
+      console.warn(`Tx lookup skipped for ${payment.id}:`, err.message);
+    }
+  }
+
+  const requiredNum = parseFloat(payment.amount) || 0;
+  const updated = await prisma.payment.update({
+    where: { id: payment.id },
+    data: {
+      status: 'CONFIRMED',
+      paidAmount: balance,
+      txHash: resolvedTx || undefined,
+      paidAt: new Date(),
+    },
+  });
+
+  try {
+    await creditPaymentBalance(updated);
+  } catch (err) {
+    console.error(`Balance credit failed for payment ${payment.id}:`, err.message);
+  }
+
+  try {
+    await tryActivateDeveloperAccess(updated);
+  } catch (err) {
+    console.error(`Developer access activation failed for payment ${payment.id}:`, err.message);
+  }
+
+  const note =
+    requiredNum > 0 && balanceNum + 1e-12 < requiredNum
+      ? ' (under requested)'
+      : requiredNum > 0 && balanceNum > requiredNum + 1e-12
+        ? ' (over requested)'
+        : '';
+
+  console.log(
+    `Payment confirmed: ${payment.id} - ${balance} ${payment.tokenSymbol} on chain ${payment.chainId}${note}`
+  );
+
+  return updated;
+}
+
 async function checkPayment(payment) {
   try {
     const balance = await getPaymentBalance(
@@ -22,45 +75,7 @@ async function checkPayment(payment) {
       payment.chainId,
       payment.tokenSymbol
     );
-    const balanceNum = parseFloat(balance);
-    const requiredNum = parseFloat(payment.amount);
-
-    if (balanceNum >= requiredNum) {
-      let txHash = payment.txHash;
-      if (!txHash) {
-        try {
-          txHash = await findIncomingTx(payment);
-        } catch (err) {
-          console.warn(`Tx lookup skipped for ${payment.id}:`, err.message);
-        }
-      }
-
-      const updated = await prisma.payment.update({
-        where: { id: payment.id },
-        data: {
-          status: 'CONFIRMED',
-          paidAmount: balance,
-          txHash: txHash || undefined,
-          paidAt: new Date(),
-        },
-      });
-
-      try {
-        await creditPaymentBalance(updated);
-      } catch (err) {
-        console.error(`Balance credit failed for payment ${payment.id}:`, err.message);
-      }
-
-      try {
-        await tryActivateDeveloperAccess(updated);
-      } catch (err) {
-        console.error(`Developer access activation failed for payment ${payment.id}:`, err.message);
-      }
-
-      console.log(
-        `Payment confirmed: ${payment.id} - ${balance} ${payment.tokenSymbol} on chain ${payment.chainId}`
-      );
-    }
+    await confirmFromBalance(payment, balance);
   } catch (err) {
     console.error(`Error checking payment ${payment.id}:`, err.message);
   }
@@ -71,7 +86,6 @@ async function findIncomingTx(payment) {
   const provider = getProvider(payment.chainId);
   const currentBlock = await provider.getBlockNumber();
   const fromBlock = Math.max(0, currentBlock - 5000);
-  const address = payment.depositAddress.toLowerCase();
 
   if (!isNativeToken(token)) {
     const transferTopic = ethers.id('Transfer(address,address,uint256)');
@@ -126,3 +140,5 @@ export async function getPaymentStatus(paymentId) {
     isPaid: payment.status === 'CONFIRMED' || payment.status === 'SWEPT',
   };
 }
+
+export { confirmFromBalance, MIN_CONFIRM_AMOUNT };

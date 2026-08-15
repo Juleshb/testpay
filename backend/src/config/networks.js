@@ -123,7 +123,7 @@ export const NETWORKS = {
     tokens: {
       AVAX: { symbol: 'AVAX', name: 'Avalanche', decimals: 18, address: null, isNative: true },
       USDC: { symbol: 'USDC', name: 'USD Coin', decimals: 6, address: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E' },
-      USDT: { symbol: 'USDT', name: 'Tether USD', decimals: 6, address: '0x9702230A8Ea53601f5cCD2dcCaa3C011FdAaB71F' },
+      USDT: { symbol: 'USDT', name: 'Tether USD', decimals: 6, address: '0x9702230A8EA53601F5cCd2Dccaa3c011fDAAb71f' },
     },
   },
   11155111: {
