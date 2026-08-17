@@ -77,16 +77,23 @@ export default defineConfig({
     }),
   ],
   server: {
+    host: true,
     port: 5173,
+    allowedHosts: ['stackpay.online', 'www.stackpay.online', 'localhost'],
     proxy: {
       '/api': {
-        target: 'https://cselenaguerra.site',
+        target: 'https://stackpay.site',
         changeOrigin: true,
       },
       '/ws': {
-        target: 'ws://cselenaguerra.site',
+        target: 'ws://stackpay.site',
         ws: true,
       },
     },
+  },
+  preview: {
+    host: true,
+    port: 4173,
+    allowedHosts: ['stackpay.online', 'www.stackpay.online', 'localhost'],
   },
 });
