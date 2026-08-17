@@ -294,7 +294,7 @@ router.get('/dashboard', async (_req, res) => {
         defaultChainId: config.defaultChainId,
         defaultNetwork: getNetwork(config.defaultChainId)?.name || 'Unknown',
         pollIntervalMs: config.pollIntervalMs,
-        sweepIntervalMs: 60000,
+        sweepIntervalMs: config.sweepIntervalMs,
         withdrawPollIntervalMs: config.withdrawPollIntervalMs,
         minWithdrawUsdEnv: config.minWithdrawUsd,
         maxWithdrawUsdEnv: config.maxWithdrawUsd,

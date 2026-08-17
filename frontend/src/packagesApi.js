@@ -50,9 +50,10 @@ export function getPackageEligibility(pkg, availableUsd) {
   const max = pkg.maxAmount ? parseFloat(pkg.maxAmount) : Infinity;
 
   if (balance < min) {
+    const shortfall = Math.max(0, min - balance);
     return {
       eligible: false,
-      shortfall: (min - balance).toFixed(2),
+      shortfall: shortfall.toFixed(2),
       suggestedAmount: null,
       dailyIncome: null,
     };

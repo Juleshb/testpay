@@ -319,6 +319,13 @@
     "withdraw": "Retrait",
     "transfer": "Transfert",
     "newPayment": "Nouveau paiement",
+    "quickLinks": "liens rapides",
+    "quickDeposit": "Dépôt",
+    "quickDepositHint": "Ajoutez de la crypto à votre solde USD",
+    "quickPackages": "Forfaits",
+    "quickPackagesHint": "Investissez et gagnez un revenu quotidien",
+    "quickMining": "Mining",
+    "quickMiningHint": "Lancez un mineur depuis votre solde",
     "accountBalance": "solde du compte",
     "available": "Disponible",
     "totalPaid": "Total payé",
@@ -398,9 +405,9 @@
     "wrongNetwork": "mauvais réseau",
     "requested": "demandé",
     "received": "reçu {{amount}} {{symbol}}",
-    "creditedNote": "Credited from what you sent · swept to treasury",
-    "underpaidNote": "Under requested amount — still credited and swept",
-    "overpaidNote": "Over requested amount — full received amount credited",
+    "creditedNote": "On-chain received · USD is added after sweep",
+    "underpaidNote": "Under requested amount — still swept, then credited",
+    "overpaidNote": "Over requested amount — full received amount is swept, then credited",
     "name": "Name",
     "email": "E-mail",
     "depositAddress": "adresse de dépôt",
@@ -414,7 +421,6 @@
     "needAtLeast": "Il faut au moins {{amount}} {{symbol}} sur {{network}}",
     "pay": "Payer {{amount}} {{symbol}}",
     "tx": "Tx :",
-    "balanceUpdates": "Any amount received is confirmed, credited, and swept · updates every 10s",
     "balanceError": "Impossible d'actualiser le solde. Les détails du paiement restent valides."
   },
   "transfer": {
@@ -624,7 +630,9 @@
     "dailyReturn": "daily return · {{days}} days",
     "atMin": "at min",
     "fromUsd": "from ${{amount}} USD",
-    "needMoreShort": " · need ${{amount}} more"
+    "needMoreShort": " · need ${{amount}} more",
+    "unlock": "Unlock · ${{amount}}",
+    "unlockHint": "Deposit ${{amount}} to unlock this package"
   },
   "mining": {
     "title": "Mining Options",

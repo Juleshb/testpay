@@ -16,6 +16,12 @@ import AmountInput from '../components/ui/AmountInput';
 import { PageLoader } from '../components/ui/Spinner';
 import { cn } from '../lib/cn';
 
+function depositUrl(amount) {
+  const usd = parseFloat(amount);
+  if (!Number.isFinite(usd) || usd <= 0) return '/payments/new';
+  return `/payments/new?amount=${encodeURIComponent(usd.toFixed(2))}`;
+}
+
 export default function PackagesPage() {
   const { t } = useTranslation();
   const [packages, setPackages] = useState([]);
@@ -107,6 +113,9 @@ export default function PackagesPage() {
 
   const investAmount = parseFloat(amount || '0');
   const insufficientBalance = amount && investAmount > availableUsd;
+  const selectedEligibility = selectedPackage
+    ? getPackageEligibility(selectedPackage, availableUsd)
+    : null;
 
   if (loading) return <PageLoader message={t('pageCommon.loading.packages')} />;
 
@@ -176,7 +185,7 @@ export default function PackagesPage() {
           <p className="font-mono text-xs mb-4" style={{ color: 'var(--color-text-muted)' }}>
             {t('packages.increaseBalance')}
           </p>
-          <Link to="/payments/new">
+          <Link to={depositUrl(lockedPackages[0]?.eligibility?.shortfall || packages[0]?.minAmount)}>
             <Button size="md">{t('packages.makePayment')}</Button>
           </Link>
         </div>
@@ -214,7 +223,7 @@ export default function PackagesPage() {
                 {lockedPackages.map((pkg) => (
                   <article
                     key={pkg.id}
-                    className="glass-panel p-5 opacity-75"
+                    className="glass-panel p-5"
                   >
                     <div className="flex items-center gap-2 mb-2">
                       <span
@@ -226,9 +235,14 @@ export default function PackagesPage() {
                     <p className="font-mono text-xs" style={{ color: 'var(--color-warning)' }}>
                       {t('packages.needMore', { amount: pkg.eligibility.shortfall })}
                     </p>
-                    <p className="font-mono text-[11px] mt-1" style={{ color: 'var(--color-text-muted)' }}>
+                    <p className="font-mono text-[11px] mt-1 mb-4" style={{ color: 'var(--color-text-muted)' }}>
                       {t('packages.minDaily', { min: pkg.minAmount, rate: pkg.dailyRate })}
                     </p>
+                    <Link to={depositUrl(pkg.eligibility.shortfall)} className="block">
+                      <Button className="w-full" size="md">
+                        {t('packages.unlock', { amount: pkg.eligibility.shortfall })}
+                      </Button>
+                    </Link>
                   </article>
                 ))}
               </div>
@@ -287,18 +301,27 @@ export default function PackagesPage() {
                     })}
                   </Alert>
                 )}
-                <Button
-                  type="submit"
-                  className="w-full"
-                  loading={investing}
-                  disabled={
-                    insufficientBalance ||
-                    availableUsd <= 0 ||
-                    !getPackageEligibility(selectedPackage, availableUsd).eligible
-                  }
-                >
-                  {t('packages.activateInvestment')}
-                </Button>
+                {!selectedEligibility?.eligible ? (
+                  <Link
+                    to={depositUrl(selectedEligibility?.shortfall)}
+                    className="block"
+                  >
+                    <Button type="button" className="w-full">
+                      {t('packages.unlock', {
+                        amount: selectedEligibility?.shortfall,
+                      })}
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    loading={investing}
+                    disabled={insufficientBalance || availableUsd <= 0}
+                  >
+                    {t('packages.activateInvestment')}
+                  </Button>
+                )}
               </form>
             </section>
           )}
@@ -366,63 +389,70 @@ function PackageCard({ pkg, eligibility, selected, onSelect }) {
   const { t } = useTranslation();
 
   return (
-    <button
-      type="button"
-      onClick={onSelect}
+    <article
       className={cn(
         'glass-panel p-5 text-left transition-all w-full',
         selected && 'border-[color-mix(in_srgb,var(--color-accent)_45%,transparent)] -translate-y-0.5',
         eligibility.eligible && 'border-[color-mix(in_srgb,var(--color-success)_25%,transparent)]'
       )}
     >
-      <div className="flex items-center justify-between gap-2 mb-3">
-        <div className="flex items-center gap-2">
-          <span className="w-3 h-3 rounded-full shrink-0" style={{ background: pkg.badgeColor }} />
-          <span className="font-semibold text-sm">{pkg.name}</span>
+      <button type="button" onClick={onSelect} className="w-full text-left">
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full shrink-0" style={{ background: pkg.badgeColor }} />
+            <span className="font-semibold text-sm">{pkg.name}</span>
+          </div>
+          {eligibility.eligible ? (
+            <span
+              className="font-mono text-[10px] px-2 py-0.5 rounded-full uppercase"
+              style={{
+                color: 'var(--color-success)',
+                background: 'color-mix(in srgb, var(--color-success) 12%, transparent)',
+              }}
+            >
+              {t('packages.eligible')}
+            </span>
+          ) : (
+            <span
+              className="font-mono text-[10px] px-2 py-0.5 rounded-full uppercase"
+              style={{ color: 'var(--color-text-muted)' }}
+            >
+              {t('packages.locked')}
+            </span>
+          )}
         </div>
-        {eligibility.eligible ? (
-          <span
-            className="font-mono text-[10px] px-2 py-0.5 rounded-full uppercase"
-            style={{
-              color: 'var(--color-success)',
-              background: 'color-mix(in srgb, var(--color-success) 12%, transparent)',
-            }}
-          >
-            {t('packages.eligible')}
+        <p className="font-mono text-2xl font-bold tabular-nums mb-1" style={{ color: 'var(--color-accent)' }}>
+          {pkg.dailyRate}%
+        </p>
+        <p className="font-mono text-[11px] mb-3" style={{ color: 'var(--color-text-muted)' }}>
+          {t('packages.dailyReturn', { days: pkg.durationDays })}
+        </p>
+        <p className="font-mono text-sm font-semibold tabular-nums mb-2" style={{ color: 'var(--color-success)' }}>
+          ${pkg.minDailyIncome}
+          {t('packages.perDay')}
+          <span className="text-[10px] font-normal ml-1" style={{ color: 'var(--color-text-muted)' }}>
+            {t('packages.atMin')}
           </span>
-        ) : (
-          <span
-            className="font-mono text-[10px] px-2 py-0.5 rounded-full uppercase"
-            style={{ color: 'var(--color-text-muted)' }}
-          >
-            {t('packages.locked')}
-          </span>
-        )}
-      </div>
-      <p className="font-mono text-2xl font-bold tabular-nums mb-1" style={{ color: 'var(--color-accent)' }}>
-        {pkg.dailyRate}%
-      </p>
-      <p className="font-mono text-[11px] mb-3" style={{ color: 'var(--color-text-muted)' }}>
-        {t('packages.dailyReturn', { days: pkg.durationDays })}
-      </p>
-      <p className="font-mono text-sm font-semibold tabular-nums mb-2" style={{ color: 'var(--color-success)' }}>
-        ${pkg.minDailyIncome}
-        {t('packages.perDay')}
-        <span className="text-[10px] font-normal ml-1" style={{ color: 'var(--color-text-muted)' }}>
-          {t('packages.atMin')}
-        </span>
-      </p>
-      <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-        {pkg.description}
-      </p>
-      <p className="font-mono text-[11px] mt-3" style={{ color: 'var(--color-text-muted)' }}>
-        {t('packages.fromUsd', { amount: pkg.minAmount })}
-        {!eligibility.eligible && (
-          <span style={{ color: 'var(--color-warning)' }}>
-            {t('packages.needMoreShort', { amount: eligibility.shortfall })}
-          </span>
-        )}
-      </p>
-    </button>
+        </p>
+        <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+          {pkg.description}
+        </p>
+        <p className="font-mono text-[11px] mt-3" style={{ color: 'var(--color-text-muted)' }}>
+          {t('packages.fromUsd', { amount: pkg.minAmount })}
+          {!eligibility.eligible && (
+            <span style={{ color: 'var(--color-warning)' }}>
+              {t('packages.needMoreShort', { amount: eligibility.shortfall })}
+            </span>
+          )}
+        </p>
+      </button>
+      {!eligibility.eligible && (
+        <Link to={depositUrl(eligibility.shortfall)} className="block mt-3">
+          <Button type="button" className="w-full" size="md">
+            {t('packages.unlock', { amount: eligibility.shortfall })}
+          </Button>
+        </Link>
+      )}
+    </article>
   );
 }

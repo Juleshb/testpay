@@ -11,6 +11,12 @@ import { Card, CardContent, CardTitle } from '../components/ui/Card';
 import { PageLoader } from '../components/ui/Spinner';
 import LiveQuotes from '../components/LiveQuotes';
 
+const QUICK_LINKS = [
+  { to: '/payments/new', labelKey: 'dashboard.quickDeposit', hintKey: 'dashboard.quickDepositHint' },
+  { to: '/packages', labelKey: 'dashboard.quickPackages', hintKey: 'dashboard.quickPackagesHint' },
+  { to: '/mining', labelKey: 'dashboard.quickMining', hintKey: 'dashboard.quickMiningHint' },
+];
+
 export default function OverviewDashboardPage() {
   const { t } = useTranslation();
   const [data, setData] = useState(null);
@@ -78,6 +84,26 @@ export default function OverviewDashboardPage() {
           </div>
         }
       />
+
+      <section>
+        <p className="section-label mb-3">{t('dashboard.quickLinks')}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {QUICK_LINKS.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className="glass-panel p-4 block transition-colors hover:border-[color-mix(in_srgb,var(--color-accent)_45%,transparent)]"
+            >
+              <p className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>
+                {t(item.labelKey)}
+              </p>
+              <p className="font-mono text-[11px] mt-1" style={{ color: 'var(--color-text-muted)' }}>
+                {t(item.hintKey)}
+              </p>
+            </Link>
+          ))}
+        </div>
+      </section>
 
       <section>
         <p className="section-label mb-4">{t('dashboard.accountBalance')}</p>

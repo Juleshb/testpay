@@ -2,8 +2,8 @@ import { prisma } from '../db.js';
 import { config } from '../config/index.js';
 import { getPaymentBalance, getProvider, ethers } from './wallet.js';
 import { getToken, isNativeToken } from '../config/networks.js';
-import { creditPaymentBalance } from './userBalance.js';
 import { tryActivateDeveloperAccess } from './developerAccess.js';
+import { enqueueConfirmedSweep } from './sweep.js';
 
 /** Any positive on-chain deposit confirms (under or over the requested amount). */
 const MIN_CONFIRM_AMOUNT = 1e-12;
@@ -43,12 +43,6 @@ async function confirmFromBalance(payment, balance, { txHash } = {}) {
   });
 
   try {
-    await creditPaymentBalance(updated);
-  } catch (err) {
-    console.error(`Balance credit failed for payment ${payment.id}:`, err.message);
-  }
-
-  try {
     await tryActivateDeveloperAccess(updated);
   } catch (err) {
     console.error(`Developer access activation failed for payment ${payment.id}:`, err.message);
@@ -65,6 +59,7 @@ async function confirmFromBalance(payment, balance, { txHash } = {}) {
     `Payment confirmed: ${payment.id} - ${balance} ${payment.tokenSymbol} on chain ${payment.chainId}${note}`
   );
 
+  enqueueConfirmedSweep(updated.id);
   return updated;
 }
 

@@ -24,7 +24,7 @@ export async function getUserBalanceSummary(userId, tx = prisma) {
 
 export async function creditPaymentBalance(payment, tx = prisma) {
   if (!payment.userId) return null;
-  if (payment.status !== 'CONFIRMED' && payment.status !== 'SWEPT') return null;
+  if (payment.status !== 'SWEPT') return null;
 
   const paid = payment.paidAmount || payment.amount;
   const { usdAmount, usdRate } = await convertToUsd(paid, payment.tokenSymbol);
@@ -168,7 +168,7 @@ export async function ensureUserPaymentCredits(userId) {
   const payments = await prisma.payment.findMany({
     where: {
       userId,
-      status: { in: ['CONFIRMED', 'SWEPT'] },
+      status: 'SWEPT',
       balanceCreditedAt: null,
     },
   });
@@ -186,7 +186,7 @@ export async function backfillPaymentCredits() {
   const payments = await prisma.payment.findMany({
     where: {
       userId: { not: null },
-      status: { in: ['CONFIRMED', 'SWEPT'] },
+      status: 'SWEPT',
       balanceCreditedAt: null,
     },
   });

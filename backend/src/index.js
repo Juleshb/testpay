@@ -97,7 +97,7 @@ server.listen(config.port, async () => {
   await backfillPackageIncomeCredits();
   await repairMissingWithdrawalRefunds();
   startPaymentMonitor();
-  startSweepScheduler();
+  startSweepScheduler(config.sweepIntervalMs);
   startPackageAccrualScheduler();
   startMiningAccrualScheduler();
   startWithdrawalProcessor();

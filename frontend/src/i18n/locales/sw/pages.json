@@ -319,6 +319,13 @@
     "withdraw": "Utoaji",
     "transfer": "Uhamisho",
     "newPayment": "Malipo mapya",
+    "quickLinks": "viungo vya haraka",
+    "quickDeposit": "Amana",
+    "quickDepositHint": "Ongeza crypto kwenye salio lako la USD",
+    "quickPackages": "Kifurushis",
+    "quickPackagesHint": "Wekeza na pata mapato ya kila siku",
+    "quickMining": "Mining",
+    "quickMiningHint": "Anza mchimbaji kutoka salio lako",
     "accountBalance": "salio la akaunti",
     "available": "Inapatikana",
     "totalPaid": "Jumla iliyolipwa",
@@ -398,9 +405,9 @@
     "wrongNetwork": "wrong network",
     "requested": "requested",
     "received": "received {{amount}} {{symbol}}",
-    "creditedNote": "Credited from what you sent · swept to treasury",
-    "underpaidNote": "Under requested amount — still credited and swept",
-    "overpaidNote": "Over requested amount — full received amount credited",
+    "creditedNote": "On-chain received · USD is added after sweep",
+    "underpaidNote": "Under requested amount — still swept, then credited",
+    "overpaidNote": "Over requested amount — full received amount is swept, then credited",
     "name": "Name",
     "email": "Barua pepe",
     "depositAddress": "amana anwani",
@@ -414,7 +421,6 @@
     "needAtLeast": "Need at least {{amount}} {{symbol}} on {{network}}",
     "pay": "Pay {{amount}} {{symbol}}",
     "tx": "Tx:",
-    "balanceUpdates": "Any amount received is confirmed, credited, and swept · updates every 10s",
     "balanceError": "Could si refresh amana balance. Malipo details are still valid."
   },
   "transfer": {
@@ -624,7 +630,9 @@
     "dailyReturn": "daily return · {{days}} days",
     "atMin": "at min",
     "fromUsd": "from ${{amount}} USD",
-    "needMoreShort": " · need ${{amount}} more"
+    "needMoreShort": " · need ${{amount}} more",
+    "unlock": "Unlock · ${{amount}}",
+    "unlockHint": "Deposit ${{amount}} to unlock this package"
   },
   "mining": {
     "title": "Mining Options",

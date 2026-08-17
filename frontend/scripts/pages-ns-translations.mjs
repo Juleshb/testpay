@@ -393,7 +393,6 @@ export const nsFr = {
     "needAtLeast": "Need at least {{amount}} {{symbol}} on {{network}}",
     "pay": "Pay {{amount}} {{symbol}}",
     "tx": "Tx:",
-    "balanceUpdates": "Balance updates every 10s",
     "balanceError": "Could not refresh deposit balance. Payment details are still valid."
   },
   "transfer": {
@@ -1418,7 +1417,6 @@ export const nsSw = {
     "needAtLeast": "Need at least {{amount}} {{symbol}} on {{network}}",
     "pay": "Pay {{amount}} {{symbol}}",
     "tx": "Tx:",
-    "balanceUpdates": "Balance updates every 10s",
     "balanceError": "Could not refresh deposit balance. Payment details are still valid."
   },
   "transfer": {

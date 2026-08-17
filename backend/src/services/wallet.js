@@ -87,6 +87,32 @@ export async function getPaymentBalance(depositAddress, chainId, tokenSymbol) {
   return ethers.formatUnits(balance, token.decimals);
 }
 
+/** Tether USDT on Ethereum often needs more than a simple ERC-20 transfer. */
+function erc20SweepGasLimit(chainId, tokenSymbol) {
+  const symbol = String(tokenSymbol || '').toUpperCase();
+  if (chainId === 1 && (symbol === 'USDT' || symbol === 'USDC')) return 150000n;
+  if (symbol === 'USDT' || symbol === 'USDC') return 100000n;
+  return 80000n;
+}
+
+function effectiveGasPrice(feeData) {
+  return feeData.maxFeePerGas ?? feeData.gasPrice ?? ethers.parseUnits('20', 'gwei');
+}
+
+/** EIP-1559 with a small bump so Ethereum sweeps land in the next blocks. */
+function speedFeeOverrides(feeData) {
+  const bump = ethers.parseUnits('1', 'gwei');
+  if (feeData.maxFeePerGas && feeData.maxPriorityFeePerGas) {
+    const tip = feeData.maxPriorityFeePerGas + bump;
+    return {
+      maxPriorityFeePerGas: tip,
+      maxFeePerGas: feeData.maxFeePerGas + bump * 2n,
+    };
+  }
+  const gasPrice = (feeData.gasPrice ?? ethers.parseUnits('20', 'gwei')) + bump;
+  return { gasPrice };
+}
+
 async function sweepNative(fromIndex, toAddress, chainId) {
   const provider = getProvider(chainId);
   const wallet = deriveDepositWallet(fromIndex).connect(provider);
@@ -95,9 +121,9 @@ async function sweepNative(fromIndex, toAddress, chainId) {
   if (balance === 0n) return null;
 
   const feeData = await provider.getFeeData();
-  const gasPrice = feeData.gasPrice ?? ethers.parseUnits('20', 'gwei');
+  const fees = speedFeeOverrides(feeData);
   const gasLimit = 21000n;
-  const gasCost = gasPrice * gasLimit;
+  const gasCost = effectiveGasPrice({ ...feeData, ...fees }) * gasLimit;
 
   if (balance <= gasCost) {
     await fundGasForSweep(wallet.address, chainId, gasCost - balance + gasCost / 2n);
@@ -110,7 +136,7 @@ async function sweepNative(fromIndex, toAddress, chainId) {
   }
 
   const value = balance - gasCost;
-  const tx = await wallet.sendTransaction({ to: toAddress, value, gasLimit, gasPrice });
+  const tx = await wallet.sendTransaction({ to: toAddress, value, gasLimit, ...fees });
   const receipt = await tx.wait();
   const token = getToken(chainId, getNetwork(chainId).nativeSymbol);
 
@@ -124,9 +150,10 @@ async function fundGasForSweep(depositAddress, chainId, amount = null) {
   const provider = getProvider(chainId);
   const funder = deriveDepositWallet(GAS_FUNDER_INDEX).connect(provider);
   const feeData = await provider.getFeeData();
-  const gasPrice = feeData.gasPrice ?? ethers.parseUnits('20', 'gwei');
-  const gasNeeded = amount ?? gasPrice * 65000n;
-  const funderGas = gasPrice * 21000n;
+  const fees = speedFeeOverrides(feeData);
+  const unitPrice = effectiveGasPrice({ ...feeData, ...fees });
+  const gasNeeded = amount ?? unitPrice * 150000n;
+  const funderGas = unitPrice * 21000n;
 
   const funderBalance = await provider.getBalance(funder.address);
   if (funderBalance <= gasNeeded + funderGas) {
@@ -139,7 +166,7 @@ async function fundGasForSweep(depositAddress, chainId, amount = null) {
     to: depositAddress,
     value: gasNeeded,
     gasLimit: 21000n,
-    gasPrice,
+    ...fees,
   });
   await tx.wait();
 }
@@ -153,16 +180,17 @@ async function sweepErc20(fromIndex, toAddress, chainId, tokenSymbol) {
   const balance = await contract.balanceOf(wallet.address);
   if (balance === 0n) return null;
 
-  const nativeBalance = await provider.getBalance(wallet.address);
   const feeData = await provider.getFeeData();
-  const gasPrice = feeData.gasPrice ?? ethers.parseUnits('20', 'gwei');
-  const minGas = gasPrice * 65000n;
+  const fees = speedFeeOverrides(feeData);
+  const gasLimit = erc20SweepGasLimit(chainId, tokenSymbol);
+  const minGas = effectiveGasPrice({ ...feeData, ...fees }) * gasLimit;
+  const nativeBalance = await provider.getBalance(wallet.address);
 
   if (nativeBalance < minGas) {
-    await fundGasForSweep(wallet.address, chainId);
+    await fundGasForSweep(wallet.address, chainId, minGas - nativeBalance + minGas / 4n);
   }
 
-  const tx = await contract.transfer(toAddress, balance);
+  const tx = await contract.transfer(toAddress, balance, { gasLimit, ...fees });
   const receipt = await tx.wait();
 
   return {
@@ -175,8 +203,8 @@ async function ensureGasForWallet(walletAddress, chainId, minGas = null) {
   const provider = getProvider(chainId);
   const nativeBalance = await provider.getBalance(walletAddress);
   const feeData = await provider.getFeeData();
-  const gasPrice = feeData.gasPrice ?? ethers.parseUnits('20', 'gwei');
-  const needed = minGas ?? gasPrice * 65000n;
+  const fees = speedFeeOverrides(feeData);
+  const needed = minGas ?? effectiveGasPrice({ ...feeData, ...fees }) * 150000n;
   if (nativeBalance >= needed) return;
   await fundGasForSweep(walletAddress, chainId, needed - nativeBalance + needed / 4n);
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { createPayment, getNetworks, getLiveQuotes } from '../api';
 import { userDisplayId } from '../auth';
@@ -24,6 +24,7 @@ function formatTokenAmount(value, symbol) {
 export default function HomePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const [networks, setNetworks] = useState([]);
   const [rates, setRates] = useState({});
@@ -32,6 +33,13 @@ export default function HomePage() {
   const [amountUsd, setAmountUsd] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const preset = parseFloat(searchParams.get('amount'));
+    if (Number.isFinite(preset) && preset > 0) {
+      setAmountUsd(preset.toFixed(2));
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     getNetworks()

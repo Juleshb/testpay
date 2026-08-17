@@ -381,12 +381,6 @@ export default function PaymentPage() {
       )}
 
       {error && <Alert className="mt-3 sm:mt-4">{error}</Alert>}
-
-      {!isPaid && (
-        <p className="text-center text-[11px] sm:text-xs mt-4 sm:mt-6 font-mono px-2" style={{ color: 'var(--color-text-muted)' }}>
-          {t('payment.balanceUpdates')}
-        </p>
-      )}
     </div>
   );
 }

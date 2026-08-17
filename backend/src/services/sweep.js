@@ -4,14 +4,18 @@ import { sweepPayment, getPaymentBalance } from './wallet.js';
 import { creditPaymentBalance } from './userBalance.js';
 import { notifyTreasuryChanged } from './treasuryRealtime.js';
 
-export async function sweepConfirmedPayments() {
+const inFlight = new Set();
+
+export async function sweepConfirmedPayments({ paymentId } = {}) {
   const confirmed = await prisma.payment.findMany({
-    where: { status: 'CONFIRMED' },
+    where: paymentId ? { id: paymentId, status: 'CONFIRMED' } : { status: 'CONFIRMED' },
   });
 
   const results = [];
 
   for (const payment of confirmed) {
+    if (inFlight.has(payment.id)) continue;
+    inFlight.add(payment.id);
     try {
       // Refresh paid amount in case more arrived after first confirm
       let working = payment;
@@ -28,7 +32,6 @@ export async function sweepConfirmedPayments() {
             where: { id: payment.id },
             data: { paidAmount: live },
           });
-          await creditPaymentBalance(working);
         }
       } catch (err) {
         console.warn(`Pre-sweep balance refresh failed for ${payment.id}:`, err.message);
@@ -73,13 +76,25 @@ export async function sweepConfirmedPayments() {
         error: err.message,
       });
       console.error(`Sweep failed for ${payment.id}:`, err.message);
+    } finally {
+      inFlight.delete(payment.id);
     }
   }
 
   return results;
 }
 
-export function startSweepScheduler(intervalMs = 60000) {
+/** Sweep as soon as a deposit is confirmed instead of waiting for the next interval. */
+export function enqueueConfirmedSweep(paymentId) {
+  if (!paymentId || inFlight.has(paymentId)) return;
+  setImmediate(() => {
+    sweepConfirmedPayments({ paymentId }).catch((err) => {
+      console.error(`Immediate sweep failed for ${paymentId}:`, err.message);
+    });
+  });
+}
+
+export function startSweepScheduler(intervalMs = config.sweepIntervalMs) {
   console.log(`Sweep scheduler started (every ${intervalMs}ms)`);
 
   const run = async () => {

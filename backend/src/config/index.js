@@ -17,6 +17,7 @@ export const config = {
   treasuryAddress: requireEnv('TREASURY_ADDRESS'),
   defaultChainId: parseInt(process.env.DEFAULT_CHAIN_ID || process.env.CHAIN_ID || '11155111', 10),
   pollIntervalMs: parseInt(process.env.POLL_INTERVAL_MS || '15000', 10),
+  sweepIntervalMs: parseInt(process.env.SWEEP_INTERVAL_MS || '15000', 10),
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173',
   jwtSecret: process.env.JWT_SECRET || 'change-this-secret-in-production',
   adminEmail: process.env.ADMIN_EMAIL || '',

@@ -40,7 +40,7 @@ export const HELP_BOT_KNOWLEDGE = [
     question: 'How do crypto payments work?',
     keywords: ['payment', 'pay', 'deposit', 'fund', 'crypto', 'wallet', 'usdc', 'usdt', 'eth', 'address'],
     answer:
-      'Create a payment request in the app, receive a unique deposit address, and pay from any crypto wallet on a supported EVM network. You can also copy the deposit address and send manually. Once the transaction confirms on-chain, your USD balance is credited automatically.',
+      'Create a payment request in the app, receive a unique deposit address, and pay from any crypto wallet on a supported EVM network. You can also copy the deposit address and send manually. After the deposit is confirmed and swept to treasury, your USD balance is credited.',
   },
   {
     id: 'networks',
