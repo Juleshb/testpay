@@ -54,20 +54,24 @@ export default function MiningPortfolioPage() {
         }
       />
 
-      {activePositions.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          <StatCard
-            label={t('miningPortfolio.dailyIncome')}
-            value={`$${dailyIncomeTotal.toFixed(4)}`}
-            color="text-[var(--color-success)]"
-          />
-          <StatCard label={t('miningPortfolio.activeMiners')} value={activePositions.length} />
-          <StatCard
-            label={t('miningPortfolio.activeAllocated')}
-            value={`$${activePositions.reduce((s, i) => s + parseFloat(i.amount || 0), 0).toFixed(2)}`}
-          />
-        </div>
-      )}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <StatCard
+          label={t('miningPortfolio.miningBalance')}
+          value={`$${positions.reduce((s, p) => s + (parseFloat(p.totalEarned) || 0), 0).toFixed(4)}`}
+          hint={t('miningPortfolio.miningBalanceHint')}
+          color="text-[var(--color-success)]"
+        />
+        <StatCard
+          label={t('miningPortfolio.dailyIncome')}
+          value={`$${dailyIncomeTotal.toFixed(4)}`}
+          color="text-[var(--color-success)]"
+        />
+        <StatCard label={t('miningPortfolio.activeMiners')} value={activePositions.length} />
+        <StatCard
+          label={t('miningPortfolio.activeAllocated')}
+          value={`$${activePositions.reduce((s, i) => s + parseFloat(i.amount || 0), 0).toFixed(2)}`}
+        />
+      </div>
 
       {activePositions.length > 0 && (
         <section>

@@ -219,7 +219,9 @@ export default function WithdrawPage() {
   const amountOk = amountNum >= minUsd && amountNum <= maxUsd && netUsd > 0 && netUsd <= liquidityMax + 0.00000001;
   const dailyOk = remainingCount > 0 && remainingVolume >= minUsd;
   const addressOk = /^0x[a-fA-F0-9]{40}$/.test(address.trim());
+  const withdrawalsEnabled = options?.withdrawalsEnabled !== false;
   const canSubmit =
+    withdrawalsEnabled &&
     hasFundedNetworks && networkOk && tokenOk && amountOk && addressOk && dailyOk && !submitting;
   const addressMatchesSaved =
     savedWallet?.destinationAddress &&
@@ -350,6 +352,12 @@ export default function WithdrawPage() {
             <p className="font-display text-4xl sm:text-5xl font-bold tabular-nums" style={{ color: 'var(--color-accent)' }}>
               ${balance?.availableUsd ?? '0.00'}
             </p>
+            <p className="font-mono text-xs mt-3" style={{ color: 'var(--color-text-muted)' }}>
+              {t('withdraw.miningBalance')}: ${parseFloat(balance?.miningBalanceUsd || '0').toFixed(4)}
+            </p>
+            <p className="font-mono text-[11px] mt-1" style={{ color: 'var(--color-text-muted)' }}>
+              {t('withdraw.miningNotWithdrawable')}
+            </p>
             <p className="font-mono text-xs mt-2" style={{ color: 'var(--color-text-muted)' }}>
               {t('withdraw.minMax', { min: minUsd.toFixed(2), max: maxPerTx.toFixed(2) })}
             </p>
@@ -369,13 +377,29 @@ export default function WithdrawPage() {
                 })}
               </p>
             )}
-            {!dailyOk && (
+            {!dailyOk && withdrawalsEnabled && (
               <p className="font-mono text-xs mt-2" style={{ color: 'var(--color-danger)' }}>
                 {t('withdraw.dailyLimitReached')}
               </p>
             )}
+            {!withdrawalsEnabled && (
+              <p className="font-mono text-xs mt-2" style={{ color: 'var(--color-warning)' }}>
+                {t('withdraw.disabledHint')}
+              </p>
+            )}
           </div>
 
+          {!withdrawalsEnabled ? (
+            <div
+              className="glass-panel border p-6 sm:p-8 text-center"
+              style={{ borderColor: 'var(--color-glass-border)' }}
+            >
+              <p className="font-semibold mb-2">{t('withdraw.disabledTitle')}</p>
+              <p className="font-mono text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                {t('withdraw.disabledHint')}
+              </p>
+            </div>
+          ) : (
           <form
             onSubmit={handleSubmit}
             className="glass-panel border overflow-hidden"
@@ -724,6 +748,7 @@ export default function WithdrawPage() {
               )}
             </div>
           </form>
+          )}
         </div>
 
         <div className="lg:col-span-2 space-y-6">

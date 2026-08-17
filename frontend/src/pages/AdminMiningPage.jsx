@@ -222,6 +222,13 @@ export default function AdminMiningPage() {
                   required
                 />
               </Field>
+            </div>
+            {editingId && (
+              <p className="font-mono text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
+                {t('admin.miningPage.appliesImmediately')}
+              </p>
+            )}
+            <div className="grid sm:grid-cols-2 gap-4">
               <Field label={t('admin.miningPage.hashRate')} required>
                 <input
                   className="dev-input w-full font-mono"

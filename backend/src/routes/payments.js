@@ -85,6 +85,8 @@ router.get('/stats/dashboard', authMiddleware(true), async (req, res) => {
         totalCreditedUsd: balance.totalCreditedUsd,
         totalDebitedUsd: balance.totalDebitedUsd,
         totalPaidUsd: paymentUsd.totalPaidUsd,
+        miningBalanceUsd: balance.miningBalanceUsd,
+        miningAllocatedUsd: balance.miningAllocatedUsd,
       },
       volume: {
         totalRequests: total,

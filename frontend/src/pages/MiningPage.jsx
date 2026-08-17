@@ -17,6 +17,12 @@ import { PageLoader } from '../components/ui/Spinner';
 import { cn } from '../lib/cn';
 import LiveMiningPanel from '../components/LiveMiningPanel';
 
+function depositUrl(amount) {
+  const usd = parseFloat(amount);
+  if (!Number.isFinite(usd) || usd <= 0) return '/payments/new';
+  return `/payments/new?amount=${encodeURIComponent(usd.toFixed(2))}`;
+}
+
 export default function MiningPage() {
   const { t } = useTranslation();
   const [options, setOptions] = useState([]);
@@ -123,6 +129,9 @@ export default function MiningPage() {
 
   const investAmount = parseFloat(amount || '0');
   const insufficientBalance = amount && investAmount > availableUsd;
+  const selectedEligibility = selectedOption
+    ? getMiningEligibility(selectedOption, availableUsd)
+    : null;
 
   if (loading) return <PageLoader message={t('pageCommon.loading.mining')} />;
 
@@ -146,7 +155,14 @@ export default function MiningPage() {
           <StatCard
             label={t('mining.availableBalance')}
             value={`$${overview.availableUsd}`}
+            hint={t('mining.availableHint')}
             color="text-[var(--color-accent)]"
+          />
+          <StatCard
+            label={t('mining.miningBalance')}
+            value={`$${parseFloat(overview.miningBalanceUsd || overview.totalEarned || '0').toFixed(4)}`}
+            hint={t('mining.miningBalanceHint')}
+            color="text-[var(--color-success)]"
           />
           <StatCard
             label={t('mining.dailyIncome')}
@@ -155,11 +171,6 @@ export default function MiningPage() {
           />
           <StatCard label={t('mining.active')} value={overview.activePositions} />
           <StatCard label={t('mining.allocated')} value={`$${overview.activeInvested}`} />
-          <StatCard
-            label={t('mining.totalEarned')}
-            value={`$${parseFloat(overview.totalEarned).toFixed(4)}`}
-            color="text-[var(--color-success)]"
-          />
           <StatCard label={t('mining.allTimeAllocated')} value={`$${overview.totalInvested}`} />
         </div>
       )}
@@ -195,7 +206,7 @@ export default function MiningPage() {
           <p className="font-mono text-xs mb-4" style={{ color: 'var(--color-text-muted)' }}>
             {t('mining.increaseBalance')}
           </p>
-          <Link to="/payments/new">
+          <Link to={depositUrl(lockedOptions[0]?.eligibility?.shortfall || options[0]?.minAmount)}>
             <Button size="md">{t('mining.makePayment')}</Button>
           </Link>
         </div>
@@ -231,7 +242,7 @@ export default function MiningPage() {
               <p className="section-label mb-4">{t('mining.needMoreBalance')}</p>
               <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
                 {lockedOptions.map((option) => (
-                  <article key={option.id} className="glass-panel p-5 opacity-75">
+                  <article key={option.id} className="glass-panel p-5">
                     <div className="flex items-center gap-2 mb-2">
                       <span
                         className="w-2.5 h-2.5 rounded-full shrink-0"
@@ -242,9 +253,14 @@ export default function MiningPage() {
                     <p className="font-mono text-xs" style={{ color: 'var(--color-warning)' }}>
                       {t('mining.needMore', { amount: option.eligibility.shortfall })}
                     </p>
-                    <p className="font-mono text-[11px] mt-1" style={{ color: 'var(--color-text-muted)' }}>
+                    <p className="font-mono text-[11px] mt-1 mb-4" style={{ color: 'var(--color-text-muted)' }}>
                       {t('mining.hashRateCoin', { hashRate: option.hashRate, coin: option.coin })}
                     </p>
+                    <Link to={depositUrl(option.eligibility.shortfall)} className="block">
+                      <Button className="w-full" size="md">
+                        {t('mining.unlock', { amount: option.eligibility.shortfall })}
+                      </Button>
+                    </Link>
                   </article>
                 ))}
               </div>
@@ -315,24 +331,30 @@ export default function MiningPage() {
                     {t('mining.freeHint', { amount: selectedOption.minAmount, days: selectedOption.durationDays })}
                   </p>
                 )}
-                <Button
-                  type="submit"
-                  className="w-full"
-                  loading={starting}
-                  disabled={
-                    selectedOption.isFree
+                {!selectedOption.isFree && !selectedEligibility?.eligible ? (
+                  <Link to={depositUrl(selectedEligibility?.shortfall)} className="block">
+                    <Button type="button" className="w-full">
+                      {t('mining.unlock', { amount: selectedEligibility?.shortfall })}
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    loading={starting}
+                    disabled={
+                      selectedOption.isFree
+                        ? hasActiveFree
+                        : insufficientBalance || availableUsd <= 0
+                    }
+                  >
+                    {selectedOption.isFree
                       ? hasActiveFree
-                      : insufficientBalance ||
-                        availableUsd <= 0 ||
-                        !getMiningEligibility(selectedOption, availableUsd).eligible
-                  }
-                >
-                  {selectedOption.isFree
-                    ? hasActiveFree
-                      ? t('mining.alreadyRunning')
-                      : t('mining.startFree')
-                    : t('mining.startMining')}
-                </Button>
+                        ? t('mining.alreadyRunning')
+                        : t('mining.startFree')
+                      : t('mining.startMining')}
+                  </Button>
+                )}
               </form>
             </section>
           )}
@@ -438,78 +460,85 @@ function MiningCard({ option, eligibility, selected, onSelect }) {
   const { t } = useTranslation();
 
   return (
-    <button
-      type="button"
-      onClick={onSelect}
+    <article
       className={cn(
         'glass-panel p-5 text-left transition-all w-full',
         selected && 'border-[color-mix(in_srgb,var(--color-accent)_45%,transparent)] -translate-y-0.5',
         eligibility.eligible && 'border-[color-mix(in_srgb,var(--color-success)_25%,transparent)]'
       )}
     >
-      <div className="flex items-center justify-between gap-2 mb-3">
-        <div className="flex items-center gap-2">
-          <span className="w-3 h-3 rounded-full shrink-0" style={{ background: option.badgeColor }} />
-          <span className="font-semibold text-sm">{option.name}</span>
+      <button type="button" onClick={onSelect} className="w-full text-left">
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full shrink-0" style={{ background: option.badgeColor }} />
+            <span className="font-semibold text-sm">{option.name}</span>
+          </div>
+          {option.isFree ? (
+            <span
+              className="font-mono text-[10px] px-2 py-0.5 rounded-full uppercase"
+              style={{
+                color: 'var(--color-accent)',
+                background: 'color-mix(in srgb, var(--color-accent) 12%, transparent)',
+              }}
+            >
+              {t('mining.free')}
+            </span>
+          ) : eligibility.eligible ? (
+            <span
+              className="font-mono text-[10px] px-2 py-0.5 rounded-full uppercase"
+              style={{
+                color: 'var(--color-success)',
+                background: 'color-mix(in srgb, var(--color-success) 12%, transparent)',
+              }}
+            >
+              {t('mining.eligible')}
+            </span>
+          ) : (
+            <span
+              className="font-mono text-[10px] px-2 py-0.5 rounded-full uppercase"
+              style={{ color: 'var(--color-text-muted)' }}
+            >
+              {t('mining.locked')}
+            </span>
+          )}
         </div>
-        {option.isFree ? (
-          <span
-            className="font-mono text-[10px] px-2 py-0.5 rounded-full uppercase"
-            style={{
-              color: 'var(--color-accent)',
-              background: 'color-mix(in srgb, var(--color-accent) 12%, transparent)',
-            }}
-          >
-            {t('mining.free')}
+        <p className="font-mono text-2xl font-bold tabular-nums mb-1" style={{ color: 'var(--color-accent)' }}>
+          {option.dailyRate}%
+        </p>
+        <p className="font-mono text-[11px] mb-2" style={{ color: 'var(--color-text-muted)' }}>
+          {t('mining.hashRateCoin', { hashRate: option.hashRate, coin: option.coin })}
+        </p>
+        <p className="font-mono text-[11px] mb-3" style={{ color: 'var(--color-text-muted)' }}>
+          {t('mining.dailyReturn', { days: option.durationDays })}
+        </p>
+        <p className="font-mono text-sm font-semibold tabular-nums mb-2" style={{ color: 'var(--color-success)' }}>
+          ${option.minDailyIncome}
+          {t('mining.perDay')}
+          <span className="text-[10px] font-normal ml-1" style={{ color: 'var(--color-text-muted)' }}>
+            {t('mining.atMin')}
           </span>
-        ) : eligibility.eligible ? (
-          <span
-            className="font-mono text-[10px] px-2 py-0.5 rounded-full uppercase"
-            style={{
-              color: 'var(--color-success)',
-              background: 'color-mix(in srgb, var(--color-success) 12%, transparent)',
-            }}
-          >
-            {t('mining.eligible')}
-          </span>
-        ) : (
-          <span
-            className="font-mono text-[10px] px-2 py-0.5 rounded-full uppercase"
-            style={{ color: 'var(--color-text-muted)' }}
-          >
-            {t('mining.locked')}
-          </span>
-        )}
-      </div>
-      <p className="font-mono text-2xl font-bold tabular-nums mb-1" style={{ color: 'var(--color-accent)' }}>
-        {option.dailyRate}%
-      </p>
-      <p className="font-mono text-[11px] mb-2" style={{ color: 'var(--color-text-muted)' }}>
-        {t('mining.hashRateCoin', { hashRate: option.hashRate, coin: option.coin })}
-      </p>
-      <p className="font-mono text-[11px] mb-3" style={{ color: 'var(--color-text-muted)' }}>
-        {t('mining.dailyReturn', { days: option.durationDays })}
-      </p>
-      <p className="font-mono text-sm font-semibold tabular-nums mb-2" style={{ color: 'var(--color-success)' }}>
-        ${option.minDailyIncome}
-        {t('mining.perDay')}
-        <span className="text-[10px] font-normal ml-1" style={{ color: 'var(--color-text-muted)' }}>
-          {t('mining.atMin')}
-        </span>
-      </p>
-      <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-        {option.description}
-      </p>
-      <p className="font-mono text-[11px] mt-3" style={{ color: 'var(--color-text-muted)' }}>
-        {option.isFree
-          ? t('mining.freeFromUsd', { amount: option.minAmount })
-          : t('mining.fromUsd', { amount: option.minAmount })}
-        {!option.isFree && !eligibility.eligible && (
-          <span style={{ color: 'var(--color-warning)' }}>
-            {t('mining.needMoreShort', { amount: eligibility.shortfall })}
-          </span>
-        )}
-      </p>
-    </button>
+        </p>
+        <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+          {option.description}
+        </p>
+        <p className="font-mono text-[11px] mt-3" style={{ color: 'var(--color-text-muted)' }}>
+          {option.isFree
+            ? t('mining.freeFromUsd', { amount: option.minAmount })
+            : t('mining.fromUsd', { amount: option.minAmount })}
+          {!option.isFree && !eligibility.eligible && (
+            <span style={{ color: 'var(--color-warning)' }}>
+              {t('mining.needMoreShort', { amount: eligibility.shortfall })}
+            </span>
+          )}
+        </p>
+      </button>
+      {!option.isFree && !eligibility.eligible && (
+        <Link to={depositUrl(eligibility.shortfall)} className="block mt-3">
+          <Button type="button" className="w-full" size="md">
+            {t('mining.unlock', { amount: eligibility.shortfall })}
+          </Button>
+        </Link>
+      )}
+    </article>
   );
 }

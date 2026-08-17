@@ -72,6 +72,7 @@ export async function getWithdrawOptions(userId = null) {
     maxWithdrawalsPerDay: settings.maxWithdrawalsPerDay,
     feePercent: parseFloat(settings.feePercent),
     feeFlatUsd: parseFloat(settings.feeFlatUsd),
+    withdrawalsEnabled: settings.withdrawalsEnabled !== false,
     defaultChainId: preferredDefault,
     defaultToken: networks
       .find((n) => n.chainId === preferredDefault)
@@ -123,6 +124,12 @@ export async function requestWithdrawal(
   tx = prisma
 ) {
   const settings = await getWithdrawSettings(tx);
+  if (settings.withdrawalsEnabled === false) {
+    const err = new Error('Withdrawals are temporarily turned off');
+    err.status = 403;
+    throw err;
+  }
+
   const amountNum = parseFloat(amountUsd);
   const minUsd = parseFloat(settings.minWithdrawUsd);
   const maxUsd = parseFloat(settings.maxWithdrawUsd);
@@ -364,6 +371,13 @@ export async function cancelWithdrawal(withdrawalId, { reason } = {}) {
 }
 
 export async function retryWithdrawal(withdrawalId) {
+  const settings = await getWithdrawSettings();
+  if (settings.withdrawalsEnabled === false) {
+    const err = new Error('Withdrawals are temporarily turned off');
+    err.status = 403;
+    throw err;
+  }
+
   const withdrawal = await prisma.withdrawal.findUnique({ where: { id: withdrawalId } });
   if (!withdrawal) {
     const err = new Error('Withdrawal not found');

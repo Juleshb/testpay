@@ -12,13 +12,35 @@ function sumEntries(entries) {
   return { credits, debits, available: credits - debits };
 }
 
+export async function getMiningBalanceSummary(userId, tx = prisma) {
+  const positions = await tx.miningPosition.findMany({
+    where: { userId },
+    select: { amount: true, totalEarned: true, status: true },
+  });
+  let earned = 0;
+  let allocated = 0;
+  for (const pos of positions) {
+    earned += parseFloat(pos.totalEarned) || 0;
+    if (pos.status === 'ACTIVE') allocated += parseFloat(pos.amount) || 0;
+  }
+  return {
+    miningBalanceUsd: earned.toFixed(4),
+    miningAllocatedUsd: allocated.toFixed(2),
+  };
+}
+
 export async function getUserBalanceSummary(userId, tx = prisma) {
-  const entries = await tx.balanceEntry.findMany({ where: { userId } });
+  const [entries, mining] = await Promise.all([
+    tx.balanceEntry.findMany({ where: { userId } }),
+    getMiningBalanceSummary(userId, tx),
+  ]);
   const { credits, debits, available } = sumEntries(entries);
   return {
     availableUsd: Math.max(0, available).toFixed(2),
     totalCreditedUsd: credits.toFixed(2),
     totalDebitedUsd: debits.toFixed(2),
+    miningBalanceUsd: mining.miningBalanceUsd,
+    miningAllocatedUsd: mining.miningAllocatedUsd,
   };
 }
 

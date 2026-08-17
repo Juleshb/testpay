@@ -15,6 +15,9 @@ model User {
   passwordHash         String
   name                 String?
   role                 Role                @default(USER)
+  blocked              Boolean             @default(false)
+  blockedAt            DateTime?
+  blockedReason        String?
   createdAt            DateTime            @default(now())
   updatedAt            DateTime            @updatedAt
   payments             Payment[]
@@ -306,6 +309,7 @@ model Withdrawal {
 
 model WithdrawSettings {
   id                   Int      @id @default(1)
+  withdrawalsEnabled   Boolean  @default(true)
   minWithdrawUsd       String   @default("5")
   maxWithdrawUsd       String   @default("50000")
   maxWithdrawUsdPerDay String   @default("50000")
@@ -321,6 +325,7 @@ model CommunityChannel {
   name        String
   description String?
   sortOrder   Int             @default(0)
+  chatEnabled Boolean         @default(true)
   createdAt   DateTime        @default(now())
   posts       CommunityPost[]
   reads       CommunityChannelRead[]

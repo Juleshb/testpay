@@ -17,6 +17,7 @@ function toNum(value, fallback = 0) {
 
 export function formatWithdrawSettings(row) {
   return {
+    withdrawalsEnabled: row.withdrawalsEnabled !== false,
     minWithdrawUsd: toNum(row.minWithdrawUsd, 5).toFixed(2),
     maxWithdrawUsd: toNum(row.maxWithdrawUsd, 50000).toFixed(2),
     maxWithdrawUsdPerDay: toNum(row.maxWithdrawUsdPerDay, 50000).toFixed(2),
@@ -81,10 +82,17 @@ export async function updateWithdrawSettings(input) {
     throw err;
   }
 
+  const existing = await prisma.withdrawSettings.findUnique({ where: { id: 1 } });
+  const withdrawalsEnabled =
+    typeof input.withdrawalsEnabled === 'boolean'
+      ? input.withdrawalsEnabled
+      : existing?.withdrawalsEnabled !== false;
+
   const row = await prisma.withdrawSettings.upsert({
     where: { id: 1 },
     create: {
       id: 1,
+      withdrawalsEnabled,
       minWithdrawUsd: minWithdrawUsd.toFixed(2),
       maxWithdrawUsd: maxWithdrawUsd.toFixed(2),
       maxWithdrawUsdPerDay: maxWithdrawUsdPerDay.toFixed(2),
@@ -93,6 +101,7 @@ export async function updateWithdrawSettings(input) {
       feeFlatUsd: feeFlatUsd.toFixed(2),
     },
     update: {
+      withdrawalsEnabled,
       minWithdrawUsd: minWithdrawUsd.toFixed(2),
       maxWithdrawUsd: maxWithdrawUsd.toFixed(2),
       maxWithdrawUsdPerDay: maxWithdrawUsdPerDay.toFixed(2),

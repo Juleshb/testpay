@@ -140,11 +140,14 @@ export function LiveMiningCard({ position, compact = false }) {
             ${live.liveTotal.toFixed(6)}
           </p>
         </div>
-        <p className="font-mono text-[11px] tabular-nums mb-2" style={{ color: 'var(--color-text-muted)' }}>
+        <p className="font-mono text-[11px] tabular-nums mb-1" style={{ color: 'var(--color-text-muted)' }}>
           {t('mining.confirmedPending', {
             confirmed: live.confirmed.toFixed(4),
             pending: live.pending.toFixed(6),
           })}
+        </p>
+        <p className="font-mono text-[10px] mb-2" style={{ color: 'var(--color-text-muted)' }}>
+          {t('mining.earningsNotWithdrawable')}
         </p>
         <EarningsSparkline points={history} />
       </div>

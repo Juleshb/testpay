@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../AuthContext';
 import {
   getChannels,
@@ -12,6 +13,7 @@ import {
   memberAvatarProps,
   buildPrivateReplyQuote,
   markChannelRead,
+  setChannelChat,
 } from '../../communityApi';
 import { useCommunityUnread, UnreadBadge } from '../../CommunityUnreadContext';
 import MessagingPanel from './MessagingPanel';
@@ -46,7 +48,9 @@ function formatDateDivider(date) {
 }
 
 export default function CommunityWorkspace({ initialDmUserId }) {
+  const { t } = useTranslation();
   const { user } = useAuth();
+  const isAdmin = user?.role === 'ADMIN';
   const { channels: unreadChannels, conversations: unreadConversations, refresh: refreshUnread } =
     useCommunityUnread();
   const [loading, setLoading] = useState(true);
@@ -70,6 +74,7 @@ export default function CommunityWorkspace({ initialDmUserId }) {
 
   const [composer, setComposer] = useState('');
   const [posting, setPosting] = useState(false);
+  const [togglingChat, setTogglingChat] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(null);
   const [firstUnreadPostId, setFirstUnreadPostId] = useState(null);
   const [scrollToEnd, setScrollToEnd] = useState(true);
@@ -121,6 +126,15 @@ export default function CommunityWorkspace({ initialDmUserId }) {
           }
           return next;
         });
+      }
+      if (msg.type === 'channel:chat') {
+        const enabled = Boolean(msg.chatEnabled);
+        setChannels((prev) =>
+          prev.map((ch) => (ch.slug === msg.channel ? { ...ch, chatEnabled: enabled } : ch))
+        );
+        if (msg.channel === activeChannelRef.current) {
+          setChannelMeta((prev) => (prev ? { ...prev, chatEnabled: enabled } : prev));
+        }
       }
       if (msg.type === 'conversations:update') {
         getConversations().then(setConversations).catch(() => {});
@@ -318,6 +332,7 @@ export default function CommunityWorkspace({ initialDmUserId }) {
   const handlePost = async (e) => {
     e.preventDefault();
     if (!composer.trim() || postingRef.current) return;
+    if (!isAdmin && channelMeta?.chatEnabled === false) return;
     postingRef.current = true;
     setPosting(true);
     setError('');
@@ -334,6 +349,26 @@ export default function CommunityWorkspace({ initialDmUserId }) {
       postingRef.current = false;
       setPosting(false);
       composerRef.current?.focus();
+    }
+  };
+
+  const toggleChannelChat = async () => {
+    if (!isAdmin || togglingChat) return;
+    setTogglingChat(true);
+    setError('');
+    try {
+      const next = channelMeta?.chatEnabled === false;
+      const updated = await setChannelChat(activeChannel, next);
+      setChannelMeta((prev) => ({ ...(prev || {}), ...updated }));
+      setChannels((list) =>
+        list.map((ch) =>
+          ch.slug === activeChannel ? { ...ch, chatEnabled: updated.chatEnabled } : ch
+        )
+      );
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setTogglingChat(false);
     }
   };
 
@@ -363,6 +398,9 @@ export default function CommunityWorkspace({ initialDmUserId }) {
     const q = memberQuery.trim().toLowerCase();
     return !q || memberLabel(m).toLowerCase().includes(q);
   });
+
+  const chatEnabled = channelMeta?.chatEnabled !== false;
+  const canPost = isAdmin || chatEnabled;
 
   if (loading) return <PageLoader message="loading workspace" />;
 
@@ -407,6 +445,23 @@ export default function CommunityWorkspace({ initialDmUserId }) {
                   <span className="min-w-0 flex-1 truncate">
                     <span style={{ color: 'var(--color-text-muted)' }}>#</span> {ch.name}
                   </span>
+                  {ch.chatEnabled === false && (
+                    <span
+                      className="shrink-0"
+                      style={{ color: 'var(--color-warning)' }}
+                      title={t('community.chatOff')}
+                      aria-label={t('community.chatOff')}
+                    >
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                        />
+                      </svg>
+                    </span>
+                  )}
                   <UnreadBadge count={unreadChannels[ch.slug] || 0} />
                 </button>
               ))}
@@ -523,18 +578,37 @@ export default function CommunityWorkspace({ initialDmUserId }) {
                     {realtimeConnected && (
                       <span style={{ color: 'var(--color-success)' }}> · live</span>
                     )}
+                    {!chatEnabled && (
+                      <span style={{ color: 'var(--color-warning)' }}> · {t('community.adminOnly')}</span>
+                    )}
                   </p>
                 ) : realtimeConnected ? (
-                  <p className="hidden sm:block font-mono text-[10px]" style={{ color: 'var(--color-success)' }}>
-                    live
+                  <p className="hidden sm:block font-mono text-[10px]" style={{ color: chatEnabled ? 'var(--color-success)' : 'var(--color-warning)' }}>
+                    {chatEnabled ? 'live' : t('community.adminOnly')}
                   </p>
                 ) : null}
                 {!formatTypingLabel(channelTypers) && channelMeta?.description && (
                   <p className="sm:hidden font-mono text-[9px] truncate" style={{ color: 'var(--color-text-muted)' }}>
-                    {realtimeConnected ? 'live' : channelMeta.description}
+                    {chatEnabled
+                      ? realtimeConnected
+                        ? 'live'
+                        : channelMeta.description
+                      : t('community.adminOnly')}
                   </p>
                 )}
               </div>
+              {isAdmin && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="shrink-0"
+                  loading={togglingChat}
+                  onClick={toggleChannelChat}
+                >
+                  {chatEnabled ? t('community.turnChatOff') : t('community.turnChatOn')}
+                </Button>
+              )}
             </header>
 
             <div className="flex-1 min-h-0 overflow-y-auto px-2 sm:px-4 py-2 sm:py-4">
@@ -584,6 +658,7 @@ export default function CommunityWorkspace({ initialDmUserId }) {
                         members={members}
                         quickEmojis={quickEmojis}
                         showEmojiPicker={showEmojiPicker === post.id}
+                        alwaysShowReact={!chatEnabled}
                         onToggleEmojiPicker={() =>
                           setShowEmojiPicker((id) => (id === post.id ? null : post.id))
                         }
@@ -598,6 +673,7 @@ export default function CommunityWorkspace({ initialDmUserId }) {
               <div ref={feedEndRef} />
             </div>
 
+            {canPost ? (
             <form
               onSubmit={handlePost}
               className="p-2 sm:p-3 border-t shrink-0"
@@ -636,9 +712,37 @@ export default function CommunityWorkspace({ initialDmUserId }) {
                 </div>
               </div>
               <p className="hidden sm:block font-mono text-[10px] mt-1.5 px-1" style={{ color: 'var(--color-text-muted)' }}>
-                @ mention · Enter to send · Shift+Enter new line
+                {chatEnabled
+                  ? '@ mention · Enter to send · Shift+Enter new line'
+                  : t('community.adminCanStillPost')}
               </p>
             </form>
+            ) : (
+              <div
+                className="p-3 sm:p-4 border-t shrink-0 text-center space-y-3"
+                style={{ borderColor: 'var(--color-border)' }}
+              >
+                <p className="font-mono text-xs" style={{ color: 'var(--color-warning)' }}>
+                  {t('community.chatOffMemberHint')}
+                </p>
+                {posts.length > 0 && (
+                  <div className="flex flex-wrap items-center justify-center gap-1.5">
+                    {quickEmojis.map((emoji) => (
+                      <button
+                        key={emoji}
+                        type="button"
+                        className="text-lg px-2 py-1 rounded-lg border hover:bg-white/[0.06]"
+                        style={{ borderColor: 'var(--color-border)' }}
+                        onClick={() => handleReaction(posts[posts.length - 1].id, emoji)}
+                        title={t('community.reactLatest')}
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </>
         )}
       </div>
@@ -651,6 +755,7 @@ function SlackPost({
   members,
   quickEmojis,
   showEmojiPicker,
+  alwaysShowReact = false,
   onToggleEmojiPicker,
   onReact,
   onReplyPrivately,
@@ -727,9 +832,9 @@ function SlackPost({
           />
         </div>
 
-        {post.reactions?.length > 0 && (
+        {(post.reactions?.length > 0 || alwaysShowReact) && (
           <div className={cn('flex flex-wrap gap-1.5 mt-2', own && 'justify-end')}>
-            {post.reactions.map((r) => (
+            {(post.reactions || []).map((r) => (
               <button
                 key={r.emoji}
                 type="button"
@@ -748,6 +853,23 @@ function SlackPost({
                 {r.emoji} {r.count}
               </button>
             ))}
+            {alwaysShowReact &&
+              quickEmojis
+                .filter((emoji) => !(post.reactions || []).some((r) => r.emoji === emoji))
+                .map((emoji) => (
+                  <button
+                    key={emoji}
+                    type="button"
+                    onClick={() => onReact(emoji)}
+                    className="font-mono text-xs px-2 py-0.5 rounded-full border transition-colors hover:bg-white/[0.06]"
+                    style={{
+                      background: 'var(--color-surface-700)',
+                      borderColor: 'var(--color-border)',
+                    }}
+                  >
+                    {emoji}
+                  </button>
+                ))}
           </div>
         )}
       </div>

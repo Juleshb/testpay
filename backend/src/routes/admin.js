@@ -13,6 +13,8 @@ import {
   formatMiningOption,
   validateMiningOptionInput,
 } from '../services/bootstrapMining.js';
+import { accruePackageDailyIncome, applyActivePackageTerms } from '../services/packageAccrual.js';
+import { accrueMiningDailyIncome, applyActiveMiningTerms } from '../services/miningAccrual.js';
 import {
   getReferralSettings,
   updateReferralSettings,
@@ -202,6 +204,10 @@ router.get('/dashboard', async (_req, res) => {
       .reduce((sum, row) => sum + (parseFloat(row.commissionUsd) || 0), 0)
       .toFixed(2);
 
+    const depositedUsd = confirmedUsd;
+    const feesIncomeUsd = parseFloat(withdrawFeeStats.totalFeesUsd) || 0;
+    const systemAvailableUsd = depositedUsd + feesIncomeUsd;
+
     res.json({
       overview: {
         users: userCount,
@@ -269,6 +275,11 @@ router.get('/dashboard', async (_req, res) => {
         approximateVolume: totalVolume.toFixed(6),
         confirmedVolume: confirmedVolume.toFixed(6),
         confirmedUsd: confirmedUsd.toFixed(2),
+      },
+      systemBalance: {
+        depositedUsd: depositedUsd.toFixed(2),
+        feesIncomeUsd: feesIncomeUsd.toFixed(2),
+        availableUsd: systemAvailableUsd.toFixed(2),
       },
       breakdown: {
         byNetwork: Object.entries(byNetwork)
@@ -377,6 +388,7 @@ router.get('/users', async (_req, res) => {
         phone: true,
         name: true,
         role: true,
+        blocked: true,
         createdAt: true,
         _count: { select: { payments: true, balanceEntries: true } },
       },
@@ -390,6 +402,7 @@ router.get('/users', async (_req, res) => {
         phone: u.phone,
         name: u.name,
         role: u.role,
+        blocked: Boolean(u.blocked),
         createdAt: u.createdAt,
         paymentCount: u._count.payments,
         transactionCount: u._count.balanceEntries,
@@ -411,6 +424,50 @@ router.get('/users/:id', async (req, res) => {
   } catch (err) {
     console.error('Admin user account error:', err);
     res.status(500).json({ error: 'Failed to load user account' });
+  }
+});
+
+router.patch('/users/:id/block', async (req, res) => {
+  try {
+    const targetId = String(req.params.id);
+    if (targetId === req.user.id) {
+      return res.status(400).json({ error: 'You cannot block your own account' });
+    }
+
+    const target = await prisma.user.findUnique({
+      where: { id: targetId },
+      select: { id: true, role: true, blocked: true },
+    });
+    if (!target) return res.status(404).json({ error: 'User not found' });
+    if (target.role === 'ADMIN') {
+      return res.status(400).json({ error: 'Admin accounts cannot be blocked' });
+    }
+
+    const blocked = Boolean(req.body.blocked);
+    const reason = String(req.body.reason || '').trim().slice(0, 500) || null;
+
+    const updated = await prisma.user.update({
+      where: { id: targetId },
+      data: blocked
+        ? { blocked: true, blockedAt: new Date(), blockedReason: reason }
+        : { blocked: false, blockedAt: null, blockedReason: null },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        phone: true,
+        name: true,
+        role: true,
+        blocked: true,
+        blockedAt: true,
+        blockedReason: true,
+      },
+    });
+
+    res.json({ user: updated });
+  } catch (err) {
+    console.error('Admin block user error:', err);
+    res.status(500).json({ error: 'Failed to update user block status' });
   }
 });
 
@@ -487,7 +544,22 @@ router.patch('/packages/:id', async (req, res) => {
       where: { id },
       data,
     });
-    res.json(formatPackage(pkg));
+
+    const durationChanged = data.durationDays != null;
+    const rateChanged =
+      data.dailyRate != null && String(data.dailyRate) !== String(existing.dailyRate);
+
+    const activeTerms = durationChanged
+      ? await applyActivePackageTerms(id, { durationDays: data.durationDays })
+      : { updated: 0, completed: 0 };
+
+    if (rateChanged || durationChanged) {
+      accruePackageDailyIncome().catch((err) =>
+        console.error('Package accrual after admin update:', err.message)
+      );
+    }
+
+    res.json({ ...formatPackage(pkg), activeTerms });
   } catch (err) {
     console.error('Admin update package error:', err);
     res.status(500).json({ error: 'Failed to update package' });
@@ -568,7 +640,22 @@ router.patch('/mining/:id', async (req, res) => {
       where: { id },
       data,
     });
-    res.json(formatMiningOption(option));
+
+    const durationChanged = data.durationDays != null;
+    const rateChanged =
+      data.dailyRate != null && String(data.dailyRate) !== String(existing.dailyRate);
+
+    const activeTerms = durationChanged
+      ? await applyActiveMiningTerms(id, { durationDays: data.durationDays })
+      : { updated: 0, completed: 0 };
+
+    if (rateChanged || durationChanged) {
+      accrueMiningDailyIncome().catch((err) =>
+        console.error('Mining accrual after admin update:', err.message)
+      );
+    }
+
+    res.json({ ...formatMiningOption(option), activeTerms });
   } catch (err) {
     console.error('Admin update mining option error:', err);
     res.status(500).json({ error: 'Failed to update mining option' });

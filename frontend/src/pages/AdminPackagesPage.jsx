@@ -199,6 +199,13 @@ export default function AdminPackagesPage() {
                   required
                 />
               </Field>
+            </div>
+            {editingId && (
+              <p className="font-mono text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
+                {t('admin.packagesPage.appliesImmediately')}
+              </p>
+            )}
+            <div className="grid sm:grid-cols-2 gap-4">
               <Field label={t('admin.packagesPage.badgeColor')}>
                 <input
                   type="color"

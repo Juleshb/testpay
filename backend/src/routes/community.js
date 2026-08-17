@@ -5,6 +5,7 @@ import { authMiddleware } from '../middleware/auth.js';
 import {
   broadcastChannelPost,
   broadcastChannelReaction,
+  broadcastChannelChat,
   broadcastDmMessage,
   notifyConversationParticipants,
   notifyUser,
@@ -103,6 +104,22 @@ function formatDmBroadcast(message) {
     quotedContent: message.quotedContent,
   };
 }
+function isAdminUser(user) {
+  return user?.role === 'ADMIN';
+}
+
+function formatChannel(ch) {
+  if (!ch) return null;
+  return {
+    id: ch.id,
+    slug: ch.slug,
+    name: ch.name,
+    description: ch.description,
+    chatEnabled: ch.chatEnabled !== false,
+    label: `# ${ch.name}`,
+  };
+}
+
 function formatPost(post, userId) {
   return {
     id: post.id,
@@ -132,15 +149,7 @@ router.get('/channels', async (_req, res) => {
     const channels = await prisma.communityChannel.findMany({
       orderBy: { sortOrder: 'asc' },
     });
-    res.json(
-      channels.map((ch) => ({
-        id: ch.id,
-        slug: ch.slug,
-        name: ch.name,
-        description: ch.description,
-        label: `# ${ch.name}`,
-      }))
-    );
+    res.json(channels.map(formatChannel));
   } catch (err) {
     console.error('Community channels error:', err);
     res.status(500).json({ error: 'Failed to load channels' });
@@ -169,9 +178,7 @@ router.get('/feed', async (req, res) => {
     });
 
     res.json({
-      channel: channel
-        ? { id: channel.id, slug: channel.slug, name: channel.name, description: channel.description }
-        : null,
+      channel: formatChannel(channel),
       posts: posts.map((p) => formatPost(p, req.user.id)),
       quickEmojis: QUICK_EMOJIS,
       unreadCount: await countChannelUnread(req.user.id, slug),
@@ -196,6 +203,10 @@ router.post('/feed', async (req, res) => {
     let channel = await prisma.communityChannel.findUnique({ where: { slug } });
     if (!channel) {
       channel = await prisma.communityChannel.findUnique({ where: { slug: 'general' } });
+    }
+
+    if (channel && channel.chatEnabled === false && !isAdminUser(req.user)) {
+      return res.status(403).json({ error: 'Chat is off. Only admin can post in this channel.' });
     }
 
     const post = await prisma.communityPost.create({
@@ -287,6 +298,33 @@ router.get('/unread-summary', async (req, res) => {
   } catch (err) {
     console.error('Unread summary error:', err);
     res.status(500).json({ error: 'Failed to load unread summary' });
+  }
+});
+
+router.patch('/channels/:slug/chat', async (req, res) => {
+  try {
+    if (!isAdminUser(req.user)) {
+      return res.status(403).json({ error: 'Admin access required' });
+    }
+
+    const slug = String(req.params.slug);
+    if (typeof req.body.chatEnabled !== 'boolean') {
+      return res.status(400).json({ error: 'chatEnabled boolean is required' });
+    }
+    const chatEnabled = req.body.chatEnabled;
+    const channel = await prisma.communityChannel.findUnique({ where: { slug } });
+    if (!channel) return res.status(404).json({ error: 'Channel not found' });
+
+    const updated = await prisma.communityChannel.update({
+      where: { id: channel.id },
+      data: { chatEnabled },
+    });
+
+    broadcastChannelChat(updated.slug, updated.chatEnabled);
+    res.json(formatChannel(updated));
+  } catch (err) {
+    console.error('Toggle channel chat error:', err);
+    res.status(500).json({ error: 'Failed to update chat' });
   }
 });
 

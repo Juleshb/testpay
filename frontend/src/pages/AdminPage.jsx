@@ -148,7 +148,7 @@ export default function AdminPage() {
 
   if (loading || !data) return <PageLoader message={t('pageCommon.loading.dashboard')} />;
 
-  const { overview, volume, system, recentPayments, users, modules } = data;
+  const { overview, volume, system, recentPayments, users, modules, systemBalance } = data;
   const treasuryAddress = treasury?.address || system.treasuryAddress;
 
   return (
@@ -165,6 +165,27 @@ export default function AdminPage() {
       />
 
       {message && <Alert variant="warning">{message}</Alert>}
+
+      <section>
+        <h2 className="section-label mb-3">{t('admin.systemBalance')}</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <StatCard
+            label={t('admin.systemAvailable')}
+            value={`$${systemBalance?.availableUsd ?? '0.00'}`}
+            hint={t('admin.systemBalanceHint')}
+            color="text-[var(--color-accent)]"
+          />
+          <StatCard
+            label={t('admin.systemDeposited')}
+            value={`$${systemBalance?.depositedUsd ?? volume.confirmedUsd ?? '0.00'}`}
+          />
+          <StatCard
+            label={t('admin.systemFeesIncome')}
+            value={`$${systemBalance?.feesIncomeUsd ?? modules.withdrawals.totalFeesUsd ?? '0.00'}`}
+            color="text-[var(--color-success)]"
+          />
+        </div>
+      </section>
 
       {/* 1. Snapshot */}
       <section>

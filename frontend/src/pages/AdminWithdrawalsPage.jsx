@@ -21,6 +21,7 @@ import SegmentedControl from '../components/ui/SegmentedControl';
 import TxHashDisplay from '../components/TxHashDisplay';
 
 const EMPTY_FORM = {
+  withdrawalsEnabled: true,
   minWithdrawUsd: '5',
   maxWithdrawUsd: '50000',
   maxWithdrawUsdPerDay: '50000',
@@ -55,6 +56,7 @@ export default function AdminWithdrawalsPage() {
   const loadSettings = useCallback(async () => {
     const data = await getAdminWithdrawSettings();
     setForm({
+      withdrawalsEnabled: data.settings.withdrawalsEnabled !== false,
       minWithdrawUsd: data.settings.minWithdrawUsd,
       maxWithdrawUsd: data.settings.maxWithdrawUsd,
       maxWithdrawUsdPerDay: data.settings.maxWithdrawUsdPerDay,
@@ -101,6 +103,7 @@ export default function AdminWithdrawalsPage() {
     setError('');
     try {
       const data = await updateAdminWithdrawSettings({
+        withdrawalsEnabled: form.withdrawalsEnabled,
         minWithdrawUsd: form.minWithdrawUsd,
         maxWithdrawUsd: form.maxWithdrawUsd,
         maxWithdrawUsdPerDay: form.maxWithdrawUsdPerDay,
@@ -109,6 +112,7 @@ export default function AdminWithdrawalsPage() {
         feeFlatUsd: form.feeFlatUsd,
       });
       setForm({
+        withdrawalsEnabled: data.settings.withdrawalsEnabled !== false,
         minWithdrawUsd: data.settings.minWithdrawUsd,
         maxWithdrawUsd: data.settings.maxWithdrawUsd,
         maxWithdrawUsdPerDay: data.settings.maxWithdrawUsdPerDay,
@@ -117,6 +121,42 @@ export default function AdminWithdrawalsPage() {
         feeFlatUsd: data.settings.feeFlatUsd,
       });
       setMessage(t('admin.withdrawalsPage.saved'));
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleToggleWithdrawals = async () => {
+    setSaving(true);
+    setMessage('');
+    setError('');
+    try {
+      const next = !form.withdrawalsEnabled;
+      const data = await updateAdminWithdrawSettings({
+        withdrawalsEnabled: next,
+        minWithdrawUsd: form.minWithdrawUsd,
+        maxWithdrawUsd: form.maxWithdrawUsd,
+        maxWithdrawUsdPerDay: form.maxWithdrawUsdPerDay,
+        maxWithdrawalsPerDay: parseInt(form.maxWithdrawalsPerDay, 10),
+        feePercent: form.feePercent,
+        feeFlatUsd: form.feeFlatUsd,
+      });
+      setForm({
+        withdrawalsEnabled: data.settings.withdrawalsEnabled !== false,
+        minWithdrawUsd: data.settings.minWithdrawUsd,
+        maxWithdrawUsd: data.settings.maxWithdrawUsd,
+        maxWithdrawUsdPerDay: data.settings.maxWithdrawUsdPerDay,
+        maxWithdrawalsPerDay: String(data.settings.maxWithdrawalsPerDay),
+        feePercent: data.settings.feePercent,
+        feeFlatUsd: data.settings.feeFlatUsd,
+      });
+      setMessage(
+        data.settings.withdrawalsEnabled
+          ? t('admin.withdrawalsPage.turnedOn')
+          : t('admin.withdrawalsPage.turnedOff')
+      );
     } catch (err) {
       setError(err.message);
     } finally {
@@ -198,6 +238,41 @@ export default function AdminWithdrawalsPage() {
 
       {error && <Alert>{error}</Alert>}
       {message && <Alert variant="success">{message}</Alert>}
+
+      <section
+        className="glass-panel p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4"
+        style={{
+          borderColor: form.withdrawalsEnabled
+            ? undefined
+            : 'color-mix(in srgb, var(--color-warning) 45%, transparent)',
+        }}
+      >
+        <div className="min-w-0 flex-1">
+          <p className="section-label mb-1">{t('admin.withdrawalsPage.masterSwitch')}</p>
+          <p className="font-semibold">
+            {form.withdrawalsEnabled
+              ? t('admin.withdrawalsPage.withdrawalsOn')
+              : t('admin.withdrawalsPage.withdrawalsOff')}
+          </p>
+          <p className="font-mono text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
+            {form.withdrawalsEnabled
+              ? t('admin.withdrawalsPage.withdrawalsOnHint')
+              : t('admin.withdrawalsPage.withdrawalsOffHint')}
+          </p>
+        </div>
+        <Button
+          type="button"
+          variant={form.withdrawalsEnabled ? 'danger' : 'primary'}
+          size="md"
+          loading={saving}
+          onClick={handleToggleWithdrawals}
+          className="shrink-0"
+        >
+          {form.withdrawalsEnabled
+            ? t('admin.withdrawalsPage.turnOff')
+            : t('admin.withdrawalsPage.turnOn')}
+        </Button>
+      </section>
 
       {stats && (
         <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
@@ -420,6 +495,7 @@ export default function AdminWithdrawalsPage() {
                             busy={busyId === w.id}
                             onAction={runAction}
                             t={t}
+                            withdrawalsEnabled={form.withdrawalsEnabled}
                           />
                         </td>
                       </tr>
@@ -449,7 +525,13 @@ export default function AdminWithdrawalsPage() {
                     Fee ${w.feeUsd || '0.00'} · net ${w.netAmountUsd || w.amountUsd} {w.tokenSymbol}
                   </p>
                   {w.txHash && <TxHashDisplay txHash={w.txHash} explorer={w.explorer} />}
-                  <ActionButtons w={w} busy={busyId === w.id} onAction={runAction} t={t} />
+                  <ActionButtons
+                    w={w}
+                    busy={busyId === w.id}
+                    onAction={runAction}
+                    t={t}
+                    withdrawalsEnabled={form.withdrawalsEnabled}
+                  />
                 </article>
               ))}
             </div>
@@ -460,7 +542,7 @@ export default function AdminWithdrawalsPage() {
   );
 }
 
-function ActionButtons({ w, busy, onAction, t }) {
+function ActionButtons({ w, busy, onAction, t, withdrawalsEnabled = true }) {
   return (
     <div className="flex flex-wrap gap-2 items-center">
       {w.status === 'PENDING' && (
@@ -474,7 +556,13 @@ function ActionButtons({ w, busy, onAction, t }) {
         </>
       )}
       {(w.status === 'FAILED' || w.status === 'CANCELLED') && (
-        <Button size="sm" variant="primary" loading={busy} onClick={() => onAction(w.id, 'retry')}>
+        <Button
+          size="sm"
+          variant="primary"
+          loading={busy}
+          disabled={!withdrawalsEnabled}
+          onClick={() => onAction(w.id, 'retry')}
+        >
           {t('admin.withdrawalsPage.retry')}
         </Button>
       )}

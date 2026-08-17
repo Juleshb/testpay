@@ -118,3 +118,45 @@ export function startPackageAccrualScheduler() {
 }
 
 export { calcDailyIncome };
+
+export function endsAtFromStart(startedAt, durationDays) {
+  const endsAt = new Date(startedAt);
+  endsAt.setUTCDate(endsAt.getUTCDate() + Number(durationDays));
+  return endsAt;
+}
+
+/** Recalculate end dates for active investments when admin changes duration. */
+export async function applyActivePackageTerms(packageId, { durationDays } = {}) {
+  if (durationDays == null) return { updated: 0, completed: 0 };
+
+  const days = parseInt(durationDays, 10);
+  if (!Number.isFinite(days) || days < 1) return { updated: 0, completed: 0 };
+
+  const investments = await prisma.packageInvestment.findMany({
+    where: { planId: packageId, status: 'ACTIVE' },
+    select: { id: true, startedAt: true },
+  });
+
+  const now = new Date();
+  let updated = 0;
+  let completed = 0;
+
+  for (const inv of investments) {
+    const endsAt = endsAtFromStart(inv.startedAt, days);
+    if (now >= endsAt) {
+      await prisma.packageInvestment.update({
+        where: { id: inv.id },
+        data: { endsAt, status: 'COMPLETED' },
+      });
+      completed += 1;
+    } else {
+      await prisma.packageInvestment.update({
+        where: { id: inv.id },
+        data: { endsAt },
+      });
+      updated += 1;
+    }
+  }
+
+  return { updated, completed };
+}

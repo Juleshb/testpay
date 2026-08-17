@@ -131,6 +131,17 @@ export async function getAdminUserAccount(userId) {
   return res.json();
 }
 
+export async function setAdminUserBlocked(userId, blocked, reason = '') {
+  const res = await fetch(`/api/admin/users/${userId}/block`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    body: JSON.stringify({ blocked: Boolean(blocked), reason }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || 'Failed to update user');
+  return data;
+}
+
 export async function listAdminPackages() {
   const res = await fetch('/api/admin/packages', { headers: authHeaders() });
   if (!res.ok) {

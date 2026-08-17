@@ -115,7 +115,8 @@ router.post('/', async (req, res) => {
     console.error('Withdraw request error:', err);
     const message = err.message || 'Failed to request withdrawal';
     const status =
-      message.includes('Insufficient') ||
+      err.status ||
+      (message.includes('Insufficient') ||
       message.includes('Invalid') ||
       message.includes('Minimum') ||
       message.includes('Maximum') ||
@@ -123,7 +124,7 @@ router.post('/', async (req, res) => {
       message.includes('fee') ||
       message.includes('supported')
         ? 400
-        : 500;
+        : 500);
     res.status(status).json({ error: message });
   }
 });

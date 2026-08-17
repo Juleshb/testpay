@@ -1,11 +1,12 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { listAdminUsers } from '../adminApi';
+import { listAdminUsers, setAdminUserBlocked } from '../adminApi';
 import PageHeader from '../components/ui/PageHeader';
 import StatCard from '../components/ui/StatCard';
 import EmptyState from '../components/ui/EmptyState';
 import Button from '../components/ui/Button';
+import Alert from '../components/ui/Alert';
 import SegmentedControl from '../components/ui/SegmentedControl';
 import { PageLoader } from '../components/ui/Spinner';
 
@@ -13,6 +14,7 @@ const ROLE_OPTIONS = [
   { value: 'all', labelKey: 'admin.usersPage.roleAll' },
   { value: 'USER', labelKey: 'admin.usersPage.roleUsers' },
   { value: 'ADMIN', labelKey: 'admin.usersPage.roleAdmins' },
+  { value: 'blocked', labelKey: 'admin.usersPage.filterBlocked' },
 ];
 
 function userLabel(u) {
@@ -25,6 +27,9 @@ export default function AdminUsersPage() {
   const [loading, setLoading] = useState(true);
   const [role, setRole] = useState('all');
   const [query, setQuery] = useState('');
+  const [busyId, setBusyId] = useState('');
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     listAdminUsers()
@@ -42,7 +47,11 @@ export default function AdminUsersPage() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return users.filter((u) => {
-      if (role !== 'all' && u.role !== role) return false;
+      if (role === 'blocked') {
+        if (!u.blocked) return false;
+      } else if (role !== 'all' && u.role !== role) {
+        return false;
+      }
       if (!q) return true;
       return [u.email, u.phone, u.name, u.username, u.id]
         .filter(Boolean)
@@ -55,10 +64,29 @@ export default function AdminUsersPage() {
       total: users.length,
       users: users.filter((u) => u.role === 'USER').length,
       admins: users.filter((u) => u.role === 'ADMIN').length,
+      blocked: users.filter((u) => u.blocked).length,
       withPayments: users.filter((u) => u.paymentCount > 0).length,
     }),
     [users]
   );
+
+  const handleBlock = async (u, blocked) => {
+    if (blocked && !window.confirm(t('admin.userDetail.confirmBlock'))) return;
+    setBusyId(u.id);
+    setError('');
+    setMessage('');
+    try {
+      const data = await setAdminUserBlocked(u.id, blocked);
+      setUsers((prev) =>
+        prev.map((row) => (row.id === u.id ? { ...row, blocked: data.user.blocked } : row))
+      );
+      setMessage(blocked ? t('admin.userDetail.blockedSuccess') : t('admin.userDetail.unblockedSuccess'));
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusyId('');
+    }
+  };
 
   if (loading) return <PageLoader message={t('pageCommon.loading.users')} />;
 
@@ -78,10 +106,15 @@ export default function AdminUsersPage() {
       />
 
       <section className="space-y-4">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
           <StatCard label={t('admin.usersPage.total')} value={stats.total} />
           <StatCard label={t('admin.users')} value={stats.users} color="text-[var(--color-accent)]" />
           <StatCard label={t('admin.admins')} value={stats.admins} color="text-[var(--color-warning)]" />
+          <StatCard
+            label={t('admin.usersPage.blockedCount')}
+            value={stats.blocked}
+            color="text-[var(--color-danger)]"
+          />
           <StatCard label={t('admin.usersPage.withPayments')} value={stats.withPayments} color="text-[var(--color-success)]" />
         </div>
 
@@ -102,6 +135,9 @@ export default function AdminUsersPage() {
           </div>
         </div>
       </section>
+
+      {error && <Alert>{error}</Alert>}
+      {message && <Alert variant="success">{message}</Alert>}
 
       {filtered.length === 0 ? (
         <div className="glass-panel">
@@ -125,6 +161,7 @@ export default function AdminUsersPage() {
                     <th className="px-4 py-3 font-medium">{t('admin.phone')}</th>
                     <th className="px-4 py-3 font-medium">{t('admin.name')}</th>
                     <th className="px-4 py-3 font-medium">{t('admin.usersPage.roleHeader')}</th>
+                    <th className="px-4 py-3 font-medium">{t('admin.usersPage.blocked')}</th>
                     <th className="px-4 py-3 font-medium">{t('admin.payments')}</th>
                     <th className="px-4 py-3 font-medium">{t('admin.usersPage.transactions')}</th>
                     <th className="px-4 py-3 font-medium">{t('admin.joined')}</th>
@@ -151,19 +188,34 @@ export default function AdminUsersPage() {
                       <td className="px-4 py-3.5">
                         <RoleBadge role={u.role} />
                       </td>
+                      <td className="px-4 py-3.5">
+                        {u.blocked ? <BlockedBadge /> : '—'}
+                      </td>
                       <td className="px-4 py-3.5 font-mono tabular-nums">{u.paymentCount}</td>
                       <td className="px-4 py-3.5 font-mono tabular-nums">{u.transactionCount ?? 0}</td>
                       <td className="px-4 py-3.5 font-mono text-xs tabular-nums whitespace-nowrap" style={{ color: 'var(--color-text-muted)' }}>
                         {new Date(u.createdAt).toLocaleString()}
                       </td>
                       <td className="px-4 py-3.5">
-                        <Link
-                          to={`/admin/users/${u.id}`}
-                          className="font-mono text-xs hover:underline"
-                          style={{ color: 'var(--color-accent)' }}
-                        >
-                          {t('admin.usersPage.viewAccount')}
-                        </Link>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Link
+                            to={`/admin/users/${u.id}`}
+                            className="font-mono text-xs hover:underline"
+                            style={{ color: 'var(--color-accent)' }}
+                          >
+                            {t('admin.usersPage.viewAccount')}
+                          </Link>
+                          {u.role !== 'ADMIN' && (
+                            <Button
+                              size="sm"
+                              variant={u.blocked ? 'primary' : 'danger'}
+                              loading={busyId === u.id}
+                              onClick={() => handleBlock(u, !u.blocked)}
+                            >
+                              {u.blocked ? t('admin.usersPage.unblock') : t('admin.usersPage.block')}
+                            </Button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -184,7 +236,10 @@ export default function AdminUsersPage() {
                       </p>
                     )}
                   </div>
-                  <RoleBadge role={u.role} />
+                  <div className="flex flex-col items-end gap-1">
+                    <RoleBadge role={u.role} />
+                    {u.blocked && <BlockedBadge />}
+                  </div>
                 </div>
                 <dl className="grid grid-cols-2 gap-2 font-mono text-xs">
                   <div>
@@ -206,6 +261,22 @@ export default function AdminUsersPage() {
         </>
       )}
     </div>
+  );
+}
+
+function BlockedBadge() {
+  const { t } = useTranslation();
+  return (
+    <span
+      className="inline-block font-mono text-[10px] px-2 py-0.5 rounded-full uppercase"
+      style={{
+        color: 'var(--color-danger)',
+        background: 'color-mix(in srgb, var(--color-danger) 12%, transparent)',
+        border: '1px solid color-mix(in srgb, var(--color-danger) 25%, transparent)',
+      }}
+    >
+      {t('admin.usersPage.blocked')}
+    </span>
   );
 }
 

@@ -10,6 +10,7 @@ const userSelect = {
   phone: true,
   name: true,
   role: true,
+  blocked: true,
   avatarUrl: true,
   createdAt: true,
 };
@@ -41,6 +42,10 @@ export function authMiddleware(required = true) {
           return res.status(401).json({ error: 'Invalid token' });
         }
         return next();
+      }
+
+      if (user.blocked) {
+        return res.status(403).json({ error: 'This account has been blocked', code: 'ACCOUNT_BLOCKED' });
       }
 
       req.user = user;

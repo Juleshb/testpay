@@ -1,5 +1,8 @@
 import { prisma } from '../db.js';
 
+// Mining yield stays on MiningIncome / MiningPosition.totalEarned only.
+// Never credit Available USD — mining cannot be withdrawn.
+
 function startOfUtcDay(date) {
   return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
 }
@@ -103,3 +106,44 @@ export function startMiningAccrualScheduler() {
 }
 
 export { calcDailyIncome };
+
+export function endsAtFromStart(startedAt, durationDays) {
+  const endsAt = new Date(startedAt);
+  endsAt.setUTCDate(endsAt.getUTCDate() + Number(durationDays));
+  return endsAt;
+}
+
+export async function applyActiveMiningTerms(optionId, { durationDays } = {}) {
+  if (durationDays == null) return { updated: 0, completed: 0 };
+
+  const days = parseInt(durationDays, 10);
+  if (!Number.isFinite(days) || days < 1) return { updated: 0, completed: 0 };
+
+  const positions = await prisma.miningPosition.findMany({
+    where: { optionId, status: 'ACTIVE' },
+    select: { id: true, startedAt: true },
+  });
+
+  const now = new Date();
+  let updated = 0;
+  let completed = 0;
+
+  for (const pos of positions) {
+    const endsAt = endsAtFromStart(pos.startedAt, days);
+    if (now >= endsAt) {
+      await prisma.miningPosition.update({
+        where: { id: pos.id },
+        data: { endsAt, status: 'COMPLETED' },
+      });
+      completed += 1;
+    } else {
+      await prisma.miningPosition.update({
+        where: { id: pos.id },
+        data: { endsAt },
+      });
+      updated += 1;
+    }
+  }
+
+  return { updated, completed };
+}

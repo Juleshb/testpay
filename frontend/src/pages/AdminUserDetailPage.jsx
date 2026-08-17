@@ -1,14 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getAdminUserAccount } from '../adminApi';
+import { getAdminUserAccount, setAdminUserBlocked } from '../adminApi';
 import PageHeader from '../components/ui/PageHeader';
 import StatCard from '../components/ui/StatCard';
 import EmptyState from '../components/ui/EmptyState';
 import Button from '../components/ui/Button';
+import Alert from '../components/ui/Alert';
 import SegmentedControl from '../components/ui/SegmentedControl';
 import { PageLoader } from '../components/ui/Spinner';
 import TxHashDisplay from '../components/TxHashDisplay';
+import { useAuth } from '../AuthContext';
 
 const TABS = [
   { value: 'ledger', labelKey: 'admin.userDetail.tabLedger' },
@@ -38,10 +40,14 @@ function Money({ amount, type }) {
 
 export default function AdminUserDetailPage() {
   const { t } = useTranslation();
+  const { user: me } = useAuth();
   const { id } = useParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+  const [blocking, setBlocking] = useState(false);
+  const [blockReason, setBlockReason] = useState('');
   const [tab, setTab] = useState('ledger');
   const [sourceFilter, setSourceFilter] = useState('all');
 
@@ -80,7 +86,7 @@ export default function AdminUserDetailPage() {
 
   if (loading) return <PageLoader message={t('pageCommon.loading.users')} />;
 
-  if (error || !data) {
+  if (!data) {
     return (
       <div className="space-y-6">
         <PageHeader
@@ -102,6 +108,32 @@ export default function AdminUserDetailPage() {
   }
 
   const { user, balance } = data;
+  const canBlock = user.role !== 'ADMIN' && user.id !== me?.id;
+
+  const handleBlock = async (blocked) => {
+    if (blocked && !window.confirm(t('admin.userDetail.confirmBlock'))) return;
+    setBlocking(true);
+    setError('');
+    setMessage('');
+    try {
+      const result = await setAdminUserBlocked(user.id, blocked, blocked ? blockReason : '');
+      setData((prev) => ({
+        ...prev,
+        user: {
+          ...prev.user,
+          blocked: result.user.blocked,
+          blockedAt: result.user.blockedAt,
+          blockedReason: result.user.blockedReason,
+        },
+      }));
+      if (!blocked) setBlockReason('');
+      setMessage(blocked ? t('admin.userDetail.blockedSuccess') : t('admin.userDetail.unblockedSuccess'));
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBlocking(false);
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -118,6 +150,9 @@ export default function AdminUserDetailPage() {
         }
       />
 
+      {error && <Alert>{error}</Alert>}
+      {message && <Alert variant="success">{message}</Alert>}
+
       <section className="glass-panel p-5 space-y-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
@@ -126,21 +161,35 @@ export default function AdminUserDetailPage() {
               {user.id}
             </p>
           </div>
-          <span
-            className="font-mono text-[10px] px-2 py-0.5 rounded-full uppercase"
-            style={{
-              color: user.role === 'ADMIN' ? 'var(--color-warning)' : 'var(--color-accent)',
-              background:
-                user.role === 'ADMIN'
-                  ? 'color-mix(in srgb, var(--color-warning) 12%, transparent)'
-                  : 'color-mix(in srgb, var(--color-accent) 12%, transparent)',
-              border: `1px solid color-mix(in srgb, ${
-                user.role === 'ADMIN' ? 'var(--color-warning)' : 'var(--color-accent)'
-              } 25%, transparent)`,
-            }}
-          >
-            {user.role}
-          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            {user.blocked && (
+              <span
+                className="font-mono text-[10px] px-2 py-0.5 rounded-full uppercase"
+                style={{
+                  color: 'var(--color-danger)',
+                  background: 'color-mix(in srgb, var(--color-danger) 12%, transparent)',
+                  border: '1px solid color-mix(in srgb, var(--color-danger) 25%, transparent)',
+                }}
+              >
+                {t('admin.userDetail.blocked')}
+              </span>
+            )}
+            <span
+              className="font-mono text-[10px] px-2 py-0.5 rounded-full uppercase"
+              style={{
+                color: user.role === 'ADMIN' ? 'var(--color-warning)' : 'var(--color-accent)',
+                background:
+                  user.role === 'ADMIN'
+                    ? 'color-mix(in srgb, var(--color-warning) 12%, transparent)'
+                    : 'color-mix(in srgb, var(--color-accent) 12%, transparent)',
+                border: `1px solid color-mix(in srgb, ${
+                  user.role === 'ADMIN' ? 'var(--color-warning)' : 'var(--color-accent)'
+                } 25%, transparent)`,
+              }}
+            >
+              {user.role}
+            </span>
+          </div>
         </div>
         <dl className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs">
           <div>
@@ -180,6 +229,44 @@ export default function AdminUserDetailPage() {
             </dd>
           </div>
         </dl>
+        {canBlock && (
+          <div
+            className="pt-4 border-t space-y-3"
+            style={{ borderColor: 'var(--color-border)' }}
+          >
+            {user.blocked ? (
+              <p className="font-mono text-xs" style={{ color: 'var(--color-danger)' }}>
+                {t('admin.userDetail.blockedHint')}
+                {user.blockedAt ? ` · ${new Date(user.blockedAt).toLocaleString()}` : ''}
+                {user.blockedReason ? ` · ${user.blockedReason}` : ''}
+              </p>
+            ) : (
+              <div>
+                <label className="section-label mb-2 block" htmlFor="blockReason">
+                  {t('admin.userDetail.reason')}
+                </label>
+                <input
+                  id="blockReason"
+                  type="text"
+                  value={blockReason}
+                  onChange={(e) => setBlockReason(e.target.value)}
+                  placeholder={t('admin.userDetail.reasonPlaceholder')}
+                  className="input-field w-full font-mono text-sm"
+                  maxLength={500}
+                />
+              </div>
+            )}
+            <Button
+              type="button"
+              variant={user.blocked ? 'primary' : 'danger'}
+              size="md"
+              loading={blocking}
+              onClick={() => handleBlock(!user.blocked)}
+            >
+              {user.blocked ? t('admin.userDetail.unblock') : t('admin.userDetail.block')}
+            </Button>
+          </div>
+        )}
       </section>
 
       <section className="grid grid-cols-2 sm:grid-cols-4 gap-4">

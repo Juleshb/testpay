@@ -85,8 +85,9 @@ async function verifyToken(token) {
     const payload = jwt.verify(token, config.jwtSecret);
     const user = await prisma.user.findUnique({
       where: { id: payload.sub },
-      select: { id: true, name: true, email: true, phone: true, role: true, createdAt: true },
+      select: { id: true, name: true, email: true, phone: true, role: true, blocked: true, createdAt: true },
     });
+    if (!user || user.blocked) return null;
     return user;
   } catch {
     return null;
@@ -129,7 +130,14 @@ function handleClientMessage(ws, meta, raw) {
   if (msg.type === 'typing') {
     const isTyping = Boolean(msg.isTyping);
     if (msg.channel) {
-      setTyping(channelRoom(String(msg.channel)), meta.userId, displayName(meta.user), isTyping);
+      const slug = String(msg.channel);
+      prisma.communityChannel
+        .findUnique({ where: { slug } })
+        .then((channel) => {
+          if (channel && channel.chatEnabled === false && meta.user.role !== 'ADMIN') return;
+          setTyping(channelRoom(slug), meta.userId, displayName(meta.user), isTyping);
+        })
+        .catch(() => {});
     } else if (msg.conversationId) {
       const convId = String(msg.conversationId);
       const room = dmRoom(convId);
@@ -207,6 +215,10 @@ export function broadcastChannelPost(slug, post) {
 
 export function broadcastChannelReaction(slug, postId, reactions) {
   broadcast(channelRoom(slug), { type: 'channel:reaction', channel: slug, postId, reactions });
+}
+
+export function broadcastChannelChat(slug, chatEnabled) {
+  broadcast(channelRoom(slug), { type: 'channel:chat', channel: slug, chatEnabled });
 }
 
 export function broadcastDmMessage(conversationId, message) {

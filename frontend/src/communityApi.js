@@ -62,6 +62,17 @@ export async function markChannelRead(slug) {
   return res.json();
 }
 
+export async function setChannelChat(slug, chatEnabled) {
+  const res = await fetch(`${API_BASE}/channels/${encodeURIComponent(slug)}/chat`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    body: JSON.stringify({ chatEnabled: Boolean(chatEnabled) }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || 'Failed to update chat');
+  return data;
+}
+
 export async function getCommunityMembers(query = '') {
   const params = query.trim() ? `?q=${encodeURIComponent(query.trim())}` : '';
   const res = await fetch(`${API_BASE}/members${params}`, { headers: authHeaders() });

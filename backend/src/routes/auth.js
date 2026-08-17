@@ -100,6 +100,10 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid username, email, phone, or password' });
     }
 
+    if (user.blocked) {
+      return res.status(403).json({ error: 'This account has been blocked' });
+    }
+
     const token = signToken(user.id);
     res.json({
       user: withAvatar(formatUserResponse(user)),

@@ -107,11 +107,18 @@ export default function OverviewDashboardPage() {
 
       <section>
         <p className="section-label mb-4">{t('dashboard.accountBalance')}</p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           <StatCard
             label={t('dashboard.available')}
             value={`$${balance?.availableUsd ?? '0.00'}`}
+            hint={t('dashboard.availableHint')}
             color="text-[var(--color-accent)]"
+          />
+          <StatCard
+            label={t('dashboard.miningBalance')}
+            value={`$${parseFloat(balance?.miningBalanceUsd || '0').toFixed(4)}`}
+            hint={t('dashboard.miningBalanceHint')}
+            color="text-[var(--color-success)]"
           />
           <StatCard label={t('dashboard.totalPaid')} value={`$${balance?.totalPaidUsd ?? '0.00'}`} />
           <StatCard label={t('dashboard.invested')} value={`$${balance?.totalDebitedUsd ?? '0.00'}`} />

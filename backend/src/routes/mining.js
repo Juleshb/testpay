@@ -77,6 +77,7 @@ router.get('/dashboard', authMiddleware(true), async (req, res) => {
         activePositions: activeCount,
         activeInvested: activeInvested.toFixed(2),
         totalEarned: totalEarned.toFixed(8),
+        miningBalanceUsd: totalEarned.toFixed(4),
         totalInvested: totalInvested.toFixed(2),
         dailyIncomeUsd: dailyIncomeUsd.toFixed(4),
         availableUsd: balance.availableUsd,
