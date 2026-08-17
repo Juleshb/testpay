@@ -2,15 +2,41 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, rmSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 
 const appVersion = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')).version;
+
+/** aaPanel / OpenLiteSpeed drop a protected `.user.ini` in the site root. Vite cannot delete it. */
+const PROTECTED_OUT_FILES = new Set(['.user.ini']);
+
+function emptyOutDirKeepProtected() {
+  let outDir = resolve('dist');
+  return {
+    name: 'empty-outdir-keep-protected',
+    apply: 'build',
+    configResolved(config) {
+      outDir = resolve(config.root, config.build.outDir);
+    },
+    buildStart() {
+      if (!existsSync(outDir)) return;
+      for (const name of readdirSync(outDir)) {
+        if (PROTECTED_OUT_FILES.has(name)) continue;
+        rmSync(join(outDir, name), { recursive: true, force: true });
+      }
+    },
+  };
+}
 
 export default defineConfig({
   define: {
     __APP_VERSION__: JSON.stringify(appVersion),
   },
+  build: {
+    emptyOutDir: false,
+  },
   plugins: [
+    emptyOutDirKeepProtected(),
     react(),
     tailwindcss(),
     VitePWA({
