@@ -22,7 +22,16 @@ function emptyOutDirKeepProtected() {
       if (!existsSync(outDir)) return;
       for (const name of readdirSync(outDir)) {
         if (PROTECTED_OUT_FILES.has(name)) continue;
-        rmSync(join(outDir, name), { recursive: true, force: true });
+        const target = join(outDir, name);
+        try {
+          rmSync(target, { recursive: true, force: true });
+        } catch (err) {
+          if (err && (err.code === 'EPERM' || err.code === 'EACCES')) {
+            this.warn(`Skipping locked file ${target} (${err.code})`);
+            continue;
+          }
+          throw err;
+        }
       }
     },
   };
