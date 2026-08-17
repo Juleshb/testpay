@@ -37,6 +37,16 @@ export default defineConfig({
   },
   plugins: [
     emptyOutDirKeepProtected(),
+    {
+      name: 'html-build-stamp',
+      transformIndexHtml(html) {
+        const stamp = new Date().toISOString();
+        return html.replace(
+          '</head>',
+          `    <meta name="app-build" content="${stamp}" />\n  </head>`
+        );
+      },
+    },
     react(),
     tailwindcss(),
     VitePWA({
@@ -75,6 +85,9 @@ export default defineConfig({
         ],
       },
       workbox: {
+        skipWaiting: true,
+        clientsClaim: true,
+        cleanupOutdatedCaches: true,
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/api/, /^\/ws/],
