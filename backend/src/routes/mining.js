@@ -183,12 +183,23 @@ router.post('/start', authMiddleware(true), async (req, res) => {
     await ensureUserPaymentCredits(req.user.id);
 
     const position = await prisma.$transaction(async (tx) => {
+      const existingOnOption = await tx.miningPosition.findFirst({
+        where: {
+          userId: req.user.id,
+          optionId: option.id,
+          status: 'ACTIVE',
+        },
+      });
+      if (existingOnOption) {
+        throw new Error('You already have an active miner on this plan.');
+      }
+
       if (isFree) {
         const existingFree = await tx.miningPosition.findFirst({
           where: {
             userId: req.user.id,
             status: 'ACTIVE',
-            option: { isFree: true },
+            startedIsFree: true,
           },
         });
         if (existingFree) {
@@ -207,6 +218,7 @@ router.post('/start', authMiddleware(true), async (req, res) => {
           optionId: option.id,
           amount: String(num),
           tokenSymbol: 'USD',
+          startedIsFree: isFree,
           endsAt,
         },
         include: { option: true },
@@ -231,7 +243,8 @@ router.post('/start', authMiddleware(true), async (req, res) => {
   } catch (err) {
     if (
       err.message?.includes('Insufficient balance') ||
-      err.message?.includes('already have an active free miner')
+      err.message?.includes('already have an active free miner') ||
+      err.message?.includes('already have an active miner on this plan')
     ) {
       return res.status(400).json({ error: err.message });
     }
@@ -252,6 +265,7 @@ function formatPosition(pos) {
     tokenSymbol: pos.tokenSymbol,
     status: pos.status,
     totalEarned: pos.totalEarned,
+    startedIsFree: Boolean(pos.startedIsFree),
     dailyIncome,
     dailyRate: pos.option.dailyRate,
     startedAt: pos.startedAt,
@@ -262,6 +276,7 @@ function formatPosition(pos) {
       id: pos.option.id,
       name: pos.option.name,
       slug: pos.option.slug,
+      minAmount: pos.option.minAmount,
       durationDays: pos.option.durationDays,
       hashRate: pos.option.hashRate,
       coin: pos.option.coin,

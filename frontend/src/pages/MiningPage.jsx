@@ -65,7 +65,7 @@ export default function MiningPage() {
     () => new Set(activePositions.map((p) => p.option?.id).filter(Boolean)),
     [activePositions]
   );
-  const hasActiveFree = activePositions.some((p) => p.option?.isFree);
+  const hasActiveFree = activePositions.some((p) => p.startedIsFree);
 
   const optionsWithEligibility = useMemo(
     () =>

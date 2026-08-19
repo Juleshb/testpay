@@ -705,7 +705,8 @@
     "confirmedPending": "confirmed ${{confirmed}} · pending ${{pending}}",
     "hashActivity": "hash activity",
     "load": "load",
-    "nextPayoutProgress": "next payout progress · {{percent}}%"
+    "nextPayoutProgress": "next payout progress · {{percent}}%",
+    "renewalRequiresPayment": "Started free — keeps running. Next start on this plan requires ${{min}} from balance."
   },
   "miningPortfolio": {
     "title": "My Miners",

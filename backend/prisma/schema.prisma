@@ -217,6 +217,7 @@ model MiningPosition {
   amount        String
   tokenSymbol   String               @default("USD")
   status        MiningPositionStatus @default(ACTIVE)
+  startedIsFree Boolean              @default(false)
   totalEarned   String               @default("0")
   startedAt     DateTime             @default(now())
   endsAt        DateTime

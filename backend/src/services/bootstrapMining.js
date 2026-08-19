@@ -94,7 +94,34 @@ export async function bootstrapMining() {
       },
     });
   }
+  await backfillStartedIsFree();
   console.log(`Mining options ready (${DEFAULT_MINING_OPTIONS.length} default tiers)`);
+}
+
+/** Positions without a MINING_PURCHASE debit were started free (legacy rows before startedIsFree). */
+export async function backfillStartedIsFree() {
+  const candidates = await prisma.miningPosition.findMany({
+    where: { startedIsFree: false },
+    select: { id: true },
+  });
+  if (!candidates.length) return;
+
+  const purchases = await prisma.balanceEntry.findMany({
+    where: {
+      sourceType: 'MINING_PURCHASE',
+      sourceId: { in: candidates.map((p) => p.id) },
+    },
+    select: { sourceId: true },
+  });
+  const paidIds = new Set(purchases.map((p) => p.sourceId));
+
+  const freeIds = candidates.filter((p) => !paidIds.has(p.id)).map((p) => p.id);
+  if (!freeIds.length) return;
+
+  await prisma.miningPosition.updateMany({
+    where: { id: { in: freeIds } },
+    data: { startedIsFree: true },
+  });
 }
 
 export function formatMiningOption(option) {

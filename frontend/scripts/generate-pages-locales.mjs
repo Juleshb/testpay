@@ -692,6 +692,8 @@ const en = {
     hashActivity: 'hash activity',
     load: 'load',
     nextPayoutProgress: 'next payout progress · {{percent}}%',
+    renewalRequiresPayment:
+      'Started free — keeps running. Next start on this plan requires ${{min}} from balance.',
   },
 
   miningPortfolio: {

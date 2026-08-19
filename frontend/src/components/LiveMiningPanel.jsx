@@ -125,6 +125,11 @@ export function LiveMiningCard({ position, compact = false }) {
           <p className="font-mono text-[11px] mt-1" style={{ color: 'var(--color-text-muted)' }}>
             {position.option?.hashRate} · {position.option?.coin} · {position.dailyRate}% {t('mining.daily')}
           </p>
+          {position.startedIsFree && !position.option?.isFree && (
+            <p className="font-mono text-[10px] mt-1" style={{ color: 'var(--color-warning)' }}>
+              {t('mining.renewalRequiresPayment', { min: position.option?.minAmount || '0' })}
+            </p>
+          )}
         </div>
         <p className="font-mono text-sm font-bold tabular-nums shrink-0" style={{ color: 'var(--color-accent)' }}>
           ${position.amount}
