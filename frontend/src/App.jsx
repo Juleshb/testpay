@@ -21,6 +21,7 @@ import AdminShowcaseTeamPage from './pages/AdminShowcaseTeamPage';
 import AdminTestimonialsPage from './pages/AdminTestimonialsPage';
 import AdminUsersPage from './pages/AdminUsersPage';
 import AdminUserDetailPage from './pages/AdminUserDetailPage';
+import AdminConversationsPage from './pages/AdminConversationsPage';
 import AdminReportPage from './pages/AdminReportPage';
 import PackagesPage from './pages/PackagesPage';
 import PackagePortfolioPage from './pages/PackagePortfolioPage';
@@ -148,6 +149,14 @@ export default function App() {
           element={
             <AdminRoute>
               <AdminReportPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/conversations"
+          element={
+            <AdminRoute>
+              <AdminConversationsPage />
             </AdminRoute>
           }
         />

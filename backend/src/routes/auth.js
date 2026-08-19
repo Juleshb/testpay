@@ -16,6 +16,7 @@ import {
   generateUniqueInviteCode,
   resolveInviterByCode,
 } from '../services/referrals.js';
+import { touchPresence } from '../services/presence.js';
 
 const router = Router();
 
@@ -105,6 +106,7 @@ router.post('/login', async (req, res) => {
     }
 
     const token = signToken(user.id);
+    touchPresence(user.id);
     res.json({
       user: withAvatar(formatUserResponse(user)),
       token,
@@ -116,6 +118,7 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/me', authMiddleware(true), async (req, res) => {
+  touchPresence(req.user.id);
   let user = req.user;
   if (!user.username) {
     const username = await assignUsernameIfMissing(user.id);
@@ -184,6 +187,11 @@ router.patch('/me', authMiddleware(true), async (req, res) => {
     console.error('Update profile error:', err);
     res.status(400).json({ error: err.message || 'Failed to update profile' });
   }
+});
+
+router.post('/presence', authMiddleware(), (req, res) => {
+  touchPresence(req.user.id);
+  res.json({ ok: true });
 });
 
 export default router;

@@ -20,3 +20,9 @@ export async function getPublicMeta() {
   if (!res.ok) throw new Error('Failed to load app meta');
   return res.json();
 }
+
+export async function getOnlineUsers() {
+  const res = await fetch('/api/public/online');
+  if (!res.ok) throw new Error('Failed to load online users');
+  return res.json();
+}

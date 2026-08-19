@@ -11,6 +11,8 @@ import LanguageSwitcher from '../components/LanguageSwitcher';
 import { APP_NAME, APP_VERSION } from '../lib/appMeta';
 import MobileBottomNav from '../components/MobileBottomNav';
 import { useCommunityUnread, UnreadBadge } from '../CommunityUnreadContext';
+import OnlineUsersBadge from '../components/OnlineUsersBadge';
+import { usePresenceHeartbeat } from '../hooks/usePresenceHeartbeat';
 
 function SidebarLink({ to, end, icon: Icon, children, onClick, badge = 0 }) {
   return (
@@ -145,6 +147,9 @@ function SidebarContent({ onNavigate }) {
                 <SidebarLink to="/admin/users" icon={IconUsers} onClick={onNavigate}>
                   {t('nav.users')}
                 </SidebarLink>
+                <SidebarLink to="/admin/conversations" icon={IconCommunity} onClick={onNavigate}>
+                  {t('nav.userMessages')}
+                </SidebarLink>
                 <SidebarLink to="/admin/packages" icon={IconPackages} onClick={onNavigate}>
                   {t('nav.packages')}
                 </SidebarLink>
@@ -201,6 +206,9 @@ function SidebarContent({ onNavigate }) {
           <p className="font-mono text-[10px] mt-3" style={{ color: 'var(--color-text-muted)' }}>
             {APP_NAME} v{APP_VERSION}
           </p>
+          <div className="mt-2">
+            <OnlineUsersBadge />
+          </div>
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
@@ -223,6 +231,7 @@ function SidebarContent({ onNavigate }) {
 
 export default function AppLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  usePresenceHeartbeat(true);
 
   return (
     <div className="app-layout-shell min-h-screen min-h-[100dvh] lg:min-h-screen">

@@ -10,6 +10,7 @@ import BarRow from '../components/ui/BarRow';
 import { Card, CardContent, CardTitle } from '../components/ui/Card';
 import { PageLoader } from '../components/ui/Spinner';
 import LiveQuotes from '../components/LiveQuotes';
+import OnlineUsersBadge from '../components/OnlineUsersBadge';
 
 const QUICK_LINKS = [
   { to: '/payments/new', labelKey: 'dashboard.quickDeposit', hintKey: 'dashboard.quickDepositHint' },
@@ -65,7 +66,9 @@ export default function OverviewDashboardPage() {
         label={t('dashboard.label')}
         description={t('dashboard.description')}
         actions={
-          <div className="mobile-action-grid">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+            <OnlineUsersBadge className="justify-center sm:justify-end px-1" />
+            <div className="mobile-action-grid">
             <Link to="/withdraw" className="min-w-0">
               <Button variant="ghost" size="md" className="w-full sm:w-auto">
                 {t('dashboard.withdraw')}
@@ -81,6 +84,7 @@ export default function OverviewDashboardPage() {
                 {t('dashboard.newPayment')}
               </Button>
             </Link>
+            </div>
           </div>
         }
       />

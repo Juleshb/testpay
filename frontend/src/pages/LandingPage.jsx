@@ -12,6 +12,7 @@ import { getPublicShowcase } from '../publicApi';
 import PublicFooter from '../components/PublicFooter';
 import HelpBot from '../components/HelpBot';
 import SubmitReviewPopup from '../components/SubmitReviewPopup';
+import OnlineUsersBadge from '../components/OnlineUsersBadge';
 import { cn } from '../lib/cn';
 
 function StrokeIcon({ children, className }) {
@@ -485,6 +486,7 @@ export default function LandingPage() {
         <nav className="glass-nav max-w-6xl mx-auto flex items-center justify-between gap-2 min-w-0 px-3 sm:px-4 py-2">
           <BrandLogo to="/" size="sm" />
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <OnlineUsersBadge className="hidden md:inline-flex" compact />
             <LanguageSwitcher size="sm" />
             <ThemeToggle />
             <Link to="/login" className="hidden sm:block">
@@ -534,6 +536,7 @@ export default function LandingPage() {
               <p className="font-mono text-xs" style={{ color: 'var(--color-text-muted)' }}>
                 {t('landing.membersJoined', { count: membersLabel })}
               </p>
+              <OnlineUsersBadge className="justify-center lg:justify-start" />
             </div>
 
             <div

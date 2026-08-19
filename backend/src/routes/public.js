@@ -12,6 +12,7 @@ import {
 } from '../services/developerAccess.js';
 import { getLiveQuotes } from '../services/priceConversion.js';
 import { attachQuotesStream } from '../services/quotesRealtime.js';
+import { getOnlineStats } from '../services/presence.js';
 
 const router = Router();
 
@@ -54,6 +55,10 @@ router.get('/showcase', async (req, res) => {
 
 router.get('/meta', (_req, res) => {
   res.json({ version: APP_VERSION, name: 'StackPay' });
+});
+
+router.get('/online', (_req, res) => {
+  res.json(getOnlineStats());
 });
 
 router.get('/quotes', async (req, res) => {

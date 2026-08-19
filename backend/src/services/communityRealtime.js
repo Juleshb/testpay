@@ -2,6 +2,7 @@ import { WebSocketServer } from 'ws';
 import jwt from 'jsonwebtoken';
 import { config } from '../config/index.js';
 import { prisma } from '../db.js';
+import { wsConnected, wsDisconnected } from './presence.js';
 
 /** @typedef {{ userId: string, user: object, subscriptions: Set<string> }} ClientMeta */
 
@@ -176,6 +177,7 @@ function cleanupClient(ws, meta) {
     }
   }
   clients.delete(ws);
+  wsDisconnected(meta.userId);
 }
 
 export function initCommunityRealtime(server) {
@@ -198,6 +200,7 @@ export function initCommunityRealtime(server) {
       subscriptions: new Set([userRoom(user.id)]),
     };
     clients.set(ws, meta);
+    wsConnected(user.id);
 
     send(ws, { type: 'connected', userId: user.id });
 

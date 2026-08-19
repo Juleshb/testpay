@@ -122,6 +122,15 @@ export async function listAdminUsers() {
   return res.json();
 }
 
+export async function listAdminOnlineUsers() {
+  const res = await fetch('/api/admin/users/online', { headers: authHeaders() });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to load online users');
+  }
+  return res.json();
+}
+
 export async function getAdminUserAccount(userId) {
   const res = await fetch(`/api/admin/users/${userId}`, { headers: authHeaders() });
   if (!res.ok) {
@@ -382,5 +391,22 @@ export async function deleteAdminTestimonial(id) {
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Failed to delete testimonial');
+  return data;
+}
+
+export async function listAdminConversations(query = '') {
+  const params = query.trim() ? `?q=${encodeURIComponent(query.trim())}` : '';
+  const res = await fetch(`/api/admin/conversations${params}`, { headers: authHeaders() });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to load conversations');
+  return data;
+}
+
+export async function getAdminConversationMessages(conversationId) {
+  const res = await fetch(`/api/admin/conversations/${conversationId}/messages`, {
+    headers: authHeaders(),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to load messages');
   return data;
 }

@@ -15,6 +15,7 @@ import TxHashDisplay from '../components/TxHashDisplay';
 const QUICK_LINKS = [
   { to: '/admin/reports', labelKey: 'admin.hubReports' },
   { to: '/admin/users', labelKey: 'admin.hubUsers' },
+  { to: '/admin/conversations', labelKey: 'admin.hubConversations' },
   { to: '/admin/payments/recent', labelKey: 'admin.hubPayments' },
   { to: '/admin/withdrawals', labelKey: 'admin.hubWithdraw' },
   { to: '/admin/packages', labelKey: 'admin.hubPackages' },

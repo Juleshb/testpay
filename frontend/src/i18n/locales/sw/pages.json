@@ -69,6 +69,8 @@
       "mobileApp": "Programu ya simu"
     },
     "membersJoined": "Jiunge na wanachama {{count}} tayari kwenye StackPay",
+    "onlineUsers": "{{count}} users online",
+    "onlineNow": "Users online now",
     "atAGlance": "Kwa muhtasari",
     "glance": {
       "payments": {
@@ -920,6 +922,8 @@
     "hubReportsDesc": "Daily snapshot, top investors, and key activity",
     "hubUsers": "Mtumiajis",
     "hubUsersDesc": "Accounts, balances, and full transaction history",
+    "hubConversations": "User messages",
+    "hubConversationsDesc": "Read direct messages between members",
     "hubPayments": "Malipos",
     "hubPaymentsDesc": "All deposits across networks and tokens",
     "hubPackages": "Kifurushis",
@@ -1087,7 +1091,33 @@
       "block": "Zuia",
       "unblock": "Ondoa zuio",
       "blockedCount": "Imezuiliwa",
-      "filterBlocked": "waliozuiliwa"
+      "filterBlocked": "waliozuiliwa",
+      "filterOnline": "online",
+      "onlineNow": "Online now",
+      "online": "Online",
+      "onlineListTitle": "Online now · {{count}}",
+      "viewAllOnline": "Filter online →",
+      "status": "Hali",
+      "statusOnline": "Online",
+      "statusLive": "Active now",
+      "lastSeen": "Last seen {{time}}"
+    },
+    "conversationsPage": {
+      "title": "User messages",
+      "label": "admin · conversations",
+      "description": "Read direct messages between members · admin view only",
+      "search": "Search",
+      "searchPlaceholder": "name, email, phone, message…",
+      "conversationsCount": "Conversations · {{count}}",
+      "emptyTitle": "No conversations",
+      "emptyDescription": "No direct messages between users yet.",
+      "selectConversation": "Select a conversation to read the full message history",
+      "loadingMessages": "Loading messages…",
+      "participants": "Participants",
+      "messageCount": "{{count}} messages",
+      "noMessages": "No messages yet",
+      "updated": "Last activity {{time}}",
+      "readAt": "Read {{time}}"
     },
     "userDetail": {
       "title": "User account",

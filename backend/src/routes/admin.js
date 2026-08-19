@@ -38,6 +38,8 @@ import {
   deleteShowcaseTestimonial,
 } from '../services/showcaseTestimonials.js';
 import { getAdminUserAccount } from '../services/adminUserAccount.js';
+import { getOnlinePresence } from '../services/presence.js';
+import { resolveAvatarUrl } from '../services/avatar.js';
 import { getAdminDailyReport } from '../services/adminReport.js';
 
 const router = Router();
@@ -377,8 +379,55 @@ router.get('/payments', async (_req, res) => {
   }
 });
 
+router.get('/users/online', async (_req, res) => {
+  try {
+    const { onlineUsers, byUserId } = getOnlinePresence();
+    const ids = [...byUserId.keys()];
+
+    if (!ids.length) {
+      return res.json({ onlineUsers: 0, users: [] });
+    }
+
+    const users = await prisma.user.findMany({
+      where: { id: { in: ids } },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        phone: true,
+        name: true,
+        role: true,
+        blocked: true,
+      },
+    });
+
+    const rows = users
+      .map((u) => {
+        const presence = byUserId.get(u.id);
+        return {
+          id: u.id,
+          username: u.username,
+          email: u.email,
+          phone: u.phone,
+          name: u.name,
+          role: u.role,
+          blocked: Boolean(u.blocked),
+          lastSeenAt: presence?.lastSeenAt ?? null,
+          wsConnected: Boolean(presence?.wsConnected),
+        };
+      })
+      .sort((a, b) => new Date(b.lastSeenAt).getTime() - new Date(a.lastSeenAt).getTime());
+
+    res.json({ onlineUsers, users: rows });
+  } catch (err) {
+    console.error('Admin online users error:', err);
+    res.status(500).json({ error: 'Failed to list online users' });
+  }
+});
+
 router.get('/users', async (_req, res) => {
   try {
+    const { byUserId } = getOnlinePresence();
     const users = await prisma.user.findMany({
       orderBy: { createdAt: 'desc' },
       select: {
@@ -395,18 +444,24 @@ router.get('/users', async (_req, res) => {
     });
 
     res.json(
-      users.map((u) => ({
-        id: u.id,
-        username: u.username,
-        email: u.email,
-        phone: u.phone,
-        name: u.name,
-        role: u.role,
-        blocked: Boolean(u.blocked),
-        createdAt: u.createdAt,
-        paymentCount: u._count.payments,
-        transactionCount: u._count.balanceEntries,
-      }))
+      users.map((u) => {
+        const presence = byUserId.get(u.id);
+        return {
+          id: u.id,
+          username: u.username,
+          email: u.email,
+          phone: u.phone,
+          name: u.name,
+          role: u.role,
+          blocked: Boolean(u.blocked),
+          createdAt: u.createdAt,
+          paymentCount: u._count.payments,
+          transactionCount: u._count.balanceEntries,
+          isOnline: Boolean(presence),
+          lastSeenAt: presence?.lastSeenAt ?? null,
+          wsConnected: Boolean(presence?.wsConnected),
+        };
+      })
     );
   } catch (err) {
     console.error('Admin users error:', err);
@@ -978,6 +1033,145 @@ router.delete('/testimonials/:id', async (req, res) => {
       return res.status(404).json({ error: 'Testimonial not found' });
     }
     res.status(500).json({ error: 'Failed to delete testimonial' });
+  }
+});
+
+const adminConversationUserSelect = {
+  id: true,
+  username: true,
+  email: true,
+  phone: true,
+  name: true,
+  role: true,
+  avatarUrl: true,
+  blocked: true,
+};
+
+function formatAdminConversationUser(user) {
+  if (!user) return null;
+  const label = user.username
+    ? `@${user.username}`
+    : user.name || user.email || user.phone || 'User';
+  return {
+    id: user.id,
+    username: user.username,
+    email: user.email,
+    phone: user.phone,
+    name: user.name,
+    role: user.role,
+    blocked: Boolean(user.blocked),
+    displayName: label,
+    avatarUrl: resolveAvatarUrl(user),
+  };
+}
+
+router.get('/conversations', async (req, res) => {
+  try {
+    const q = String(req.query.q || '').trim().toLowerCase();
+    const conversations = await prisma.conversation.findMany({
+      orderBy: { updatedAt: 'desc' },
+      take: 300,
+      include: {
+        userA: { select: adminConversationUserSelect },
+        userB: { select: adminConversationUserSelect },
+        messages: {
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+          include: { sender: { select: adminConversationUserSelect } },
+        },
+        _count: { select: { messages: true } },
+      },
+    });
+
+    let rows = conversations.map((conv) => {
+      const last = conv.messages[0];
+      return {
+        id: conv.id,
+        participantA: formatAdminConversationUser(conv.userA),
+        participantB: formatAdminConversationUser(conv.userB),
+        messageCount: conv._count.messages,
+        updatedAt: conv.updatedAt,
+        createdAt: conv.createdAt,
+        lastMessage: last
+          ? {
+              id: last.id,
+              content: last.content,
+              createdAt: last.createdAt,
+              senderId: last.senderId,
+              sender: formatAdminConversationUser(last.sender),
+            }
+          : null,
+      };
+    });
+
+    if (q) {
+      rows = rows.filter((row) => {
+        const hay = [
+          row.participantA?.email,
+          row.participantA?.phone,
+          row.participantA?.name,
+          row.participantA?.username,
+          row.participantB?.email,
+          row.participantB?.phone,
+          row.participantB?.name,
+          row.participantB?.username,
+          row.lastMessage?.content,
+        ]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase();
+        return hay.includes(q);
+      });
+    }
+
+    res.json({ total: rows.length, conversations: rows });
+  } catch (err) {
+    console.error('Admin list conversations error:', err);
+    res.status(500).json({ error: 'Failed to list conversations' });
+  }
+});
+
+router.get('/conversations/:id/messages', async (req, res) => {
+  try {
+    const conversation = await prisma.conversation.findUnique({
+      where: { id: req.params.id },
+      include: {
+        userA: { select: adminConversationUserSelect },
+        userB: { select: adminConversationUserSelect },
+      },
+    });
+
+    if (!conversation) {
+      return res.status(404).json({ error: 'Conversation not found' });
+    }
+
+    const messages = await prisma.directMessage.findMany({
+      where: { conversationId: conversation.id },
+      orderBy: { createdAt: 'asc' },
+      include: { sender: { select: adminConversationUserSelect } },
+    });
+
+    res.json({
+      id: conversation.id,
+      participantA: formatAdminConversationUser(conversation.userA),
+      participantB: formatAdminConversationUser(conversation.userB),
+      createdAt: conversation.createdAt,
+      updatedAt: conversation.updatedAt,
+      messageCount: messages.length,
+      messages: messages.map((msg) => ({
+        id: msg.id,
+        content: msg.content,
+        createdAt: msg.createdAt,
+        readAt: msg.readAt,
+        quotedPostId: msg.quotedPostId,
+        quotedContent: msg.quotedContent,
+        senderId: msg.senderId,
+        sender: formatAdminConversationUser(msg.sender),
+      })),
+    });
+  } catch (err) {
+    console.error('Admin conversation messages error:', err);
+    res.status(500).json({ error: 'Failed to load conversation messages' });
   }
 });
 
