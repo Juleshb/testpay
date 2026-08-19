@@ -694,6 +694,10 @@ const en = {
     nextPayoutProgress: 'next payout progress · {{percent}}%',
     renewalRequiresPayment:
       'Started free — keeps running. Next start on this plan requires ${{min}} from balance.',
+    sessionPerRun: '{{hours}}h per session',
+    sessionHint: 'Runs for {{hours}} hours, then stops. Start again when the session ends.',
+    hoursLeft: 'Hours left',
+    restartMining: 'Restart mining',
   },
 
   miningPortfolio: {
@@ -710,6 +714,7 @@ const en = {
     emptyTitle: 'No miners yet',
     emptyDescription: 'Choose a mining option and start earning daily income.',
     daysLeft: '{{rate}}% daily · {{days}} days left',
+    hoursLeft: '{{rate}}% daily · {{hours}} hours left',
     earned: '+{{amount}} earned',
     started: 'Started',
     ends: 'Ends',
@@ -1204,6 +1209,8 @@ const en = {
       maxAmount: 'Max amount (USD)',
       maxPlaceholder: 'leave empty for unlimited',
       dailyRate: 'Daily rate (%)',
+      sessionHours: 'Session (hours)',
+      sessionHoursHint: 'Set 24 for stop-and-restart cycles. Leave empty to use duration days.',
       durationDays: 'Duration (days)',
       hashRate: 'Hash rate',
       coin: 'Coin',

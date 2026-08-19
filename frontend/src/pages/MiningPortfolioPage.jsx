@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getMiningPositions, getMiningIncome } from '../miningApi';
+import { getMiningPositions, getMiningIncome, usesHourSession } from '../miningApi';
 import PageHeader from '../components/ui/PageHeader';
 import StatCard from '../components/ui/StatCard';
 import Button from '../components/ui/Button';
@@ -123,7 +123,9 @@ export default function MiningPortfolioPage() {
                       <StatusPill status={pos.status} />
                     </div>
                     <p className="font-mono text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
-                      {t('miningPortfolio.daysLeft', { rate: pos.dailyRate, days: pos.daysLeft })}
+                      {usesHourSession(pos.option)
+                        ? t('miningPortfolio.hoursLeft', { rate: pos.dailyRate, hours: pos.hoursLeft })
+                        : t('miningPortfolio.daysLeft', { rate: pos.dailyRate, days: pos.daysLeft })}
                       {' · '}
                       {pos.option.hashRate} · {pos.option.coin}
                     </p>
@@ -150,7 +152,11 @@ export default function MiningPortfolioPage() {
                   </div>
                   <div>
                     <dt style={{ color: 'var(--color-text-muted)' }}>{t('miningPortfolio.ends')}</dt>
-                    <dd>{new Date(pos.endsAt).toLocaleDateString()}</dd>
+                    <dd>
+                      {usesHourSession(pos.option)
+                        ? new Date(pos.endsAt).toLocaleString()
+                        : new Date(pos.endsAt).toLocaleDateString()}
+                    </dd>
                   </div>
                   <div>
                     <dt style={{ color: 'var(--color-text-muted)' }}>{t('miningPortfolio.lastAccrual')}</dt>

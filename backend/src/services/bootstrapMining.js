@@ -8,10 +8,11 @@ export const DEFAULT_MINING_OPTIONS = [
     minAmount: '10',
     maxAmount: '10',
     dailyRate: '0.5',
-    durationDays: 14,
+    durationDays: 1,
+    sessionHours: 24,
     hashRate: '10 TH/s',
     coin: 'BTC',
-    description: 'Free starter miner · no balance required',
+    description: 'Free starter miner · 24-hour session · restart when done',
     badgeColor: '#7DCEA0',
     sortOrder: 0,
     isFree: true,
@@ -22,10 +23,11 @@ export const DEFAULT_MINING_OPTIONS = [
     minAmount: '50',
     maxAmount: '499.99',
     dailyRate: '1.0',
-    durationDays: 30,
+    durationDays: 1,
+    sessionHours: 24,
     hashRate: '100 TH/s',
     coin: 'BTC',
-    description: 'Entry cloud miner · steady daily yield',
+    description: 'Entry cloud miner · 24-hour session · restart when done',
     badgeColor: '#6B8EAD',
     sortOrder: 1,
     isFree: false,
@@ -36,10 +38,11 @@ export const DEFAULT_MINING_OPTIONS = [
     minAmount: '500',
     maxAmount: '1999.99',
     dailyRate: '1.5',
-    durationDays: 60,
+    durationDays: 1,
+    sessionHours: 24,
     hashRate: '500 TH/s',
     coin: 'BTC',
-    description: 'Balanced hashrate · higher daily rate',
+    description: 'Balanced hashrate · 24-hour session · restart when done',
     badgeColor: '#A2D5C6',
     sortOrder: 2,
     isFree: false,
@@ -50,10 +53,11 @@ export const DEFAULT_MINING_OPTIONS = [
     minAmount: '2000',
     maxAmount: '9999.99',
     dailyRate: '2.0',
-    durationDays: 90,
+    durationDays: 1,
+    sessionHours: 24,
     hashRate: '2 PH/s',
     coin: 'BTC',
-    description: 'Farm-scale power · accelerated income',
+    description: 'Farm-scale power · 24-hour session · restart when done',
     badgeColor: '#E8B86D',
     sortOrder: 3,
     isFree: false,
@@ -64,10 +68,11 @@ export const DEFAULT_MINING_OPTIONS = [
     minAmount: '10000',
     maxAmount: null,
     dailyRate: '2.8',
-    durationDays: 120,
+    durationDays: 1,
+    sessionHours: 24,
     hashRate: '10 PH/s',
     coin: 'BTC',
-    description: 'Industrial tier · maximum daily yield',
+    description: 'Industrial tier · 24-hour session · restart when done',
     badgeColor: '#C9A0DC',
     sortOrder: 4,
     isFree: false,
@@ -85,6 +90,7 @@ export async function bootstrapMining() {
         maxAmount: option.maxAmount,
         dailyRate: option.dailyRate,
         durationDays: option.durationDays,
+        sessionHours: option.sessionHours ?? null,
         hashRate: option.hashRate,
         coin: option.coin,
         description: option.description,
@@ -135,6 +141,7 @@ export function formatMiningOption(option) {
     dailyRatePercent: parseFloat(option.dailyRate),
     minDailyIncome: calcDailyIncome(option.minAmount, option.dailyRate),
     durationDays: option.durationDays,
+    sessionHours: option.sessionHours ?? null,
     hashRate: option.hashRate,
     coin: option.coin,
     description: option.description,
@@ -189,6 +196,15 @@ export function validateMiningOptionInput(body, partial = false) {
     const days = parseInt(body.durationDays, 10);
     if (isNaN(days) || days < 1) errors.push('durationDays must be at least 1');
     else data.durationDays = days;
+  }
+  if (body.sessionHours !== undefined) {
+    if (body.sessionHours === null || body.sessionHours === '') {
+      data.sessionHours = null;
+    } else {
+      const hours = parseInt(body.sessionHours, 10);
+      if (isNaN(hours) || hours < 1) errors.push('sessionHours must be at least 1');
+      else data.sessionHours = hours;
+    }
   }
   if (!partial || body.hashRate !== undefined) {
     if (!body.hashRate?.trim()) errors.push('hashRate is required');

@@ -642,14 +642,19 @@ router.patch('/mining/:id', async (req, res) => {
     });
 
     const durationChanged = data.durationDays != null;
+    const sessionChanged = data.sessionHours !== undefined;
     const rateChanged =
       data.dailyRate != null && String(data.dailyRate) !== String(existing.dailyRate);
 
-    const activeTerms = durationChanged
-      ? await applyActiveMiningTerms(id, { durationDays: data.durationDays })
-      : { updated: 0, completed: 0 };
+    const activeTerms =
+      sessionChanged || durationChanged
+        ? await applyActiveMiningTerms(id, {
+            durationDays: data.durationDays,
+            sessionHours: data.sessionHours,
+          })
+        : { updated: 0, completed: 0 };
 
-    if (rateChanged || durationChanged) {
+    if (rateChanged || durationChanged || sessionChanged) {
       accrueMiningDailyIncome().catch((err) =>
         console.error('Mining accrual after admin update:', err.message)
       );

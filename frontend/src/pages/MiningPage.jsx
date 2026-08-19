@@ -7,6 +7,7 @@ import {
   startMining,
   calcEstimatedDaily,
   getMiningEligibility,
+  usesHourSession,
 } from '../miningApi';
 import PageHeader from '../components/ui/PageHeader';
 import StatCard from '../components/ui/StatCard';
@@ -16,6 +17,13 @@ import AmountInput from '../components/ui/AmountInput';
 import { PageLoader } from '../components/ui/Spinner';
 import { cn } from '../lib/cn';
 import LiveMiningPanel from '../components/LiveMiningPanel';
+
+function sessionLabel(option, t) {
+  if (usesHourSession(option)) {
+    return t('mining.sessionPerRun', { hours: option.sessionHours });
+  }
+  return t('mining.days', { count: option.durationDays });
+}
 
 function depositUrl(amount) {
   const usd = parseFloat(amount);
@@ -328,7 +336,17 @@ export default function MiningPage() {
                 )}
                 {selectedOption.isFree && (
                   <p className="font-mono text-xs" style={{ color: 'var(--color-text-muted)' }}>
-                    {t('mining.freeHint', { amount: selectedOption.minAmount, days: selectedOption.durationDays })}
+                    {usesHourSession(selectedOption)
+                      ? t('mining.sessionHint', { hours: selectedOption.sessionHours })
+                      : t('mining.freeHint', {
+                          amount: selectedOption.minAmount,
+                          days: selectedOption.durationDays,
+                        })}
+                  </p>
+                )}
+                {!selectedOption.isFree && usesHourSession(selectedOption) && (
+                  <p className="font-mono text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                    {t('mining.sessionHint', { hours: selectedOption.sessionHours })}
                   </p>
                 )}
                 {!selectedOption.isFree && !selectedEligibility?.eligible ? (
@@ -436,7 +454,7 @@ function EligibleMiningCard({ option, eligibility, alreadyRunning, activating, o
         </div>
         <div className="flex justify-between">
           <dt style={{ color: 'var(--color-text-muted)' }}>{t('mining.duration')}</dt>
-          <dd>{t('mining.days', { count: option.durationDays })}</dd>
+          <dd>{sessionLabel(option, t)}</dd>
         </div>
       </dl>
       {alreadyRunning ? (
@@ -509,7 +527,9 @@ function MiningCard({ option, eligibility, selected, onSelect }) {
           {t('mining.hashRateCoin', { hashRate: option.hashRate, coin: option.coin })}
         </p>
         <p className="font-mono text-[11px] mb-3" style={{ color: 'var(--color-text-muted)' }}>
-          {t('mining.dailyReturn', { days: option.durationDays })}
+          {usesHourSession(option)
+            ? t('mining.sessionPerRun', { hours: option.sessionHours })
+            : t('mining.dailyReturn', { days: option.durationDays })}
         </p>
         <p className="font-mono text-sm font-semibold tabular-nums mb-2" style={{ color: 'var(--color-success)' }}>
           ${option.minDailyIncome}

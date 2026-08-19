@@ -190,6 +190,7 @@ model MiningOption {
   maxAmount    String?
   dailyRate    String
   durationDays Int
+  sessionHours Int?
   hashRate     String
   coin         String           @default("BTC")
   description  String?
@@ -218,6 +219,7 @@ model MiningPosition {
   tokenSymbol   String               @default("USD")
   status        MiningPositionStatus @default(ACTIVE)
   startedIsFree Boolean              @default(false)
+  sessionHours  Int?
   totalEarned   String               @default("0")
   startedAt     DateTime             @default(now())
   endsAt        DateTime

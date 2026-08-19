@@ -44,6 +44,10 @@ export function calcEstimatedDaily(amount, dailyRate) {
   return (n * (r / 100)).toFixed(4);
 }
 
+export function usesHourSession(option) {
+  return option?.sessionHours != null && Number(option.sessionHours) > 0;
+}
+
 export function getMiningEligibility(option, availableUsd) {
   if (option.isFree) {
     return {

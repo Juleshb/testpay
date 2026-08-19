@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '../db.js';
 import { authMiddleware } from '../middleware/auth.js';
-import { calcDailyIncome } from '../services/miningAccrual.js';
+import { calcDailyIncome, computeMiningEndsAt, usesHourSession } from '../services/miningAccrual.js';
 import { formatMiningOption } from '../services/bootstrapMining.js';
 import { getUserBalanceSummary, ensureUserPaymentCredits } from '../services/userBalance.js';
 
@@ -177,8 +177,9 @@ router.post('/start', authMiddleware(true), async (req, res) => {
       }
     }
 
-    const endsAt = new Date();
-    endsAt.setUTCDate(endsAt.getUTCDate() + option.durationDays);
+    const startedAt = new Date();
+    const endsAt = computeMiningEndsAt(startedAt, option);
+    const sessionHours = usesHourSession(option) ? option.sessionHours : null;
 
     await ensureUserPaymentCredits(req.user.id);
 
@@ -219,6 +220,8 @@ router.post('/start', authMiddleware(true), async (req, res) => {
           amount: String(num),
           tokenSymbol: 'USD',
           startedIsFree: isFree,
+          sessionHours,
+          startedAt,
           endsAt,
         },
         include: { option: true },
@@ -255,10 +258,11 @@ router.post('/start', authMiddleware(true), async (req, res) => {
 
 function formatPosition(pos) {
   const dailyIncome = calcDailyIncome(pos.amount, pos.option.dailyRate);
-  const daysLeft = Math.max(
-    0,
-    Math.ceil((new Date(pos.endsAt).getTime() - Date.now()) / (24 * 60 * 60 * 1000))
-  );
+  const msLeft = Math.max(0, new Date(pos.endsAt).getTime() - Date.now());
+  const daysLeft = Math.max(0, Math.ceil(msLeft / (24 * 60 * 60 * 1000)));
+  const hoursLeft = Math.max(0, Math.ceil(msLeft / (60 * 60 * 1000)));
+  const sessionHours = pos.sessionHours ?? (usesHourSession(pos.option) ? pos.option.sessionHours : null);
+
   return {
     id: pos.id,
     amount: pos.amount,
@@ -266,18 +270,21 @@ function formatPosition(pos) {
     status: pos.status,
     totalEarned: pos.totalEarned,
     startedIsFree: Boolean(pos.startedIsFree),
+    sessionHours,
     dailyIncome,
     dailyRate: pos.option.dailyRate,
     startedAt: pos.startedAt,
     endsAt: pos.endsAt,
     lastAccruedAt: pos.lastAccruedAt,
     daysLeft,
+    hoursLeft,
     option: {
       id: pos.option.id,
       name: pos.option.name,
       slug: pos.option.slug,
       minAmount: pos.option.minAmount,
       durationDays: pos.option.durationDays,
+      sessionHours: pos.option.sessionHours,
       hashRate: pos.option.hashRate,
       coin: pos.option.coin,
       badgeColor: pos.option.badgeColor,

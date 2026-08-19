@@ -20,7 +20,8 @@ const EMPTY_FORM = {
   minAmount: '',
   maxAmount: '',
   dailyRate: '',
-  durationDays: '',
+  durationDays: '1',
+  sessionHours: '24',
   hashRate: '',
   coin: 'BTC',
   description: '',
@@ -70,6 +71,7 @@ export default function AdminMiningPage() {
       maxAmount: option.maxAmount || '',
       dailyRate: option.dailyRate,
       durationDays: String(option.durationDays),
+      sessionHours: option.sessionHours != null ? String(option.sessionHours) : '',
       hashRate: option.hashRate || '',
       coin: option.coin || 'BTC',
       description: option.description || '',
@@ -93,6 +95,7 @@ export default function AdminMiningPage() {
         ...form,
         maxAmount: form.maxAmount === '' ? null : form.maxAmount,
         durationDays: parseInt(form.durationDays, 10),
+        sessionHours: form.sessionHours === '' ? null : parseInt(form.sessionHours, 10),
         sortOrder: parseInt(form.sortOrder, 10) || 0,
       };
       if (editingId) {
@@ -213,6 +216,15 @@ export default function AdminMiningPage() {
                   required
                 />
               </Field>
+              <Field label={t('admin.miningPage.sessionHours')}>
+                <input
+                  type="number"
+                  className="dev-input w-full font-mono"
+                  value={form.sessionHours}
+                  onChange={(e) => setForm({ ...form, sessionHours: e.target.value })}
+                  placeholder="24"
+                />
+              </Field>
               <Field label={t('admin.miningPage.durationDays')} required>
                 <input
                   type="number"
@@ -228,6 +240,9 @@ export default function AdminMiningPage() {
                 {t('admin.miningPage.appliesImmediately')}
               </p>
             )}
+            <p className="font-mono text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
+              {t('admin.miningPage.sessionHoursHint')}
+            </p>
             <div className="grid sm:grid-cols-2 gap-4">
               <Field label={t('admin.miningPage.hashRate')} required>
                 <input
@@ -357,7 +372,9 @@ export default function AdminMiningPage() {
                         {option.minAmount}
                         {option.maxAmount ? ` – ${option.maxAmount}` : '+'} USD
                       </td>
-                      <td className="px-4 py-3 font-mono text-xs">{option.durationDays}d</td>
+                      <td className="px-4 py-3 font-mono text-xs">
+                        {option.sessionHours ? `${option.sessionHours}h` : `${option.durationDays}d`}
+                      </td>
                       <td className="px-4 py-3 font-mono text-xs">{option.positionCount ?? 0}</td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">

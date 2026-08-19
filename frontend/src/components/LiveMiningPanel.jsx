@@ -9,6 +9,25 @@ const HISTORY_LEN = 36;
 function estimateLive(pos, now) {
   const daily = parseFloat(pos.dailyIncome) || 0;
   const confirmed = parseFloat(pos.totalEarned) || 0;
+  const hourSession = (pos.sessionHours ?? pos.option?.sessionHours) > 0;
+
+  if (hourSession) {
+    const started = new Date(pos.startedAt).getTime();
+    const ends = new Date(pos.endsAt).getTime();
+    const sessionMs = Math.max(1, ends - started);
+    const sinceMs = Math.max(0, now - started);
+    const sessionProgress = Math.min(1, sinceMs / sessionMs);
+    const pending = daily * sessionProgress;
+    return {
+      confirmed,
+      pending,
+      liveTotal: confirmed + pending,
+      dayProgress: sessionProgress,
+      hourSession: true,
+      hashPulse: 0.55 + Math.sin(now / 320) * 0.2 + Math.sin(now / 170) * 0.15,
+    };
+  }
+
   const anchor = pos.lastAccruedAt || pos.startedAt;
   const sinceMs = Math.max(0, now - new Date(anchor).getTime());
   const dayProgress = Math.min(1, sinceMs / (24 * 60 * 60 * 1000));
@@ -18,6 +37,7 @@ function estimateLive(pos, now) {
     pending,
     liveTotal: confirmed + pending,
     dayProgress,
+    hourSession: false,
     hashPulse: 0.55 + Math.sin(now / 320) * 0.2 + Math.sin(now / 170) * 0.15,
   };
 }
@@ -184,8 +204,10 @@ export function LiveMiningCard({ position, compact = false }) {
       {!compact && (
         <dl className="grid grid-cols-3 gap-2 font-mono text-[11px] mb-3">
           <div>
-            <dt style={{ color: 'var(--color-text-muted)' }}>{t('mining.daysLeft')}</dt>
-            <dd className="font-semibold">{position.daysLeft}</dd>
+            <dt style={{ color: 'var(--color-text-muted)' }}>
+              {live.hourSession ? t('mining.hoursLeft') : t('mining.daysLeft')}
+            </dt>
+            <dd className="font-semibold">{live.hourSession ? position.hoursLeft : position.daysLeft}</dd>
           </div>
           <div>
             <dt style={{ color: 'var(--color-text-muted)' }}>{t('mining.dailyIncome')}</dt>
