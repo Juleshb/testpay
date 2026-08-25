@@ -38,6 +38,10 @@ import {
   deleteShowcaseTestimonial,
 } from '../services/showcaseTestimonials.js';
 import { getAdminUserAccount } from '../services/adminUserAccount.js';
+import {
+  notifyPendingDepositors,
+  notifyPendingDepositByPaymentId,
+} from '../services/adminPendingDepositNotify.js';
 import { getOnlinePresence } from '../services/presence.js';
 import { resolveAvatarUrl } from '../services/avatar.js';
 import { getAdminDailyReport } from '../services/adminReport.js';
@@ -376,6 +380,28 @@ router.get('/payments', async (_req, res) => {
   } catch (err) {
     console.error('Admin payments error:', err);
     res.status(500).json({ error: 'Failed to list payments' });
+  }
+});
+
+router.post('/payments/notify-pending', async (req, res) => {
+  try {
+    const { message, paymentIds } = req.body || {};
+    const result = await notifyPendingDepositors(req.user.id, { message, paymentIds });
+    res.json(result);
+  } catch (err) {
+    console.error('Admin notify pending deposits error:', err);
+    res.status(err.status || 500).json({ error: err.message || 'Failed to notify depositors' });
+  }
+});
+
+router.post('/payments/:id/notify', async (req, res) => {
+  try {
+    const { message } = req.body || {};
+    const result = await notifyPendingDepositByPaymentId(req.user.id, req.params.id, message);
+    res.json(result);
+  } catch (err) {
+    console.error('Admin notify payment error:', err);
+    res.status(err.status || 500).json({ error: err.message || 'Failed to notify user' });
   }
 });
 

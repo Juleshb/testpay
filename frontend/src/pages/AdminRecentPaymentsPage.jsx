@@ -1,13 +1,14 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { listAdminPayments } from '../adminApi';
+import { listAdminPayments, notifyPendingDepositors, notifyPendingDeposit } from '../adminApi';
 import { shortenAddress, loadNetworks, getChainName } from '../wallet';
 import PageHeader from '../components/ui/PageHeader';
 import StatCard from '../components/ui/StatCard';
 import Badge from '../components/ui/Badge';
 import EmptyState from '../components/ui/EmptyState';
 import Button from '../components/ui/Button';
+import Alert from '../components/ui/Alert';
 import SegmentedControl from '../components/ui/SegmentedControl';
 import { PageLoader } from '../components/ui/Spinner';
 
@@ -74,6 +75,12 @@ export default function AdminRecentPaymentsPage() {
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState('7d');
   const [status, setStatus] = useState('all');
+  const [showNotify, setShowNotify] = useState(false);
+  const [customMessage, setCustomMessage] = useState('');
+  const [notifyBusy, setNotifyBusy] = useState(false);
+  const [busyPaymentId, setBusyPaymentId] = useState('');
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     loadNetworks().then(setNetworks).catch(console.error);
@@ -101,6 +108,16 @@ export default function AdminRecentPaymentsPage() {
     });
   }, [payments, period, status]);
 
+  const pendingWithUser = useMemo(
+    () => payments.filter((p) => p.status === 'PENDING' && p.userId),
+    [payments]
+  );
+
+  const pendingUserCount = useMemo(
+    () => new Set(pendingWithUser.map((p) => p.userId)).size,
+    [pendingWithUser]
+  );
+
   const stats = useMemo(
     () => ({
       total: filtered.length,
@@ -113,6 +130,42 @@ export default function AdminRecentPaymentsPage() {
 
   const groups = useMemo(() => groupPaymentsByDate(filtered, t), [filtered, t]);
 
+  const handleNotifyAll = async () => {
+    setNotifyBusy(true);
+    setError('');
+    setMessage('');
+    try {
+      const data = await notifyPendingDepositors(customMessage.trim() || undefined);
+      setMessage(
+        t('admin.recentPaymentsPage.notifyPendingDone', {
+          sent: data.sent,
+          users: data.uniqueUsers,
+          failed: data.failed,
+        })
+      );
+      setShowNotify(false);
+      setCustomMessage('');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setNotifyBusy(false);
+    }
+  };
+
+  const handleNotifyOne = async (paymentId) => {
+    setBusyPaymentId(paymentId);
+    setError('');
+    setMessage('');
+    try {
+      await notifyPendingDeposit(paymentId);
+      setMessage(t('admin.recentPaymentsPage.notifyOneDone'));
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusyPaymentId('');
+    }
+  };
+
   if (loading) return <PageLoader message={t('pageCommon.loading.platformPayments')} />;
 
   return (
@@ -122,13 +175,76 @@ export default function AdminRecentPaymentsPage() {
         label={t('admin.recentPaymentsPage.label')}
         description={t('admin.recentPaymentsPage.description')}
         actions={
-          <Link to="/admin">
-            <Button variant="ghost" size="md">
-              {t('admin.systemDashboard')}
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="primary"
+              size="md"
+              disabled={pendingUserCount === 0}
+              onClick={() => {
+                setShowNotify(true);
+                setCustomMessage(t('admin.recentPaymentsPage.notifyPendingDraft'));
+                setError('');
+                setMessage('');
+              }}
+            >
+              {t('admin.recentPaymentsPage.notifyPending', {
+                users: pendingUserCount,
+                payments: pendingWithUser.length,
+              })}
             </Button>
-          </Link>
+            <Link to="/admin">
+              <Button variant="ghost" size="md">
+                {t('admin.systemDashboard')}
+              </Button>
+            </Link>
+          </div>
         }
       />
+
+      {error && <Alert>{error}</Alert>}
+      {message && <Alert variant="success">{message}</Alert>}
+
+      {showNotify && (
+        <section className="glass-panel p-4 sm:p-5 space-y-3">
+          <p className="font-semibold text-sm">{t('admin.recentPaymentsPage.notifyPendingTitle')}</p>
+          <p className="text-xs sm:text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+            {t('admin.recentPaymentsPage.notifyPendingHint')}
+          </p>
+          <label className="block">
+            <span className="section-label text-[10px] mb-1.5 block">
+              {t('admin.recentPaymentsPage.notifyPendingCustom')}
+            </span>
+            <textarea
+              className="w-full rounded-lg px-3 py-2 text-sm font-mono min-h-[100px] resize-y"
+              style={{
+                background: 'var(--color-surface-700)',
+                border: '1px solid var(--color-border)',
+                color: 'var(--color-text-primary)',
+              }}
+              value={customMessage}
+              onChange={(e) => setCustomMessage(e.target.value)}
+              placeholder={t('admin.recentPaymentsPage.notifyPendingPlaceholder')}
+              maxLength={2000}
+            />
+          </label>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="primary" size="md" loading={notifyBusy} onClick={handleNotifyAll}>
+              {t('admin.recentPaymentsPage.notifyPendingSend')}
+            </Button>
+            <Button
+              variant="ghost"
+              size="md"
+              disabled={notifyBusy}
+              onClick={() => {
+                setShowNotify(false);
+                setCustomMessage('');
+              }}
+            >
+              {t('admin.recentPaymentsPage.notifyPendingCancel')}
+            </Button>
+          </div>
+        </section>
+      )}
 
       <section className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -215,13 +331,28 @@ export default function AdminRecentPaymentsPage() {
                           })}
                         </td>
                         <td className="px-4 py-3.5">
-                          <Link
-                            to={`/pay/${p.id}`}
-                            className="font-mono text-xs hover:underline"
-                            style={{ color: 'var(--color-accent)' }}
-                          >
-                            {t('pageCommon.open')}
-                          </Link>
+                          <div className="flex items-center gap-3 justify-end">
+                            {p.status === 'PENDING' && p.userId && (
+                              <button
+                                type="button"
+                                className="font-mono text-xs hover:underline disabled:opacity-50"
+                                style={{ color: 'var(--color-warning)' }}
+                                disabled={busyPaymentId === p.id}
+                                onClick={() => handleNotifyOne(p.id)}
+                              >
+                                {busyPaymentId === p.id
+                                  ? '…'
+                                  : t('admin.recentPaymentsPage.notifyOne')}
+                              </button>
+                            )}
+                            <Link
+                              to={`/pay/${p.id}`}
+                              className="font-mono text-xs hover:underline"
+                              style={{ color: 'var(--color-accent)' }}
+                            >
+                              {t('pageCommon.open')}
+                            </Link>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -232,34 +363,48 @@ export default function AdminRecentPaymentsPage() {
 
             <div className="lg:hidden space-y-3 mb-6">
               {group.items.map((p) => (
-                <Link
-                  key={p.id}
-                  to={`/pay/${p.id}`}
-                  className="block glass-panel p-4 transition-colors hover:border-[color-mix(in_srgb,var(--color-accent)_30%,transparent)]"
-                >
-                  <div className="flex items-start justify-between gap-3 mb-2">
-                    <div className="min-w-0">
-                      <p className="font-mono font-semibold tabular-nums">
-                        {p.amount} {p.tokenSymbol}
+                <div key={p.id} className="glass-panel p-4">
+                  <Link
+                    to={`/pay/${p.id}`}
+                    className="block transition-colors hover:opacity-90"
+                  >
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <div className="min-w-0">
+                        <p className="font-mono font-semibold tabular-nums">
+                          {p.amount} {p.tokenSymbol}
+                        </p>
+                        <p className="font-mono text-xs mt-0.5 truncate" style={{ color: 'var(--color-text-secondary)' }}>
+                          {p.userEmail}
+                        </p>
+                      </div>
+                      <Badge status={p.status} />
+                    </div>
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="font-mono text-xs truncate" style={{ color: 'var(--color-text-muted)' }}>
+                        {p.networkName || getChainName(p.chainId, networks)} · {shortenAddress(p.depositAddress)}
                       </p>
-                      <p className="font-mono text-xs mt-0.5 truncate" style={{ color: 'var(--color-text-secondary)' }}>
-                        {p.userEmail}
+                      <p className="font-mono text-xs shrink-0 tabular-nums" style={{ color: 'var(--color-text-muted)' }}>
+                        {new Date(p.createdAt).toLocaleTimeString(undefined, {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
                       </p>
                     </div>
-                    <Badge status={p.status} />
-                  </div>
-                  <div className="flex items-center justify-between gap-2">
-                    <p className="font-mono text-xs truncate" style={{ color: 'var(--color-text-muted)' }}>
-                      {p.networkName || getChainName(p.chainId, networks)} · {shortenAddress(p.depositAddress)}
-                    </p>
-                    <p className="font-mono text-xs shrink-0 tabular-nums" style={{ color: 'var(--color-text-muted)' }}>
-                      {new Date(p.createdAt).toLocaleTimeString(undefined, {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </p>
-                  </div>
-                </Link>
+                  </Link>
+                  {p.status === 'PENDING' && p.userId && (
+                    <div className="mt-3 pt-3 border-t" style={{ borderColor: 'var(--color-border)' }}>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-full"
+                        loading={busyPaymentId === p.id}
+                        onClick={() => handleNotifyOne(p.id)}
+                      >
+                        {t('admin.recentPaymentsPage.notifyOne')}
+                      </Button>
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           </section>

@@ -113,6 +113,31 @@ export async function listAdminPayments() {
   return res.json();
 }
 
+export async function notifyPendingDepositors(message, paymentIds) {
+  const res = await fetch('/api/admin/payments/notify-pending', {
+    method: 'POST',
+    headers: { ...authHeaders(), 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      ...(message ? { message } : {}),
+      ...(paymentIds?.length ? { paymentIds } : {}),
+    }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to notify depositors');
+  return data;
+}
+
+export async function notifyPendingDeposit(paymentId, message) {
+  const res = await fetch(`/api/admin/payments/${paymentId}/notify`, {
+    method: 'POST',
+    headers: { ...authHeaders(), 'Content-Type': 'application/json' },
+    body: JSON.stringify(message ? { message } : {}),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to notify user');
+  return data;
+}
+
 export async function listAdminUsers() {
   const res = await fetch('/api/admin/users', { headers: authHeaders() });
   if (!res.ok) {

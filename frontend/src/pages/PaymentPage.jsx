@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getPayment, getPaymentBalance, registerPaymentTx } from '../api';
+import { getPayment, getPaymentBalance, registerPaymentTx, getLiveQuotes } from '../api';
 import {
   connectWallet,
   sendPayment,
@@ -41,6 +41,34 @@ export default function PaymentPage() {
   const [txHash, setTxHash] = useState(null);
   const [error, setError] = useState('');
   const [balanceError, setBalanceError] = useState('');
+  const [estimatedUsd, setEstimatedUsd] = useState(null);
+
+  useEffect(() => {
+    if (!payment) return;
+
+    if (payment.usdAmount) {
+      setEstimatedUsd(parseFloat(payment.usdAmount));
+      return;
+    }
+
+    if (payment.usdRate && payment.amount) {
+      setEstimatedUsd(parseFloat(payment.amount) * parseFloat(payment.usdRate));
+      return;
+    }
+
+    const symbol = payment.tokenSymbol;
+    const amount = parseFloat(payment.amount);
+    if (!(amount > 0)) return;
+
+    getLiveQuotes()
+      .then((data) => {
+        const quote = data.quotes?.find((q) => q.symbol === symbol);
+        if (quote?.priceUsd) {
+          setEstimatedUsd(amount * quote.priceUsd);
+        }
+      })
+      .catch(() => {});
+  }, [payment]);
 
   useEffect(() => {
     loadNetworks().then(setNetworks).catch(console.error);
@@ -203,12 +231,29 @@ export default function PaymentPage() {
 
           <div className="px-3 sm:px-5 py-4 sm:py-6 text-center border-b" style={{ borderColor: 'var(--color-border)' }}>
             <p className="section-label text-[10px] mb-1.5 sm:mb-2">{t('payment.requested')}</p>
-            <p
-              className="font-mono text-2xl sm:text-3xl font-bold tabular-nums break-all"
-              style={{ color: 'var(--color-accent)' }}
-            >
-              {payment.amount} {symbol}
-            </p>
+            {estimatedUsd != null && estimatedUsd > 0 ? (
+              <>
+                <p
+                  className="font-mono text-2xl sm:text-3xl font-bold tabular-nums"
+                  style={{ color: 'var(--color-accent)' }}
+                >
+                  {t('payment.usdMain', { amount: estimatedUsd.toFixed(2) })}
+                </p>
+                <p
+                  className="font-mono text-sm sm:text-base tabular-nums mt-1.5 sm:mt-2 break-all"
+                  style={{ color: 'var(--color-text-muted)' }}
+                >
+                  {payment.amount} {symbol}
+                </p>
+              </>
+            ) : (
+              <p
+                className="font-mono text-2xl sm:text-3xl font-bold tabular-nums break-all"
+                style={{ color: 'var(--color-accent)' }}
+              >
+                {payment.amount} {symbol}
+              </p>
+            )}
             <p
               className="font-mono text-xs sm:text-sm tabular-nums mt-2 sm:mt-3 break-all"
               style={{ color: isPaid || receivedNum > 0 ? 'var(--color-success)' : 'var(--color-text-secondary)' }}
@@ -251,6 +296,31 @@ export default function PaymentPage() {
             >
               {payment.name && <DetailRow label={t('payment.name')} value={payment.name} />}
               {payment.email && <DetailRow label={t('payment.email')} value={payment.email} />}
+            </div>
+          )}
+
+          {!isPaid && (
+            <div
+              className="px-3 sm:px-5 py-3 sm:py-4 border-b"
+              style={{ borderColor: 'var(--color-border)' }}
+            >
+              <p className="section-label text-[10px] mb-2 sm:mb-3">{t('payment.howToPayTitle')}</p>
+              <ol
+                className="space-y-2 font-mono text-[11px] sm:text-xs list-decimal list-inside leading-relaxed"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
+                <li>{t('payment.howToPayStep1')}</li>
+                <li>{t('payment.howToPayStep2', { network: networkName })}</li>
+                <li>
+                  {t('payment.howToPayStep3', {
+                    amount: payment.amount,
+                    symbol,
+                    usd: estimatedUsd != null && estimatedUsd > 0 ? estimatedUsd.toFixed(2) : '—',
+                  })}
+                </li>
+                <li>{t('payment.howToPayStep4')}</li>
+                <li>{t('payment.howToPayStep5')}</li>
+              </ol>
             </div>
           )}
 
