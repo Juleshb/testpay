@@ -131,7 +131,23 @@ export function memberAvatarProps(user, fallbackName) {
     name: fallbackName || memberLabel(user),
     avatarUrl: user?.avatarUrl,
     userId: user?.id,
+    online: Boolean(user?.isOnline),
   };
+}
+
+export function sortMembersOnlineFirst(members) {
+  return [...members].sort((a, b) => {
+    if (Boolean(a.isOnline) !== Boolean(b.isOnline)) {
+      return a.isOnline ? -1 : 1;
+    }
+    return memberLabel(a).localeCompare(memberLabel(b));
+  });
+}
+
+export async function getCommunityOnlineUsers() {
+  const res = await fetch(`${API_BASE}/online`, { headers: authHeaders() });
+  if (!res.ok) throw new Error(await parseError(res, 'Failed to load online users'));
+  return res.json();
 }
 
 export function buildPrivateReplyQuote(post) {

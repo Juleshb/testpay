@@ -842,7 +842,13 @@
     "adminOnly": "admin tu",
     "chatOffMemberHint": "Gumzo limezimwa. Bado unaweza kuitikia. Ni admin tu anayeweza kuchapisha.",
     "adminCanStillPost": "Gumzo limezimwa kwa wanachama · wewe tu unaweza kuchapisha",
-    "reactLatest": "Iitikia ujumbe wa hivi karibuni"
+    "reactLatest": "Iitikia ujumbe wa hivi karibuni",
+    "onlineNow": "{{count}} online",
+    "noOneOnline": "No one else online right now",
+    "activeNow": "Active now",
+    "online": "Online",
+    "allPeople": "People · {{count}} ({{online}} online)",
+    "findPeople": "Find people…"
   },
   "networks": {
     "title": "Mtandaos",

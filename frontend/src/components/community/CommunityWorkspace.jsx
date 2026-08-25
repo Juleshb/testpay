@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../AuthContext';
 import {
@@ -11,6 +11,7 @@ import {
   startConversation,
   memberLabel,
   memberAvatarProps,
+  sortMembersOnlineFirst,
   buildPrivateReplyQuote,
   markChannelRead,
   setChannelChat,
@@ -18,6 +19,8 @@ import {
 import { useCommunityUnread, UnreadBadge } from '../../CommunityUnreadContext';
 import MessagingPanel from './MessagingPanel';
 import UserAvatar from './UserAvatar';
+import OnlineMemberAvatar from './OnlineMemberAvatar';
+import OnlineMembersSection from './OnlineMembersSection';
 import MentionComposer from './MentionComposer';
 import MentionText from './MentionText';
 import Button from '../ui/Button';
@@ -177,7 +180,25 @@ export default function CommunityWorkspace({ initialDmUserId }) {
     const [chResult, convResult, memResult] = results;
 
     if (chResult.status === 'fulfilled') setChannels(chResult.value);
-    if (convResult.status === 'fulfilled') setConversations(convResult.value);
+    if (convResult.status === 'fulfilled' && memResult.status === 'fulfilled') {
+      const onlineById = new Map(memResult.value.map((m) => [m.id, m]));
+      setConversations(
+        convResult.value.map((conv) => {
+          const member = onlineById.get(conv.peer?.id);
+          if (!member) return conv;
+          return {
+            ...conv,
+            peer: {
+              ...conv.peer,
+              isOnline: member.isOnline,
+              wsConnected: member.wsConnected,
+            },
+          };
+        })
+      );
+    } else if (convResult.status === 'fulfilled') {
+      setConversations(convResult.value);
+    }
     if (memResult.status === 'fulfilled') setMembers(memResult.value);
 
     const failed = results.find((r) => r.status === 'rejected');
@@ -394,10 +415,15 @@ export default function CommunityWorkspace({ initialDmUserId }) {
     }
   };
 
-  const filteredMembers = members.filter((m) => {
+  const filteredMembers = useMemo(() => {
     const q = memberQuery.trim().toLowerCase();
-    return !q || memberLabel(m).toLowerCase().includes(q);
-  });
+    const list = q
+      ? members.filter((m) => memberLabel(m).toLowerCase().includes(q))
+      : members;
+    return sortMembersOnlineFirst(list);
+  }, [members, memberQuery]);
+
+  const onlineCount = useMemo(() => members.filter((m) => m.isOnline).length, [members]);
 
   const chatEnabled = channelMeta?.chatEnabled !== false;
   const canPost = isAdmin || chatEnabled;
@@ -427,6 +453,8 @@ export default function CommunityWorkspace({ initialDmUserId }) {
         </div>
 
         <div className="flex-1 overflow-y-auto p-3 space-y-5">
+          <OnlineMembersSection members={members} onSelect={openDmWithMember} max={15} />
+
           <section>
             <p className="section-label text-[10px] px-2 mb-2">channels</p>
             <div className="space-y-0.5">
@@ -488,7 +516,7 @@ export default function CommunityWorkspace({ initialDmUserId }) {
                         : 'hover:bg-white/[0.04]'
                     )}
                   >
-                    <UserAvatar {...memberAvatarProps(conv.peer)} size={28} />
+                    <OnlineMemberAvatar {...memberAvatarProps(conv.peer)} size={28} />
                     <span className="text-sm truncate flex-1">{memberLabel(conv.peer)}</span>
                     <UnreadBadge count={conv.unreadCount || unreadConversations[conv.id] || 0} />
                   </button>
@@ -498,10 +526,12 @@ export default function CommunityWorkspace({ initialDmUserId }) {
           </section>
 
           <section>
-            <p className="section-label text-[10px] px-2 mb-2">people · {members.length}</p>
+            <p className="section-label text-[10px] px-2 mb-2">
+              {t('community.allPeople', { count: members.length, online: onlineCount })}
+            </p>
             <input
               className="dev-input w-full text-xs py-1.5 mb-2 mx-auto block"
-              placeholder="Find people..."
+              placeholder={t('community.findPeople')}
               value={memberQuery}
               onChange={(e) => setMemberQuery(e.target.value)}
             />
@@ -513,7 +543,7 @@ export default function CommunityWorkspace({ initialDmUserId }) {
                   onClick={() => openDmWithMember(member)}
                   className="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-white/[0.04] text-left"
                 >
-                  <UserAvatar {...memberAvatarProps(member)} size={24} />
+                  <OnlineMemberAvatar {...memberAvatarProps(member)} size={24} />
                   <span className="text-xs truncate">{memberLabel(member)}</span>
                 </button>
               ))}
@@ -575,6 +605,12 @@ export default function CommunityWorkspace({ initialDmUserId }) {
                 ) : channelMeta?.description ? (
                   <p className="hidden sm:block font-mono text-[10px]" style={{ color: 'var(--color-text-muted)' }}>
                     {channelMeta.description}
+                    {onlineCount > 0 && (
+                      <span style={{ color: 'var(--color-success)' }}>
+                        {' '}
+                        · {t('community.onlineNow', { count: onlineCount })}
+                      </span>
+                    )}
                     {realtimeConnected && (
                       <span style={{ color: 'var(--color-success)' }}> · live</span>
                     )}

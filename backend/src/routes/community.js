@@ -19,6 +19,7 @@ import {
   markChannelRead,
   markConversationRead,
 } from '../services/communityUnread.js';
+import { getOnlinePresence } from '../services/presence.js';
 
 const router = Router();
 const MAX_CONTENT = 2000;
@@ -106,6 +107,17 @@ function formatDmBroadcast(message) {
 }
 function isAdminUser(user) {
   return user?.role === 'ADMIN';
+}
+
+function formatPeerWithPresence(user) {
+  const { byUserId } = getOnlinePresence();
+  const presence = byUserId.get(user.id);
+  return {
+    ...formatPublicUser(user),
+    isOnline: Boolean(presence),
+    wsConnected: Boolean(presence?.wsConnected),
+    lastSeenAt: presence?.lastSeenAt ?? null,
+  };
 }
 
 function formatChannel(ch) {
@@ -343,13 +355,15 @@ router.post('/channels/:slug/read', async (req, res) => {
 router.get('/members', async (req, res) => {
   try {
     const q = String(req.query.q || '').trim();
-    const where = { NOT: { id: req.user.id } };
+    const { byUserId } = getOnlinePresence();
+    const where = { NOT: { id: req.user.id }, blocked: false };
 
     if (q) {
       where.OR = [
         { name: { contains: q, mode: 'insensitive' } },
         { email: { contains: q, mode: 'insensitive' } },
         { phone: { contains: q, mode: 'insensitive' } },
+        { username: { contains: q, mode: 'insensitive' } },
       ];
     }
 
@@ -359,10 +373,61 @@ router.get('/members', async (req, res) => {
       select: userPublicSelect,
     });
 
-    res.json(users.map(formatPublicUser));
+    const formatted = users.map((user) => {
+      const presence = byUserId.get(user.id);
+      return {
+        ...formatPublicUser(user),
+        isOnline: Boolean(presence),
+        wsConnected: Boolean(presence?.wsConnected),
+        lastSeenAt: presence?.lastSeenAt ?? null,
+      };
+    });
+
+    formatted.sort((a, b) => {
+      if (a.isOnline !== b.isOnline) return a.isOnline ? -1 : 1;
+      return displayName(a).localeCompare(displayName(b));
+    });
+
+    res.json(formatted);
   } catch (err) {
     console.error('Community members error:', err);
     res.status(500).json({ error: 'Failed to load members' });
+  }
+});
+
+router.get('/online', async (req, res) => {
+  try {
+    const { onlineUsers, byUserId } = getOnlinePresence();
+    const ids = [...byUserId.keys()].filter((id) => id !== req.user.id);
+
+    if (!ids.length) {
+      return res.json({ onlineUsers: 0, users: [] });
+    }
+
+    const users = await prisma.user.findMany({
+      where: { id: { in: ids }, blocked: false },
+      select: userPublicSelect,
+    });
+
+    const rows = users
+      .map((user) => {
+        const presence = byUserId.get(user.id);
+        return {
+          ...formatPublicUser(user),
+          isOnline: true,
+          wsConnected: Boolean(presence?.wsConnected),
+          lastSeenAt: presence?.lastSeenAt ?? null,
+        };
+      })
+      .sort((a, b) => {
+        if (a.wsConnected !== b.wsConnected) return a.wsConnected ? -1 : 1;
+        return displayName(a).localeCompare(displayName(b));
+      });
+
+    res.json({ onlineUsers: rows.length, users: rows });
+  } catch (err) {
+    console.error('Community online users error:', err);
+    res.status(500).json({ error: 'Failed to load online users' });
   }
 });
 
@@ -392,7 +457,7 @@ router.get('/conversations', async (req, res) => {
         const unreadCount = await countDmUnread(userId, conv.id);
         return {
           id: conv.id,
-          peer: formatPublicUser(peer),
+          peer: formatPeerWithPresence(peer),
           unreadCount,
           lastMessage: last
             ? {
@@ -509,7 +574,7 @@ router.get('/conversations/:id/messages', async (req, res) => {
 
     res.json({
       id: conversation.id,
-      peer: formatPublicUser(otherParticipant(conversation, req.user.id)),
+      peer: formatPeerWithPresence(otherParticipant(conversation, req.user.id)),
       firstUnreadMessageId,
       unreadCount: firstUnreadMessageId
         ? messages.filter((m) => m.senderId !== req.user.id && !m.readAt).length

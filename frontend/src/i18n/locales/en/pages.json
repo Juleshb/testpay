@@ -842,7 +842,13 @@
     "adminOnly": "admin only",
     "chatOffMemberHint": "Chat is off. You can still react. Only admin can post.",
     "adminCanStillPost": "Chat is off for members · only you can post",
-    "reactLatest": "React to the latest message"
+    "reactLatest": "React to the latest message",
+    "onlineNow": "{{count}} online",
+    "noOneOnline": "No one else online right now",
+    "activeNow": "Active now",
+    "online": "Online",
+    "allPeople": "People · {{count}} ({{online}} online)",
+    "findPeople": "Find people…"
   },
   "networks": {
     "title": "Networks",

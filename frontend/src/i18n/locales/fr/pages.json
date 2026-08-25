@@ -842,7 +842,13 @@
     "adminOnly": "admin seulement",
     "chatOffMemberHint": "Le chat est désactivé. Vous pouvez toujours réagir. Seul l'admin peut publier.",
     "adminCanStillPost": "Chat désactivé pour les membres · vous seul pouvez publier",
-    "reactLatest": "Réagir au dernier message"
+    "reactLatest": "Réagir au dernier message",
+    "onlineNow": "{{count}} online",
+    "noOneOnline": "No one else online right now",
+    "activeNow": "Active now",
+    "online": "Online",
+    "allPeople": "People · {{count}} ({{online}} online)",
+    "findPeople": "Find people…"
   },
   "networks": {
     "title": "Réseaus",
