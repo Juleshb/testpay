@@ -8,8 +8,25 @@ import Alert from '../components/ui/Alert';
 import EmptyState from '../components/ui/EmptyState';
 import UserAvatar from '../components/community/UserAvatar';
 import MentionText from '../components/community/MentionText';
+import PaymentMessageButtons, { usePaymentMessageParts } from '../components/community/PaymentMessageButtons';
 import { PageLoader } from '../components/ui/Spinner';
 import { cn } from '../lib/cn';
+
+function AdminMessageBody({ content, members }) {
+  const { paymentIds, displayText } = usePaymentMessageParts(content);
+  return (
+    <>
+      {displayText ? (
+        <p className="font-mono text-sm whitespace-pre-wrap break-words leading-relaxed">
+          <MentionText text={displayText} members={members} />
+        </p>
+      ) : null}
+      {paymentIds.length > 0 && (
+        <PaymentMessageButtons content={content} className={displayText ? 'mt-2.5' : ''} />
+      )}
+    </>
+  );
+}
 
 function participantLabel(user) {
   return user?.displayName || user?.email || user?.phone || user?.name || 'User';
@@ -261,9 +278,7 @@ export default function AdminConversationsPage() {
                             {msg.quotedContent}
                           </p>
                         )}
-                        <p className="font-mono text-sm whitespace-pre-wrap break-words leading-relaxed">
-                          <MentionText text={msg.content} members={members} />
-                        </p>
+                        <AdminMessageBody content={msg.content} members={members} />
                         {msg.readAt && (
                           <p className="font-mono text-[10px] mt-1" style={{ color: 'var(--color-text-muted)' }}>
                             {t('admin.conversationsPage.readAt', { time: formatWhen(msg.readAt) })}

@@ -857,7 +857,9 @@
     "activeNow": "Active now",
     "online": "Online",
     "allPeople": "People · {{count}} ({{online}} online)",
-    "findPeople": "Find people…"
+    "findPeople": "Find people…",
+    "openPayment": "Fungua kadi ya malipo",
+    "openPaymentN": "Fungua malipo {{n}}"
   },
   "networks": {
     "title": "Mtandaos",

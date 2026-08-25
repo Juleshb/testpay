@@ -17,6 +17,7 @@ import OnlineMembersSection from './OnlineMembersSection';
 import ReplyQuote from './ReplyQuote';
 import MentionComposer from './MentionComposer';
 import MentionText from './MentionText';
+import PaymentMessageButtons, { usePaymentMessageParts } from './PaymentMessageButtons';
 import { cn } from '../../lib/cn';
 import { serializeMentions } from '../../lib/mentionUtils';
 import { useTypingEmitter, formatTypingLabel } from '../../hooks/useCommunityRealtime';
@@ -646,6 +647,8 @@ export default function MessagingPanel({
 }
 
 function MessageBubble({ msg, peer, peerName, members, showUnreadDivider = false }) {
+  const { paymentIds, displayText } = usePaymentMessageParts(msg.content);
+
   return (
     <>
       {showUnreadDivider && (
@@ -695,7 +698,14 @@ function MessageBubble({ msg, peer, peerName, members, showUnreadDivider = false
                 }
           }
         >
-          <MentionText text={msg.content} members={members} isOwn={msg.isOwn} />
+          {displayText ? <MentionText text={displayText} members={members} isOwn={msg.isOwn} /> : null}
+          {paymentIds.length > 0 && (
+            <PaymentMessageButtons
+              content={msg.content}
+              isOwn={msg.isOwn}
+              className={displayText ? 'mt-2.5' : ''}
+            />
+          )}
         </div>
         <p
           className={cn(

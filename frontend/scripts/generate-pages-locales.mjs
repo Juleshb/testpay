@@ -855,6 +855,8 @@ const en = {
     online: 'Online',
     allPeople: 'People · {{count}} ({{online}} online)',
     findPeople: 'Find people…',
+    openPayment: 'Open payment card',
+    openPaymentN: 'Open payment {{n}}',
   },
 
   networks: {

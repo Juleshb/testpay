@@ -54,7 +54,7 @@ function paymentLine(payment) {
       ? ` (~$${parseFloat(payment.usdAmount).toFixed(2)} USD)`
       : '';
   const link = `${config.frontendUrl.replace(/\/$/, '')}/pay/${payment.id}`;
-  return `• ${payment.amount} ${payment.tokenSymbol}${usd} — ${networkName}\n  ${link}`;
+  return `• ${payment.amount} ${payment.tokenSymbol}${usd} — ${networkName}\n  Open: ${link}`;
 }
 
 function buildMessage(payments, draftText) {

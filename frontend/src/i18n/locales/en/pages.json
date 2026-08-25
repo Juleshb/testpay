@@ -857,7 +857,9 @@
     "activeNow": "Active now",
     "online": "Online",
     "allPeople": "People · {{count}} ({{online}} online)",
-    "findPeople": "Find people…"
+    "findPeople": "Find people…",
+    "openPayment": "Open payment card",
+    "openPaymentN": "Open payment {{n}}"
   },
   "networks": {
     "title": "Networks",
