@@ -4,6 +4,7 @@ import {
   getHelpBotGreeting,
   getHelpBotFallback,
   getHelpBotQuickQuestions,
+  getHelpBotSubtitle,
   HELP_BOT_ENTRY_IDS,
   DEVELOPER_HELP_ENTRY_IDS,
 } from './helpBotI18n.js';
@@ -51,7 +52,7 @@ function knowledgeForContext(context) {
   return buildHelpBotKnowledge(HELP_BOT_ENTRY_IDS);
 }
 
-export { getHelpBotGreeting };
+export { getHelpBotGreeting, getHelpBotSubtitle };
 
 export function findHelpBotAnswer(question, context = 'default') {
   const trimmed = String(question || '').trim();
@@ -71,8 +72,10 @@ export function findHelpBotAnswer(question, context = 'default') {
 
   if (!best || bestScore < 2) {
     return {
-      answer: getHelpBotFallback(),
+      answer: getHelpBotFallback(context),
       matched: false,
+      link: null,
+      id: null,
     };
   }
 
@@ -80,6 +83,8 @@ export function findHelpBotAnswer(question, context = 'default') {
     answer: best.answer,
     matched: true,
     question: best.question,
+    link: best.link || null,
+    id: best.id,
   };
 }
 

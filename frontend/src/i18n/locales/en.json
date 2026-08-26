@@ -13,7 +13,7 @@
     "home": "Home",
     "menu": "Menu",
     "send": "Send",
-    "askQuestion": "Ask a question...",
+    "askQuestion": "Type a message…",
     "save": "Save",
     "cancel": "Cancel",
     "loading": "Loading…",
@@ -29,7 +29,7 @@
     "closeHelp": "Close help",
     "openHelp": "Open help chat",
     "you": "You",
-    "helpBot": "Help bot",
+    "helpBot": "StackPay guide",
     "typing": "Typing…",
     "readyToStart": "Ready to start?",
     "publicFreeRead": "Public · Free to read",
@@ -148,19 +148,28 @@
   },
   "help": {
     "title": "StackPay Help",
-    "subtitle": "Answers about sign-up, payments, packages & more",
+    "subtitle": "Chat with a StackPay guide — answers from our product data",
+    "appSubtitle": "Friendly chat guide · powered by StackPay knowledge",
     "devSubtitle": "API unlock, pricing, payment & integration",
-    "greeting": "Hi! I'm the StackPay help bot. Ask me about sign-up, payments, packages, withdrawals, referrals, loans, or read the free user guide at /guide.",
+    "greeting": "Hey! 👋 I’m your StackPay helper. Ask me anything about deposits, packages, mining, withdrawals, referrals, loans, or community — I’ll explain it like we’re chatting. (Uses our product guide, no API key.)",
+    "appGreeting": "Hey! I’m here to walk you through StackPay. Tell me what you’re trying to do — deposit, earn, withdraw, transfer… — and I’ll guide you step by step.",
     "devGreeting": "Hi! I can help you unlock StackPay API docs, explain pricing and payment steps, and guide you through integration.",
-    "fallback": "I'm not sure about that yet. Try asking about sign-up, crypto payments, investment packages, withdrawals, referrals, or loans. You can also read the free user guide at /guide or create a free account to explore the dashboard.",
-    "publicGuideLink": "Public user help:",
-    "userGuideLink": "User guide",
+    "fallback": "Hmm, I’m not sure yet. Try asking about deposits, packages, mining, withdrawals, transfers, referrals, or loans — or say “what can I do?”",
+    "appFallback": "Hmm, I’m not sure yet. Try asking about deposits, packages, mining, withdrawals, transfers, loans, referrals, community, or settings — or tap a suggestion.",
+    "openPage": "Take me there",
     "quickQuestions": {
       "account": "How do I create an account?",
       "guide": "Where is the user guide?",
       "networks": "Which crypto networks are supported?",
       "packages": "How do investment packages work?",
       "withdraw": "How do withdrawals work?"
+    },
+    "appQuickQuestions": {
+      "overview": "What can I do in StackPay?",
+      "deposit": "How do I deposit crypto?",
+      "packages": "How do investment packages work?",
+      "mining": "How does cloud mining work?",
+      "withdraw": "How do I withdraw?"
     },
     "devQuickQuestions": {
       "unlock": "How do I unlock the API documentation?",
@@ -182,8 +191,8 @@
       },
       "payments": {
         "question": "How do crypto payments work?",
-        "answer": "Create a payment request in the app, receive a unique deposit address, and pay from any crypto wallet on a supported EVM network. You can also copy the deposit address and send manually from an exchange or mobile wallet. After the deposit is confirmed and swept to treasury, your USD balance is credited.",
-        "keywords": ["payment", "pay", "deposit", "fund", "crypto", "wallet", "usdc", "usdt", "eth", "address"]
+        "answer": "Go to New deposit, enter the USD amount, pick network and token, then create the request. Open the payment card to connect your wallet and pay, or copy the deposit address and send from any wallet — use the correct network only. Keep the page open; it refreshes until confirmed. Your USD balance is credited after confirmation.",
+        "keywords": ["payment", "pay", "deposit", "fund", "crypto", "wallet", "usdc", "usdt", "eth", "address", "payment card"]
       },
       "networks": {
         "question": "Which networks are supported?",
@@ -192,8 +201,23 @@
       },
       "packages": {
         "question": "How do investment packages work?",
-        "answer": "Put your USD balance into tiered investment packages to earn daily income. Browse packages in the app, choose an amount within each tier's limits, and track active investments in your portfolio. Income accrues automatically on schedule.",
+        "answer": "Put your USD balance into tiered investment packages to earn daily income. Open Packages, choose a tier and amount within the limits, confirm, then track active investments and income in Package portfolio. Package earnings go to your main USD balance and can be withdrawn.",
         "keywords": ["package", "invest", "investment", "daily", "income", "earn", "portfolio", "tier", "return"]
+      },
+      "mining": {
+        "question": "How does cloud mining work?",
+        "answer": "Open Mining, pick a plan, and start a session with your USD balance (some plans may be free). Mining runs for a set session length (often 24 hours), then stops — you can start again. Mining income goes to a separate mining balance that is not withdrawable like package USD. Track sessions in Mining portfolio.",
+        "keywords": ["mining", "mine", "cloud mining", "miner", "hash", "session", "mining balance", "yield"]
+      },
+      "overview": {
+        "question": "What can I do in StackPay?",
+        "answer": "1) Deposit crypto to fund your USD balance. 2) Grow with investment packages (withdrawable income) or cloud mining (mining balance). 3) Transfer USD to other members instantly. 4) Withdraw USDC/USDT to your wallet. 5) Borrow against active packages. 6) Invite friends for referral commissions. 7) Chat in Community. Use the sidebar menu to open each section.",
+        "keywords": ["overview", "start", "getting started", "what can", "features", "how to use", "tour", "help me", "everything"]
+      },
+      "settings": {
+        "question": "Where do I change language or profile?",
+        "answer": "Open Settings from the sidebar to update your profile, avatar, and language (English, French, Swahili). You can also install StackPay as a mobile app from your browser.",
+        "keywords": ["settings", "profile", "language", "avatar", "account settings", "french", "swahili"]
       },
       "withdraw": {
         "question": "How do withdrawals work?",

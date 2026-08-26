@@ -84,3 +84,23 @@ export async function getLiveQuotes() {
   }
   return res.json();
 }
+
+/** AI help bot chat — falls back to local FAQ on the client if AI is off. */
+export async function askHelpBot({ question, history = [], language = 'en', context = 'default' }) {
+  const res = await fetch(`${API_BASE}/help/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    body: JSON.stringify({ question, history, language, context }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok && !data.answer) {
+    throw new Error(data.message || data.error || 'Help bot request failed');
+  }
+  return data;
+}
+
+export async function getHelpBotStatus() {
+  const res = await fetch(`${API_BASE}/help/status`);
+  if (!res.ok) return { aiEnabled: false };
+  return res.json();
+}

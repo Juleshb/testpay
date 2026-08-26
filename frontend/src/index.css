@@ -875,6 +875,11 @@
     pointer-events: none;
   }
 
+  /* Clear mobile bottom nav when help bot is inside the authenticated shell */
+  .app-layout-shell .help-bot {
+    bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));
+  }
+
   .help-bot > * {
     pointer-events: auto;
   }
@@ -947,6 +952,24 @@
     color: var(--color-text-secondary);
   }
 
+  .help-bot-link {
+    display: inline-flex;
+    margin-top: 0.5rem;
+    padding: 0.375rem 0.625rem;
+    border-radius: 0.5rem;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--color-accent);
+    background: color-mix(in srgb, var(--color-accent) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+  }
+
+  .help-bot-link:hover {
+    opacity: 0.9;
+  }
+
   .help-bot-typing {
     color: var(--color-text-muted);
     font-style: italic;
@@ -1005,25 +1028,34 @@
   .help-bot-toggle {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 0.875rem;
+    justify-content: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    padding: 0;
     border-radius: 999px;
-    border: 1px solid color-mix(in srgb, var(--color-accent) 40%, transparent);
-    background: color-mix(in srgb, var(--color-surface-800) 94%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 45%, transparent);
+    background: color-mix(in srgb, var(--color-accent) 18%, var(--color-surface-800));
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    color: var(--color-text-primary);
+    color: var(--color-accent);
     box-shadow: var(--shadow-card);
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+
+  .help-bot-toggle:hover {
+    transform: scale(1.05);
+    background: color-mix(in srgb, var(--color-accent) 28%, var(--color-surface-800));
   }
 
   .help-bot-toggle-open {
     background: var(--color-surface-700);
+    color: var(--color-text-primary);
   }
 
-  .help-bot-toggle-text {
-    font-family: var(--font-mono, ui-monospace, monospace);
-    font-size: 0.6875rem;
-    font-weight: 600;
+  .help-bot-toggle-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    display: block;
   }
 
   @media (min-width: 640px) {
@@ -1032,8 +1064,18 @@
       bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
     }
 
+    .app-layout-shell .help-bot {
+      bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));
+    }
+
     .help-bot-panel {
       width: 24rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .app-layout-shell .help-bot {
+      bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
     }
   }
 

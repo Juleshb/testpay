@@ -12,6 +12,7 @@ import { APP_NAME, APP_VERSION } from '../lib/appMeta';
 import MobileBottomNav from '../components/MobileBottomNav';
 import { useCommunityUnread, UnreadBadge } from '../CommunityUnreadContext';
 import OnlineUsersBadge from '../components/OnlineUsersBadge';
+import HelpBot from '../components/HelpBot';
 import { usePresenceHeartbeat } from '../hooks/usePresenceHeartbeat';
 
 function SidebarLink({ to, end, icon: Icon, children, onClick, badge = 0 }) {
@@ -261,6 +262,8 @@ export default function AppLayout() {
 
         <MobileBottomNav onOpenMenu={() => setMobileOpen(true)} />
       </div>
+
+      <HelpBot context="app" />
     </div>
   );
 }

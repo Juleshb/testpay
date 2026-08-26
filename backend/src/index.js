@@ -30,9 +30,11 @@ import { bootstrapShowcaseTestimonials } from './services/showcaseTestimonials.j
 import { startWithdrawalProcessor, repairMissingWithdrawalRefunds } from './services/withdrawals.js';
 import { getDepositAddress } from './services/wallet.js';
 import publicRouter, { APP_VERSION } from './routes/public.js';
+import helpRouter from './routes/help.js';
 import { localeMiddleware } from './i18n/index.js';
 import { initCommunityRealtime } from './services/communityRealtime.js';
 import { startQuotesRealtime } from './services/quotesRealtime.js';
+import { isHelpBotAiConfigured } from './services/helpBotAi.js';
 
 const app = express();
 
@@ -60,6 +62,7 @@ app.get('/api/config', (_req, res) => {
 });
 
 app.use('/api/public', publicRouter);
+app.use('/api/help', helpRouter);
 
 app.use('/api/auth', authRouter);
 app.use('/api/admin', adminRouter);
@@ -83,6 +86,10 @@ initCommunityRealtime(server);
 server.listen(config.port, async () => {
   console.log(`StackPay API running on http://localhost:${config.port}`);
   console.log(`Supported networks: ${getNetworksList().map((n) => n.name).join(', ')}`);
+  console.log(
+    `Help bot: mode=${config.helpBotMode || 'knowledge'}` +
+      (isHelpBotAiConfigured() ? ` · AI on (${config.helpBotAiModel})` : ' · system knowledge only')
+  );
   await bootstrapAdmin();
   await bootstrapUsernames();
   await bootstrapInviteCodes();

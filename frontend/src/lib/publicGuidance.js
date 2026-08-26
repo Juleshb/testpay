@@ -3,15 +3,15 @@ import { APP_NAME } from './appMeta.js';
 import { buildPublicGuideSidebarNav } from './docsNav.js';
 
 export const HELP_BOT_ENTRY_IDS = [
-  'signup', 'login', 'payments', 'networks', 'packages', 'withdraw', 'transfer',
-  'referrals', 'loans', 'community', 'mobile', 'balance', 'fees', 'security',
-  'guide', 'support', 'api', 'terms',
+  'overview', 'signup', 'login', 'payments', 'networks', 'packages', 'mining',
+  'withdraw', 'transfer', 'referrals', 'loans', 'community', 'settings',
+  'mobile', 'balance', 'fees', 'security', 'guide', 'support', 'api', 'terms',
 ];
 
 const PUBLIC_GUIDE_SECTION_DEFS = [
-  { id: 'getting-started', entryIds: ['signup', 'login', 'mobile'] },
+  { id: 'getting-started', entryIds: ['overview', 'signup', 'login', 'mobile', 'settings'] },
   { id: 'money', entryIds: ['payments', 'networks', 'balance', 'fees'] },
-  { id: 'grow', entryIds: ['packages', 'referrals', 'loans'] },
+  { id: 'grow', entryIds: ['packages', 'mining', 'referrals', 'loans'] },
   { id: 'move-money', entryIds: ['transfer', 'withdraw'] },
   { id: 'community', entryIds: ['community', 'support'] },
   { id: 'trust', entryIds: ['security', 'terms'] },

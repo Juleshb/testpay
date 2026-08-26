@@ -13,7 +13,7 @@
     "home": "Nyumbani",
     "menu": "Menyu",
     "send": "Tuma",
-    "askQuestion": "Uliza swali…",
+    "askQuestion": "Andika ujumbe…",
     "save": "Hifadhi",
     "cancel": "Ghairi",
     "loading": "Inapakia…",
@@ -29,7 +29,7 @@
     "closeHelp": "Funga msaada",
     "openHelp": "Fungua mazungumzo ya msaada",
     "you": "Wewe",
-    "helpBot": "Msaidizi",
+    "helpBot": "Mwongozo wa StackPay",
     "typing": "Inaandika…",
     "readyToStart": "Uko tayari kuanza?",
     "publicFreeRead": "Umma · Bure kusoma",
@@ -149,19 +149,24 @@
   },
   "help": {
     "title": "Msaada wa StackPay",
-    "subtitle": "Majibu kuhusu usajili, malipo, vifurushi na zaidi",
-    "devSubtitle": "Kufungua API, bei, malipo na ujumuishaji",
-    "greeting": "Habari! Mimi ni msaidizi wa StackPay. Uliza kuhusu usajili, malipo, vifurushi, utoaji, rufaa, mikopo, au soma mwongozo bure kwenye /guide.",
-    "devGreeting": "Habari! Ninaweza kukusaidia kufungua nyaraka za API za StackPay, kueleza bei na hatua za malipo, na kuongoza ujumuishaji wako.",
-    "fallback": "Sijui bado. Jaribu kuuliza kuhusu usajili, malipo ya crypto, vifurushi, utoaji au rufaa. Unaweza pia kusoma mwongozo bure kwenye /guide au kuunda akaunti bure.",
-    "publicGuideLink": "Msaada wa umma:",
-    "userGuideLink": "Mwongozo wa mtumiaji",
+    "subtitle": "Ongea na mwongozo wa StackPay — majibu kutoka data yetu",
+    "appSubtitle": "Mwongozo wa mazungumzo · maarifa ya StackPay",
+    "greeting": "Habari! 👋 Mimi ni msaidizi wako wa StackPay. Niulize kuhusu amana, vifurushi, uchimbaji, utoaji… Tunaongea kutoka mwongozo wetu (bila API key).",
+    "appGreeting": "Mambo! Niambie unachotaka kufanya — kuweka amana, kupata mapato, kutoa… — nitakuongoza hatua kwa hatua.",
+    "openPage": "Nipeleke huko",
     "quickQuestions": {
       "account": "Ninawezaje kuunda akaunti?",
       "guide": "Mwongozo wa mtumiaji uko wapi?",
       "networks": "Mitandao gani ya crypto inaungwa mkono?",
       "packages": "Vifurushi vya uwekezaji vinafanyaje kazi?",
       "withdraw": "Utoaji unafanyaje kazi?"
+    },
+    "appQuickQuestions": {
+      "overview": "Ninaweza kufanya nini kwenye StackPay?",
+      "deposit": "Ninawezaje kuweka crypto?",
+      "packages": "Vifurushi vya uwekezaji vinafanyaje kazi?",
+      "mining": "Uchimbaji wa cloud unafanyaje kazi?",
+      "withdraw": "Ninawezaje kutoa?"
     },
     "devQuickQuestions": {
       "unlock": "Ninawezaje kufungua nyaraka za API?",
@@ -183,8 +188,8 @@
       },
       "payments": {
         "question": "Malipo ya crypto yanafanyaje kazi?",
-        "answer": "Unda ombi la malipo katika programu, pokea anwani ya kipekee ya amana, na ulipe kutoka pochi yoyote ya crypto kwenye mtandao wa EVM unaoungwa mkono. Unaweza pia kunakili anwani ya amana na kutuma kwa mkono kutoka soko la exchange au pochi ya simu. Miamala ikithibitishwa, salio lako la USD linaongezwa kiotomatiki.",
-        "keywords": ["malipo", "amana", "crypto", "pochi", "usdc", "usdt", "anwani"]
+        "answer": "Nenda kwenye Amana mpya, weka kiasi cha USD, chagua mtandao na tokeni, kisha unda ombi. Fungua kadi ya malipo kuunganisha pochi na kulipa, au nakili anwani ya amana — tumia mtandao sahihi pekee. Weka ukurasa wazi hadi uthibitishwe. Salio lako la USD linaongezwa baada ya uthibitisho.",
+        "keywords": ["malipo", "amana", "crypto", "pochi", "usdc", "usdt", "anwani", "kadi"]
       },
       "networks": {
         "question": "Mitandao gani inaungwa mkono?",
@@ -193,8 +198,23 @@
       },
       "packages": {
         "question": "Vifurushi vya uwekezaji vinafanyaje kazi?",
-        "answer": "Weka salio lako la USD kwenye vifurushi vya viwango ili kupata mapato ya kila siku. Angalia vifurushi, chagua kiasi, na fuata uwekezaji wako kwenye kwingineko yako.",
+        "answer": "Weka salio lako la USD kwenye vifurushi vya viwango ili kupata mapato ya kila siku. Fungua Vifurushi, chagua kiwango na kiasi, thibitisha, kisha fuata uwekezaji kwenye kwingineko. Mapato ya vifurushi yanaenda kwenye salio kuu la USD na yanaweza kutolewa.",
         "keywords": ["kifurushi", "wekeza", "uwekezaji", "mapato", "kwingineko", "package"]
+      },
+      "mining": {
+        "question": "Uchimbaji wa cloud unafanyaje kazi?",
+        "answer": "Fungua Uchimbaji, chagua mpango, na anza kikao kwa salio lako la USD (baadhi ya mipango inaweza kuwa bure). Uchimbaji hukimbia kwa muda wa kikao (mara nyingi saa 24), kisha husimama — unaweza kuanza tena. Mapato ya uchimbaji yanaenda kwenye salio tofauti la uchimbaji ambalo haliwezi kutolewa kama USD ya vifurushi. Fuata vikao kwenye kwingineko ya uchimbaji.",
+        "keywords": ["uchimbaji", "mining", "cloud", "kikao", "salio la uchimbaji", "mavuno"]
+      },
+      "overview": {
+        "question": "Ninaweza kufanya nini kwenye StackPay?",
+        "answer": "1) Weka crypto ili kujaza salio la USD. 2) Kua kwa vifurushi (mapato yanayoweza kutolewa) au uchimbaji wa cloud. 3) Hamisha USD kwa wanachama wengine. 4) Toa USDC/USDT kwenye pochi. 5) Kopa dhidi ya vifurushi vinavyoendelea. 6) Alika marafiki kwa kamisheni. 7) Ongea kwenye Jamii. Tumia menyu ya pembeni kufungua kila sehemu.",
+        "keywords": ["muhtasari", "anza", "vipengele", "ninaweza", "mwongozo", "kila kitu", "msaada"]
+      },
+      "settings": {
+        "question": "Ninawezaje kubadilisha lugha au wasifu?",
+        "answer": "Fungua Mipangilio kutoka menyu kusasisha wasifu, picha, na lugha (Kiingereza, Kifaransa, Kiswahili). Unaweza pia kusakinisha StackPay kama programu ya simu kutoka kivinjari.",
+        "keywords": ["mipangilio", "wasifu", "lugha", "picha", "settings", "kiswahili"]
       },
       "withdraw": {
         "question": "Utoaji unafanyaje kazi?",
