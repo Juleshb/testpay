@@ -1583,11 +1583,37 @@ const en = {
 
   pwa: {
     ariaLabel: 'Install StackPay app',
+    popupLabel: 'Get the app',
     title: 'Install StackPay',
-    iosHint: 'Tap Share, then Add to Home Screen for a full-screen app.',
-    defaultHint: 'Add to your home screen for a fixed, app-like experience.',
+    iosHint: 'On iPhone: tap Share, then Add to Home Screen.',
+    defaultHint: 'Install for a full-screen app, faster access, and message badges.',
+    manualHint: 'Follow the steps below to add StackPay to your home screen.',
     install: 'Install',
     notNow: 'Not now',
+    gotIt: 'Got it',
+    howToTitle: 'Install the app from your browser',
+    howToHint: 'Use StackPay like a real app — home screen icon, full screen, and better message notifications.',
+    showSteps: 'How to install',
+    hideSteps: 'Hide steps',
+    alreadyInstalled: 'StackPay is already installed on this device.',
+    stepsIos: [
+      'Open StackPay in Safari (required on iPhone/iPad).',
+      'Tap the Share button at the bottom (square with an arrow up).',
+      'Scroll and tap Add to Home Screen.',
+      'Tap Add — StackPay appears on your home screen like an app.',
+    ],
+    stepsAndroid: [
+      'Open StackPay in Chrome.',
+      'Tap the menu (⋮) in the top-right corner.',
+      'Tap Install app or Add to Home screen.',
+      'Confirm Install — you’ll get a StackPay icon on your home screen.',
+    ],
+    stepsDesktop: [
+      'Open StackPay in Chrome or Edge.',
+      'Look for the install icon in the address bar (or open the browser menu).',
+      'Click Install StackPay / Install app.',
+      'Open it from your dock or apps list for a dedicated window.',
+    ],
   },
 };
 

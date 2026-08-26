@@ -15,6 +15,9 @@ export function hasCookieConsent() {
 
 export function setCookieConsent(value) {
   localStorage.setItem(CONSENT_KEY, value);
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('stackpay:cookie-consent', { detail: { value } }));
+  }
 }
 
 export function clearCookieConsent() {

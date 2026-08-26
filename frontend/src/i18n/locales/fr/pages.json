@@ -1572,10 +1572,36 @@
   },
   "pwa": {
     "ariaLabel": "Installer l'app StackPay",
+    "popupLabel": "Obtenir l'app",
     "title": "Installer StackPay",
-    "iosHint": "Appuyez sur Partager, puis Sur l'écran d'accueil pour une app plein écran.",
-    "defaultHint": "Ajoutez à l'écran d'accueil pour une expérience type application.",
+    "iosHint": "Sur iPhone : appuyez sur Partager, puis Sur l'écran d'accueil.",
+    "defaultHint": "Installez pour une app plein écran, un accès plus rapide et les badges de messages.",
+    "manualHint": "Suivez les étapes ci-dessous pour ajouter StackPay à l'écran d'accueil.",
     "install": "Installer",
-    "notNow": "Pas maintenant"
+    "notNow": "Pas maintenant",
+    "gotIt": "Compris",
+    "howToTitle": "Installer l'app depuis le navigateur",
+    "howToHint": "Utilisez StackPay comme une vraie app — icône d'accueil, plein écran et meilleures notifications.",
+    "showSteps": "Comment installer",
+    "hideSteps": "Masquer les étapes",
+    "alreadyInstalled": "StackPay est déjà installé sur cet appareil.",
+    "stepsIos": [
+      "Ouvrez StackPay dans Safari (requis sur iPhone/iPad).",
+      "Appuyez sur le bouton Partager en bas (carré avec une flèche vers le haut).",
+      "Faites défiler et appuyez sur Sur l'écran d'accueil.",
+      "Appuyez sur Ajouter — StackPay apparaît sur l'écran d'accueil comme une app."
+    ],
+    "stepsAndroid": [
+      "Ouvrez StackPay dans Chrome.",
+      "Appuyez sur le menu (⋮) en haut à droite.",
+      "Appuyez sur Installer l'application ou Ajouter à l'écran d'accueil.",
+      "Confirmez Installer — vous aurez une icône StackPay sur l'écran d'accueil."
+    ],
+    "stepsDesktop": [
+      "Ouvrez StackPay dans Chrome ou Edge.",
+      "Cherchez l'icône d'installation dans la barre d'adresse (ou le menu du navigateur).",
+      "Cliquez sur Installer StackPay / Installer l'application.",
+      "Ouvrez-la depuis le dock ou la liste des apps pour une fenêtre dédiée."
+    ]
   }
 }

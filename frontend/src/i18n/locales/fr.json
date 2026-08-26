@@ -144,7 +144,16 @@
     "profileUpdated": "Profil mis à jour avec succès",
     "keepEmailOrPhone": "Conservez au moins un e-mail ou un téléphone sur votre compte",
     "language": "Langue",
-    "languageHint": "S'applique à l'application, l'assistant et la documentation"
+    "languageHint": "S'applique à l'application, l'assistant et la documentation",
+    "notifications": "Notifications de messages",
+    "notificationsHint": "Affiche des alertes et un badge sur l'icône de l'app pour les nouveaux messages. Idéal sur l'app mobile installée.",
+    "notificationsEnable": "Activer les notifications",
+    "notificationsEnabled": "Notifications activées",
+    "notificationsDisable": "Désactiver",
+    "notificationsDenied": "Les notifications sont bloquées dans le navigateur. Autorisez-les pour StackPay, puis réessayez.",
+    "notificationsUnsupported": "Ce navigateur ne prend pas en charge les notifications.",
+    "notificationsOn": "Notifications activées — vous serez alerté des nouveaux messages quand l'app est en arrière-plan.",
+    "notificationsOff": "Notifications de messages désactivées"
   },
   "help": {
     "title": "Aide StackPay",
@@ -336,7 +345,7 @@
       },
       "mobile": {
         "question": "Puis-je installer StackPay sur mon téléphone ?",
-        "answer": "Oui. StackPay est une PWA. Sur mobile, utilisez Ajouter à l'écran d'accueil pour l'installer comme une application native.",
+        "answer": "Oui. StackPay est une PWA.\n\n• iPhone (Safari) : Partager → Sur l'écran d'accueil → Ajouter.\n• Android (Chrome) : Menu ⋮ → Installer l'application / Ajouter à l'écran d'accueil.\n• Ordinateur (Chrome/Edge) : icône d'installation dans la barre d'adresse.\n\nOuvrez aussi Paramètres dans l'app pour le guide pas à pas. L'installation donne une icône, le plein écran et de meilleurs badges de messages.",
         "keywords": [
           "mobile",
           "app",

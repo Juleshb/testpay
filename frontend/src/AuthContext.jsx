@@ -29,6 +29,7 @@ export function AuthProvider({ children }) {
   const logoutUser = () => {
     clearAuth();
     setUser(null);
+    import('./lib/messageNotifications.js').then((m) => m.clearAppBadge()).catch(() => {});
   };
 
   return (

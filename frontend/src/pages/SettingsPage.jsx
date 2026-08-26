@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../AuthContext';
 import { updateProfile, userDisplayId } from '../auth';
@@ -12,6 +12,13 @@ import Alert from '../components/ui/Alert';
 import Button from '../components/ui/Button';
 import { APP_NAME, APP_VERSION } from '../lib/appMeta';
 import { combinePhoneNumber, parsePhoneNumber } from '../data/countryCodes';
+import {
+  getMessageNotifyPref,
+  notificationPermission,
+  requestMessageNotificationPermission,
+  setMessageNotifyPref,
+} from '../lib/messageNotifications';
+import InstallAppGuide from '../components/InstallAppGuide';
 
 export default function SettingsPage() {
   const { t } = useTranslation();
@@ -26,6 +33,40 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [notifyEnabled, setNotifyEnabled] = useState(() => getMessageNotifyPref());
+  const [notifyPermission, setNotifyPermission] = useState(() => notificationPermission());
+  const [notifyBusy, setNotifyBusy] = useState(false);
+
+  useEffect(() => {
+    setNotifyPermission(notificationPermission());
+    setNotifyEnabled(getMessageNotifyPref());
+  }, []);
+
+  const handleEnableNotifications = async () => {
+    setNotifyBusy(true);
+    setError('');
+    setMessage('');
+    try {
+      const result = await requestMessageNotificationPermission();
+      setNotifyPermission(result.permission);
+      if (result.ok) {
+        setNotifyEnabled(true);
+        setMessage(t('settings.notificationsOn'));
+      } else if (result.permission === 'denied') {
+        setError(t('settings.notificationsDenied'));
+      } else if (result.permission === 'unsupported') {
+        setError(t('settings.notificationsUnsupported'));
+      }
+    } finally {
+      setNotifyBusy(false);
+    }
+  };
+
+  const handleDisableNotifications = () => {
+    setMessageNotifyPref(false);
+    setNotifyEnabled(false);
+    setMessage(t('settings.notificationsOff'));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -67,6 +108,41 @@ export default function SettingsPage() {
         <CardContent className="pt-6">
           <LanguageSwitcher />
           <Hint className="mt-2">{t('settings.languageHint')}</Hint>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-4">
+        <CardContent className="pt-6 space-y-3">
+          <div>
+            <p className="font-semibold text-sm">{t('settings.notifications')}</p>
+            <Hint className="mt-1">{t('settings.notificationsHint')}</Hint>
+          </div>
+          {notifyEnabled && notifyPermission === 'granted' ? (
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="font-mono text-xs" style={{ color: 'var(--color-success)' }}>
+                {t('settings.notificationsEnabled')}
+              </p>
+              <Button type="button" variant="ghost" size="sm" onClick={handleDisableNotifications}>
+                {t('settings.notificationsDisable')}
+              </Button>
+            </div>
+          ) : (
+            <Button
+              type="button"
+              variant="primary"
+              size="md"
+              loading={notifyBusy}
+              onClick={handleEnableNotifications}
+            >
+              {t('settings.notificationsEnable')}
+            </Button>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card className="mb-4">
+        <CardContent className="pt-6">
+          <InstallAppGuide />
         </CardContent>
       </Card>
 

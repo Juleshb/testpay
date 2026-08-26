@@ -144,7 +144,16 @@
     "profileUpdated": "Profile updated successfully",
     "keepEmailOrPhone": "Keep at least one of email or phone on your account",
     "language": "Language",
-    "languageHint": "Applies across the app, help bot, and documentation"
+    "languageHint": "Applies across the app, help bot, and documentation",
+    "notifications": "Message notifications",
+    "notificationsHint": "Show alerts and an app icon badge when you get new community messages. Best on an installed mobile app.",
+    "notificationsEnable": "Enable notifications",
+    "notificationsEnabled": "Notifications are on",
+    "notificationsDisable": "Turn off",
+    "notificationsDenied": "Notifications are blocked in browser settings. Allow them for StackPay, then try again.",
+    "notificationsUnsupported": "This browser does not support notifications.",
+    "notificationsOn": "Notifications enabled — you'll get alerts for new messages when the app is in the background.",
+    "notificationsOff": "Message notifications turned off"
   },
   "help": {
     "title": "StackPay Help",
@@ -246,8 +255,8 @@
       },
       "mobile": {
         "question": "Can I install StackPay on my phone?",
-        "answer": "Yes. StackPay is a progressive web app (PWA). On mobile, use your browser's Add to Home Screen option to install it like a native app with a full-screen experience.",
-        "keywords": ["mobile", "app", "pwa", "install", "iphone", "android", "home screen"]
+        "answer": "Yes. StackPay is a progressive web app (PWA).\n\n• iPhone (Safari): Share → Add to Home Screen → Add.\n• Android (Chrome): Menu ⋮ → Install app / Add to Home screen.\n• Desktop (Chrome/Edge): install icon in the address bar or browser menu.\n\nYou can also open Settings in the app for step-by-step install help. Installing gives you a home-screen icon, full screen, and better message badges.",
+        "keywords": ["mobile", "app", "pwa", "install", "iphone", "android", "home screen", "add to home"]
       },
       "balance": {
         "question": "How does my USD balance work?",

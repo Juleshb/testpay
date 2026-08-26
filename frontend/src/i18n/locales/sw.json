@@ -145,7 +145,16 @@
     "profileUpdated": "Wasifu umesasishwa",
     "keepEmailOrPhone": "Weka angalau barua pepe au simu kwenye akaunti yako",
     "language": "Lugha",
-    "languageHint": "Inatumika kwenye programu, msaidizi na nyaraka"
+    "languageHint": "Inatumika kwenye programu, msaidizi na nyaraka",
+    "notifications": "Arifa za ujumbe",
+    "notificationsHint": "Onyesha arifa na beji kwenye ikoni ya programu unapopata ujumbe mpya. Bora kwenye programu ya simu iliyosakinishwa.",
+    "notificationsEnable": "Washa arifa",
+    "notificationsEnabled": "Arifa zimewashwa",
+    "notificationsDisable": "Zima",
+    "notificationsDenied": "Arifa zimezuiwa kwenye kivinjari. Ruhusu StackPay kisha jaribu tena.",
+    "notificationsUnsupported": "Kivinjari hiki hakitumii arifa.",
+    "notificationsOn": "Arifa zimewashwa — utapata arifa za ujumbe mpya programu ikiwa nyuma.",
+    "notificationsOff": "Arifa za ujumbe zimezimwa"
   },
   "help": {
     "title": "Msaada wa StackPay",
@@ -243,7 +252,7 @@
       },
       "mobile": {
         "question": "Naweza kusakinisha StackPay kwenye simu yangu?",
-        "answer": "Ndiyo. StackPay ni PWA. Kwenye simu, tumia Ongeza kwenye Skrini ya Nyumbani kuisakinisha kama programu ya asili.",
+        "answer": "Ndiyo. StackPay ni PWA.\n\n• iPhone (Safari): Share → Ongeza kwenye Skrini ya Nyumbani → Ongeza.\n• Android (Chrome): Menyu ⋮ → Sakinisha programu / Ongeza kwenye Skrini ya Nyumbani.\n• Kompyuta (Chrome/Edge): ikoni ya usakinishaji kwenye upau wa anwani.\n\nFungua pia Mipangilio kwenye programu kwa mwongozo wa hatua. Kusakinisha kunakupa ikoni, skrini kamili, na beji bora za ujumbe.",
         "keywords": ["simu", "programu", "pwa", "sakinisha", "iphone", "android"]
       },
       "balance": {

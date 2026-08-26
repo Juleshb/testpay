@@ -174,9 +174,9 @@ export const SYSTEM_TOPICS = [
       'paramètres', 'profil', 'langue', 'mipangilio', 'wasifu', 'lugha', 'kiswahili',
     ],
     answers: {
-      en: 'Open Settings to update your profile, avatar, and language (English, French, Swahili). You can also install StackPay as a mobile app from your browser (Add to Home Screen).',
-      fr: 'Ouvrez Paramètres pour mettre à jour profil, avatar et langue (anglais, français, swahili). Vous pouvez aussi installer StackPay comme app mobile (Ajouter à l\'écran d\'accueil).',
-      sw: 'Fungua Mipangilio kusasisha wasifu, picha, na lugha (Kiingereza, Kifaransa, Kiswahili). Unaweza pia kusakinisha StackPay kama programu ya simu (Ongeza kwenye Skrini ya Nyumbani).',
+      en: 'Open Settings to update your profile, avatar, and language (English, French, Swahili). To install the app from your browser: iPhone Safari → Share → Add to Home Screen; Android Chrome → Menu ⋮ → Install app; Desktop Chrome/Edge → install icon in the address bar. Settings also shows the full install steps.',
+      fr: 'Ouvrez Paramètres pour le profil, l’avatar et la langue. Pour installer depuis le navigateur : iPhone Safari → Partager → Sur l’écran d’accueil ; Android Chrome → Menu ⋮ → Installer ; Ordinateur Chrome/Edge → icône d’installation. Paramètres montre aussi toutes les étapes.',
+      sw: 'Fungua Mipangilio kwa wasifu, picha na lugha. Kusakinisha kutoka kivinjari: iPhone Safari → Share → Ongeza kwenye Skrini ya Nyumbani; Android Chrome → Menyu ⋮ → Sakinisha; Kompyuta Chrome/Edge → ikoni ya usakinishaji. Mipangilio pia inaonyesha hatua zote.',
     },
   },
   {

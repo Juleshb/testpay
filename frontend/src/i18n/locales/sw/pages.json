@@ -1572,10 +1572,36 @@
   },
   "pwa": {
     "ariaLabel": "Sakinisha StackPay app",
+    "popupLabel": "Pata programu",
     "title": "Sakinisha StackPay",
-    "iosHint": "Tap Share, then Ongeza to Home Screen for a full-screen app.",
-    "defaultHint": "Ongeza to yako home screen for a fixed, app-like experience.",
+    "iosHint": "Kwenye iPhone: bonyeza Share, kisha Ongeza kwenye Skrini ya Nyumbani.",
+    "defaultHint": "Sakinisha kwa programu ya skrini kamili, ufikiaji wa haraka, na beji za ujumbe.",
+    "manualHint": "Fuata hatua hapa chini kuongeza StackPay kwenye skrini ya nyumbani.",
     "install": "Sakinisha",
-    "notNow": "Si sasa"
+    "notNow": "Si sasa",
+    "gotIt": "Nimeelewa",
+    "howToTitle": "Sakinisha programu kutoka kivinjari",
+    "howToHint": "Tumia StackPay kama programu halisi — ikoni ya skrini ya nyumbani, skrini kamili, na arifa bora za ujumbe.",
+    "showSteps": "Jinsi ya kusakinisha",
+    "hideSteps": "Ficha hatua",
+    "alreadyInstalled": "StackPay tayari imesakinishwa kwenye kifaa hiki.",
+    "stepsIos": [
+      "Fungua StackPay katika Safari (inahitajika kwenye iPhone/iPad).",
+      "Bonyeza kitufe cha Share chini (mraba wenye mshale juu).",
+      "Sogeza chini na bonyeza Ongeza kwenye Skrini ya Nyumbani.",
+      "Bonyeza Ongeza — StackPay inaonekana kwenye skrini ya nyumbani kama programu."
+    ],
+    "stepsAndroid": [
+      "Fungua StackPay katika Chrome.",
+      "Bonyeza menyu (⋮) juu kulia.",
+      "Bonyeza Sakinisha programu au Ongeza kwenye Skrini ya Nyumbani.",
+      "Thibitisha Sakinisha — utapata ikoni ya StackPay kwenye skrini ya nyumbani."
+    ],
+    "stepsDesktop": [
+      "Fungua StackPay katika Chrome au Edge.",
+      "Tafuta ikoni ya usakinishaji kwenye upau wa anwani (au fungua menyu ya kivinjari).",
+      "Bofya Sakinisha StackPay / Sakinisha programu.",
+      "Fungua kutoka dock au orodha ya programu kwa dirisha maalum."
+    ]
   }
 }
